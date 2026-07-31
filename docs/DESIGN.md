@@ -99,8 +99,9 @@ Pluginy developerskie (hooks, cms, …) pozostają w `utopia-flutter-skills` —
 ### Dostęp uczestnika do repo bez konta GitHub
 
 Uczestnik **nie musi mieć konta GitHub**: przygotowujący tworzy **fine-grained PAT** ograniczony do
-tego jednego repo (Contents: rw, Issues: rw, wygasa np. po 90 dniach) i wpisuje go do
-`zero/config.json` w wysyłanej paczce. Skill konfiguruje remote z tym tokenem. Token nigdy nie
+tego jednego repo (Contents: rw, Issues: rw, wygasa np. po 90 dniach) i zapisuje go do
+**`zero/.pat`** (gitignorowany — trafia tylko do wysyłanej paczki ZIP, nigdy do historii
+repo ani do config.json). Skill konfiguruje remote z tym tokenem. Token nigdy nie
 przechodzi przez prompt (→ nie trafia do transkryptów), skrypty analityczne redagują wzorce
 `github_pat_*`. Publiczne repa (utopia-zero, utopia-flutter-skills) nie wymagają żadnego uwierzytelnienia.
 Alternatywa (własne konto GitHub uczestnika) — w przyszłości, gdy proces ma być w pełni samoobsługowy.
@@ -153,11 +154,13 @@ Od tego momentu prowadzi skill. Powrót po przerwie = otwórz projekt, napisz �
 
 ### Etap 2 — Fundamenty (cel: „wow" w pierwszej sesji)
 - **Środowisko progresywnie** (§7): instaluje tylko to, co potrzebne do celu bieżącego etapu —
-  na start **web-first**: git + Flutter SDK + Chrome. Zero Xcode/Android Studio na tym etapie.
+  na start **web-first**: git + Flutter SDK + przeglądarka systemowa (Chrome niewymagany).
+  Zero Xcode/Android Studio na tym etapie.
 - `dart pub global activate utopia_cli` → `utopia create flutter_app` do `app/` (org wg configu).
 - Warstwa `.claude/` projektu już jest ze startera; skill dopisuje do CLAUDE.md konwencje
   wynikające z BRIEF (nazwa, język, ustalenia).
-- Pierwszy build: ekran powitalny z nazwą i stylem z briefu, uruchomiony w Chrome.
+- Pierwszy build: ekran powitalny z nazwą i stylem z briefu, uruchomiony w domyślnej
+  przeglądarce (`flutter run -d web-server`).
 - Commit + push. Ankieta-puls #1 (2 pytania).
 
 ### Etap 3 — Szkielet MVP
@@ -207,9 +210,12 @@ Zasada: **lazy toolchain** — instalujemy wyłącznie to, czego wymaga cel bie�
 
 | Cel | macOS | Windows |
 |---|---|---|
-| Web (etap 2–4, domyślny) | Xcode CLT (git) + Flutter SDK + Chrome | Git for Windows (winget) + Flutter SDK + Chrome |
+| Web (etap 2–4, domyślny) | Xcode CLT (git) + Flutter SDK + przeglądarka systemowa | Git for Windows (winget) + Flutter SDK + przeglądarka systemowa |
 | Android (etap 5) | + Android Studio/SDK + licencje | + Android Studio/SDK + licencje |
 | iOS (etap 5) | + pełny Xcode (~dziesiątki GB!) + Apple ID | — (niedostępne; komunikat wprost) |
+
+> Podgląd webowy działa przez `flutter run -d web-server` + domyślną przeglądarkę —
+> **Chrome nie jest wymagany** (Safari/Edge wystarczą; jedna instalacja mniej).
 
 - Playbooki per OS w `references/environment-{macos,windows}.md`: wykrywanie (co już jest), instalacja,
   PATH, weryfikacja `flutter doctor` **filtrowana do bieżącego celu** (brak Androida nie blokuje weba).
@@ -266,9 +272,10 @@ utknięć; wzorce sesji (pora, długość, przerwy); korelacja rubryki rozwijaln
 infrastruktury (bez live-dostępu). Analiza post-hoc = klon repo.
 
 ### 10.3 Warstwy zbierania
-1. **Hooki Claude Code** (deterministyczne, niezależne od „pamięci" modelu) — wpięte w
-   `.claude/settings.json` startera: SessionStart/SessionEnd/Stop/PostToolUse → `zero/scripts/log_event`
-   (wariant `.sh` dla macOS i `.ps1` dla Windows; Etap 0 dopina właściwy w `settings.local.json`).
+1. **Hooki Claude Code** (deterministyczne, niezależne od „pamięci" modelu):
+   SessionStart/SessionEnd → `zero/scripts/hook_session_*` (wariant `.sh` dla macOS
+   i `.ps1` dla Windows; Etap 0 dopina właściwy do **commitowanego** `.claude/settings.json`
+   i planuje jeden restart aplikacji).
 2. **Eventy semantyczne ze skilla** — skill wywołuje `log_event` przy decyzjach, etapach, pytaniach,
    utknięciach (rzeczy, których hooki nie rozumieją).
 3. **Tokeny/koszt/model**: SessionEnd parsuje transkrypt sesji (hook dostaje `transcript_path`) →
@@ -340,15 +347,17 @@ utopia-zero/
 │  ├─ README.md                         # quickstart uczestnika (PL/EN)
 │  ├─ .gitignore                        # incl. .env, sekrety
 │  ├─ .claude/
-│  │  ├─ settings.json                  # defaultMode: acceptEdits, allowlist, hooki,
+│  │  ├─ settings.json                  # defaultMode: acceptEdits, allowlist,
 │  │  │                                 # extraKnownMarketplaces (utopia-zero + utopia-flutter-skills),
-│  │  │                                 # enabledPlugins (zero, hooks, ai-arch, dart-lsp, cms, reviews)
+│  │  │                                 # enabledPlugins (zero, hooks, ai-arch, dart-lsp, cms, reviews);
+│  │  │                                 # hooki analityczne dopina Etap 0 (per OS)
 │  │  └─ CLAUDE.md                      # „projekt w trybie utopia-zero" + konwencje
 │  ├─ zero/
-│  │  ├─ config.json                    # PLACEHOLDERY: participant_id, projekt, remote+PAT, flagi, kontakt
-│  │  ├─ scripts/log_event.sh + .ps1
+│  │  ├─ config.json                    # PLACEHOLDERY: participant_id, projekt, remote, flagi, kontakt
+│  │  │                                 # (PAT osobno w zero/.pat — gitignorowany, trafia tylko do ZIP-a)
+│  │  ├─ scripts/                       # log_event, hook_session_start, hook_session_end (.sh + .ps1)
 │  │  ├─ STATE.md  BRIEF.md  DECISIONS.md  HANDOVER.md   # szkielety
-│  │  └─ analytics/                     # events.jsonl, usage/, transcripts/
+│  │  └─ analytics/                     # events.jsonl, transcripts/
 │  └─ app/                              # (puste — generowane w Etapie 2; potem ew. admin/, backend/)
 ├─ docs/
 │  ├─ DESIGN.md                         # ten dokument
@@ -362,7 +371,8 @@ utopia-zero/
 2. `gh repo create Utopia-USS/poc-<slug> --private` (np. `poc-gra-imprezowa`).
 3. Skopiuj zawartość `starter/` do nowego katalogu, `git init` + commit + push.
 4. Fine-grained PAT ograniczony do nowego repo: Contents rw + Issues rw, wygaśnięcie 90 dni.
-5. Wypełnij `zero/config.json` (participant_id, nazwa projektu, remote z PAT, flagi, kontakt Utopii), commit + push.
+5. Wypełnij `zero/config.json` (participant_id, nazwa projektu, remote — bez tokenu, flagi,
+   kontakt Utopii), commit + push; PAT zapisz do `zero/.pat` (gitignorowany — wchodzi tylko do ZIP-a).
 6. Pobierz ZIP repo → wyślij uczestnikowi ZIP + instrukcję onboardingu + prompt startowy.
 7. Podgląd postępu: commity/pushe, `zero/analytics/events.jsonl`, issues (eskalacje).
 
@@ -374,8 +384,8 @@ utopia-zero/
 - Ograniczenia **operacyjne** pozostają (to także twarde zasady samego modelu, nie tylko skilla):
   skill nie zakłada kont, nie dotyka haseł/płatności, nie publikuje do sklepów — takie kroki
   **deleguje**: instruuje użytkownika lub wskazuje „to zrobi ktoś z Utopii z kontem admina".
-- Sekrety: PAT tylko w `zero/config.json` (nie w promptach), klucze API w `.env` poza gitem,
-  redakcja w analityce, `.gitignore` w starterze.
+- Sekrety: PAT tylko w `zero/.pat` (gitignorowany; nie w promptach ani w configu), klucze API
+  w `.env` poza gitem, redakcja w analityce, `.gitignore` w starterze.
 - Limity kosztów: brak (subskrypcja użytkownika); skill jedynie uczciwie komunikuje limity planu.
 
 ## 14. Status dokumentu
@@ -400,7 +410,7 @@ własnego sprzętu i subskrypcji Claude. Test pokrywa całą ścieżkę uczestni
 
 1. Onboarding 1:1 wg instrukcji: ZIP → otwarcie folderu → auto-propozycja marketplace'ów/pluginów → prompt startowy.
 2. Etap 0: tutorial, zgoda na analitykę, doradztwo modelowe, zachowanie auto-accept.
-3. Etap 2 na czystym środowisku: instalacja Fluttera od zera (PATH, CLT), `utopia create`, uruchomienie w Chrome, pierwszy push PAT-em do testowego `poc-dryrun`.
+3. Etap 2 na czystym środowisku: instalacja Fluttera od zera (PATH, CLT), `utopia create`, uruchomienie w domyślnej przeglądarce, pierwszy push PAT-em do testowego `poc-dryrun`.
 4. Analityka end-to-end: eventy w `events.jsonl`, tokeny/model po zamknięciu sesji, archiwizacja transkryptu, działanie „wyłącz analitykę".
 5. Ćwiczenie awarii: celowo zepsuty build → drabinka 5 prób → eskalacja jako issue → odpowiedź w issue → podjęcie jej przy kolejnym SessionStart.
 6. Wielosesyjność: zamknięcie, ponowne otwarcie, „kontynuuj" → odtworzenie stanu.
