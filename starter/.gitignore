@@ -1,0 +1,10 @@
+# secrets — never committed
+zero/.pat
+.env
+*.env
+!.env.example
+
+# local machine noise
+.claude/settings.local.json
+.DS_Store
+*.log

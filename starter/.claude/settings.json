@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash",
+      "WebFetch",
+      "WebSearch"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "utopia-zero": {
+      "source": {
+        "source": "github",
+        "repo": "Utopia-USS/utopia-zero"
+      }
+    },
+    "utopia-flutter-skills": {
+      "source": {
+        "source": "github",
+        "repo": "Utopia-USS/utopia-flutter-skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "utopia-zero@utopia-zero": true,
+    "utopia-hooks@utopia-flutter-skills": true,
+    "utopia-ai-arch@utopia-flutter-skills": true,
+    "utopia-dart-lsp@utopia-flutter-skills": true,
+    "utopia-cms@utopia-flutter-skills": true,
+    "utopia-reviews@utopia-flutter-skills": true
+  }
+}
