@@ -207,7 +207,10 @@ Zasada: **lazy toolchain** — instalujemy wyłącznie to, czego wymaga cel bie�
 
 | Cel | macOS | Windows |
 |---|---|---|
-| Web (etap 2–4, domyślny) | Xcode CLT (git) + Flutter SDK + Chrome | Git for Windows (winget) + Flutter SDK + Chrome |
+| Web (etap 2–4, domyślny) | Xcode CLT (git) + Flutter SDK + przeglądarka systemowa | Git for Windows (winget) + Flutter SDK + przeglądarka systemowa |
+
+> Podgląd webowy działa przez `flutter run -d web-server` + domyślną przeglądarkę —
+> **Chrome nie jest wymagany** (Safari/Edge wystarczą; jedna instalacja mniej).
 | Android (etap 5) | + Android Studio/SDK + licencje | + Android Studio/SDK + licencje |
 | iOS (etap 5) | + pełny Xcode (~dziesiątki GB!) + Apple ID | — (niedostępne; komunikat wprost) |
 
@@ -345,8 +348,9 @@ utopia-zero/
 │  │  │                                 # enabledPlugins (zero, hooks, ai-arch, dart-lsp, cms, reviews)
 │  │  └─ CLAUDE.md                      # „projekt w trybie utopia-zero" + konwencje
 │  ├─ zero/
-│  │  ├─ config.json                    # PLACEHOLDERY: participant_id, projekt, remote+PAT, flagi, kontakt
-│  │  ├─ scripts/log_event.sh + .ps1
+│  │  ├─ config.json                    # PLACEHOLDERY: participant_id, projekt, remote, flagi, kontakt
+│  │  │                                 # (PAT osobno w zero/.pat — gitignorowany, trafia tylko do ZIP-a)
+│  │  ├─ scripts/                       # log_event, hook_session_start, hook_session_end (.sh + .ps1)
 │  │  ├─ STATE.md  BRIEF.md  DECISIONS.md  HANDOVER.md   # szkielety
 │  │  └─ analytics/                     # events.jsonl, usage/, transcripts/
 │  └─ app/                              # (puste — generowane w Etapie 2; potem ew. admin/, backend/)

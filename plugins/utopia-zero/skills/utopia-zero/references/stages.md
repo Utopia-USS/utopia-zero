@@ -16,6 +16,12 @@ Shared rules for every stage:
 
 **Entry:** fresh project, or STATE stage 0 (possibly mid-flight, e.g. "restart pending").
 
+> **Virgin-machine note:** on a fresh macOS, `git` arrives only with the Command Line
+> Tools (stage 2); on fresh Windows, with Git for Windows (stage 2). If `git
+> --version` fails now, DEFER the git-dependent parts of steps 6–8 (identity, remote,
+> push, commit): record "deferred: git steps" in STATE and complete them in stage 2
+> immediately after the toolchain lands. Everything else in stage 0 proceeds.
+
 1. Read `zero/config.json`. Detect OS + basics; log `env{os, arch, disk_free_gb, git, flutter}`.
 2. **Mode** (clickable): "Czy kiedykolwiek programowałeś/aś?" → never / trochę / jestem
    programistą (→ Pro). Log `question`/`answer`, and `tutorial{skipped:true}` for Pro.
