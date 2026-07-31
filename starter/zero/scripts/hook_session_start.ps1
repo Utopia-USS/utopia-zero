@@ -1,7 +1,11 @@
 # utopia-zero SessionStart hook (Windows): session id file, session_start event,
 # STATE.md summary -> stdout (context), new Utopia replies on [zero] issues -> stdout.
+# Compatible with Windows PowerShell 5.1; UTF-8 in and out.
 $ErrorActionPreference = "SilentlyContinue"
 try {
+  try { [Console]::InputEncoding = [System.Text.Encoding]::UTF8 } catch { }
+  try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
+
   $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
   $an = Join-Path $Root "zero\analytics"
   New-Item -ItemType Directory -Force -Path $an | Out-Null
@@ -12,21 +16,22 @@ try {
   if ($in -and $in.session_id) { Set-Content -Path (Join-Path $an ".session") -Value $in.session_id -NoNewline }
   $src = "unknown"; if ($in -and $in.source) { $src = $in.source }
 
-  & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root "zero\scripts\log_event.ps1") `
-      "session_start" ('{"source":"' + $src + '"}') | Out-Null
+  # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
+  & (Join-Path $Root "zero\scripts\log_event.ps1") "session_start" ('{"source":"' + $src + '"}') | Out-Null
 
   # --- context injection: project state ---
   $state = Join-Path $Root "zero\STATE.md"
   if (Test-Path $state) {
     Write-Output "=== utopia-zero: zero/STATE.md (stan projektu / project state) ==="
-    Get-Content $state -TotalCount 60
+    Get-Content $state -TotalCount 60 -Encoding UTF8
     Write-Output "=== koniec STATE / end of STATE ==="
   }
 
   # --- Utopia replies on [zero] issues (best-effort) ---
   $patFile = Join-Path $Root "zero\.pat"
-  $cfg = Get-Content (Join-Path $Root "zero\config.json") -Raw | ConvertFrom-Json
+  $cfg = Get-Content (Join-Path $Root "zero\config.json") -Raw -Encoding UTF8 | ConvertFrom-Json
   if ((Test-Path $patFile) -and $cfg.git_remote -match 'github\.com[/:]([\w\.-]+/[\w\.-]+?)(\.git)?$') {
+    try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12 } catch { }
     $repo = $Matches[1]
     $pat = (Get-Content $patFile -Raw).Trim()
     $ckptFile = Join-Path $an ".issues_seen"

@@ -98,7 +98,7 @@ listed extra references when entering the stage.
 |---|---|---|---|
 | 0 | Start & tutorial | config, mode, consent, tutorial (skippable), model advice, git identity, hooks wiring, test push | `analytics.md`, `model-advice.md` |
 | 1 | Idea | interview → `zero/BRIEF.md` approved (features MVP/later/out, design brief, admin-panel decision) | `interview-guide.md`, `design-interview.md` |
-| 2 | Foundations | web-first environment, `utopia create` into `app/`, welcome screen running in Chrome, first push | `environment-macos.md` / `environment-windows.md` |
+| 2 | Foundations | web-first environment, `utopia create` into `app/`, welcome screen running in the default browser, first push | `environment-macos.md` / `environment-windows.md` |
 | 3 | Skeleton | all MVP screens as clickable skeleton with fake data | — |
 | 4 | Features (loop) | per feature: plan → accept → build → gates → checkpoint? → commit; backend & admin lazily | `failure-playbooks.md` |
 | 5 | Devices (optional) | physical phone / emulator; heavy toolchains only here | `environment-*.md`, `failure-playbooks.md` |
@@ -115,7 +115,7 @@ list — log these semantic events yourself (hooks cover sessions automatically)
 `stage_start/stage_end`, `question/answer`, `decision`, `user_override`, `build`,
 `error`, `fix_attempt`, `stuck`, `checkpoint`, `feature_start/feature_done`,
 `scope_request`, `backend_step`, `language_switch`, `consent`, `env`, `survey`,
-`model_info`, `tutorial`.
+`model_info`, `tutorial`, `handover_selfscore`.
 
 Opt-out: the user can say "wyłącz analitykę" / "disable analytics" at any time →
 set `analytics_enabled` (and/or `transcripts_enabled`) to `false` in

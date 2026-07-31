@@ -77,9 +77,15 @@ also a plan B. Say which rung you're on, in plain words, without shame.
    curl -sS -X POST -H "Authorization: Bearer $PAT" -H "Accept: application/vnd.github+json" \
      "https://api.github.com/repos/$REPO/issues" --data @/tmp/zero_issue.json
    ```
-   Windows: build the body string in PowerShell, then
-   `@{title="[zero] Stuck: <slug>"; body=$body} | ConvertTo-Json` →
-   `Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/issues" -Headers @{Authorization="Bearer $pat"; Accept="application/vnd.github+json"} -Body $json`.
+   Windows:
+   ```powershell
+   $pat  = (Get-Content zero\.pat -Raw).Trim()
+   $cfg  = Get-Content zero\config.json -Raw -Encoding UTF8 | ConvertFrom-Json
+   $repo = $cfg.git_remote -replace '^.*github\.com[/:]','' -replace '\.git$',''
+   $json = @{ title = "[zero] Stuck: <slug>"; body = $body } | ConvertTo-Json
+   Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$repo/issues" `
+     -Headers @{ Authorization = "Bearer $pat"; Accept = "application/vnd.github+json"; "User-Agent" = "utopia-zero" } -Body $json
+   ```
 
    Issue body sections: Stage & goal · Error (last ~30 lines, redacted) · Strategies
    tried (numbered, with results) · Environment (`env` payload) · Last commit link ·

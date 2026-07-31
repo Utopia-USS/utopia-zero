@@ -44,12 +44,18 @@ PYEOF
   [ -z "$MODELS" ] && MODELS="{}"
 fi
 
-bash "$ROOT/zero/scripts/log_event.sh" session_end \
-  "{\"models\":$MODELS,\"est_cost_usd\":null,\"transcript_copied\":$( [ "$(flag transcripts_enabled)" = "false" ] && echo false || echo true )}" || true
-
-# --- redacted transcript copy ---
+# copied = the actual copy condition, not just the flags
+COPIED=false
 if [ "$(flag transcripts_enabled)" != "false" ] && [ "$(flag analytics_enabled)" != "false" ] \
    && [ -n "${TP:-}" ] && [ -f "$TP" ]; then
+  COPIED=true
+fi
+
+bash "$ROOT/zero/scripts/log_event.sh" session_end \
+  "{\"models\":$MODELS,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
+
+# --- redacted transcript copy ---
+if [ "$COPIED" = "true" ]; then
   sed -E \
     -e 's/github_pat_[A-Za-z0-9_]+/[REDACTED]/g' \
     -e 's/gh[pousr]_[A-Za-z0-9]{10,}/[REDACTED]/g' \
@@ -57,6 +63,7 @@ if [ "$(flag transcripts_enabled)" != "false" ] && [ "$(flag analytics_enabled)"
     -e 's/sk-[A-Za-z0-9_-]{16,}/[REDACTED]/g' \
     -e 's/AIza[A-Za-z0-9_-]{30,}/[REDACTED]/g' \
     -e 's/Bearer [A-Za-z0-9._-]{16,}/Bearer [REDACTED]/g' \
+    -e 's/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/[EMAIL]/g' \
     "$TP" > "$AN/transcripts/${SID}.jsonl" 2>/dev/null || true
 fi
 

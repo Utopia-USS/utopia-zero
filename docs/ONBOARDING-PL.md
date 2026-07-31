@@ -51,6 +51,8 @@ otwórz swój folder.
 
 `[SCREENSHOT: okno z propozycją instalacji]`
 
+> Najpierw może pojawić się pytanie, czy **ufasz temu folderowi** (Trust) —
+> potwierdź je; dopiero po nim zobaczysz propozycję dodatków.
 > Nie pojawiła się żadna propozycja? Zajrzyj do FAQ na dole.
 
 ## Krok 6 — Włącz tryb automatyczny

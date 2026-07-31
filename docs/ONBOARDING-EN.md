@@ -50,6 +50,8 @@ them.** Then quit the app, reopen it, and open your folder again.
 
 `[SCREENSHOT: the add-on installation prompt]`
 
+> A **folder-trust** question (Trust) may appear first — confirm it; the add-on
+> prompt follows right after.
 > No prompt appeared? See the FAQ below.
 
 ## Step 6 — Turn on automatic mode

@@ -80,6 +80,10 @@ Windows — same structure, commands:
 `powershell -NoProfile -ExecutionPolicy Bypass -File zero/scripts/hook_session_start.ps1`
 (and `…session_end.ps1`).
 
+The hooks go into the **committed** `settings.json` deliberately: one participant =
+one machine, and the exact analytics config stays reproducible in the repo. (If a
+project ever spans two OSes, move the hook block to `settings.local.json` per machine.)
+
 Hooks load at session start → after wiring, one **planned restart** (stage 0 step 8).
 Verification after restart: `zero/analytics/events.jsonl` contains a fresh
 `session_start` line. Missing → re-check settings JSON validity, path, and that the
@@ -87,9 +91,9 @@ project folder (not a parent) is open.
 
 ## Redaction & privacy
 
-Scripts redact these patterns to `[REDACTED]` in event payloads AND transcript
-copies: `github_pat_*`, `ghp_*`, `gho_*`, `x-access-token:*@`, `sk-*`, `AIza*`,
-long `Bearer` values, e-mail addresses (except `*@zero.utopiasoft.io`).
+Scripts redact these patterns to `[REDACTED]` (e-mails to `[EMAIL]`) in event
+payloads AND transcript copies: `github_pat_*`, `ghp_*`, `gho_*`,
+`x-access-token:*@`, `sk-*`, `AIza*`, long `Bearer` values, e-mail addresses.
 
 Never log: real names, secrets, full file contents, raw URLs with credentials.
 `error.signature` = first line of the error only, post-redaction.

@@ -1,5 +1,6 @@
 # utopia-zero analytics: append one event to zero/analytics/events.jsonl
 # usage: powershell -NoProfile -ExecutionPolicy Bypass -File zero/scripts/log_event.ps1 <type> ['<json-payload>']
+# Compatible with Windows PowerShell 5.1. Writes BOM-less UTF-8.
 param(
   [string]$Type = "note",
   [string]$Payload = "{}"
@@ -8,13 +9,13 @@ $ErrorActionPreference = "SilentlyContinue"
 try {
   $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..")).Path
   $cfgPath = Join-Path $Root "zero\config.json"
-  $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json
+  $cfg = Get-Content $cfgPath -Raw -Encoding UTF8 | ConvertFrom-Json
   if ($cfg.analytics_enabled -eq $false) { exit 0 }
 
   $an = Join-Path $Root "zero\analytics"
   New-Item -ItemType Directory -Force -Path $an | Out-Null
 
-  $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
+  $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", [System.Globalization.CultureInfo]::InvariantCulture)
   $sid = "s0"; $sf = Join-Path $an ".session"
   if (Test-Path $sf) { $sid = (Get-Content $sf -Raw).Trim() }
   $stage = "0"; $stf = Join-Path $an ".stage"
@@ -37,6 +38,7 @@ try {
   $line = '{"ts":"' + $ts + '","participant_id":"' + $cfg.participant_id +
           '","project_id":"' + $cfg.project_id + '","session_id":"' + $sid +
           '","stage":"' + $stage + '","type":"' + $Type + '","payload":' + $Payload + '}'
-  Add-Content -Path (Join-Path $an "events.jsonl") -Value $line -Encoding utf8
+  $enc = New-Object System.Text.UTF8Encoding($false)
+  [System.IO.File]::AppendAllText((Join-Path $an "events.jsonl"), $line + "`n", $enc)
 } catch { }
 exit 0
