@@ -87,6 +87,11 @@ Load `environment-macos.md` or `environment-windows.md`. **Entry:** BRIEF approv
    `utopia create --help` first and adapt; target directory `app/`). If `utopia
    create` fails twice, fall back to `flutter create` + manual `utopia_hooks` wiring
    per the utopia-hooks skill, and log `error` + `fix_attempt`.
+   Then run the scaffold's code generation BEFORE any gate:
+   `dart run build_runner build --delete-conflicting-outputs` — the fresh scaffold
+   is not analyzer-clean until this runs (undefined localization classes are
+   expected before it). A couple of info-level lints may remain in template files —
+   fix them immediately so the analyze gate stays at literally zero issues.
 4. Append project facts to `.claude/CLAUDE.md`: app name, user language, BRIEF path,
    "run: cd app && flutter run -d web-server".
 5. **Welcome screen**: replace the default home with a branded one — app name,
