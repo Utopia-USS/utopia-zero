@@ -20,7 +20,7 @@ MODELS="{}"
 if command -v python3 >/dev/null 2>&1 && [ -n "${TP:-}" ] && [ -f "$TP" ]; then
   MODELS="$(python3 - "$TP" <<'PYEOF' 2>/dev/null || echo '{}'
 import json, sys, collections
-acc = collections.defaultdict(lambda: {"in": 0, "out": 0})
+acc = collections.defaultdict(lambda: {"in": 0, "cache_read": 0, "out": 0})
 try:
     with open(sys.argv[1]) as f:
         for line in f:
@@ -33,8 +33,8 @@ try:
             model = msg.get("model") or "unknown"
             if usage:
                 acc[model]["in"] += (usage.get("input_tokens") or 0) \
-                    + (usage.get("cache_creation_input_tokens") or 0) \
-                    + (usage.get("cache_read_input_tokens") or 0)
+                    + (usage.get("cache_creation_input_tokens") or 0)
+                acc[model]["cache_read"] += usage.get("cache_read_input_tokens") or 0
                 acc[model]["out"] += usage.get("output_tokens") or 0
     print(json.dumps(dict(acc)))
 except Exception:

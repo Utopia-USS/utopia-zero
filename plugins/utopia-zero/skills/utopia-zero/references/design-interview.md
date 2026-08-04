@@ -36,8 +36,13 @@ radius 20 · density roomy · mode both(light-first)`.
 
 - Google Fonts only (offline-safe via `google_fonts` package); one display + one body
   font max.
+- **No raw emoji characters in UI** — Flutter web has no guaranteed emoji font
+  (tofu boxes). Use Material icons or bundled assets; emoji are fine inside
+  user-generated TEXT content, never as UI ornaments.
 - Accessibility floor regardless of answers: text contrast ≥ 4.5:1, touch targets
-  ≥ 48dp — never trade these away.
+  ≥ 48dp — never trade these away. This is a **check, not a vibe**: before every
+  visual checkpoint, verify the actual fg/bg color pairs you used (compute the
+  ratio; "looks fine" is how the floor gets broken).
 - "Zdecyduj ty" → neutral modern default (Inter, radius 12, domain-vibe seed) and say
   one sentence about what you chose, in their language, no jargon.
 - The stage-2 welcome screen is the design checkpoint: if the vibe is wrong there,

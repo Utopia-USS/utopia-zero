@@ -8,3 +8,8 @@ zero/.pat
 .claude/settings.local.json
 .DS_Store
 *.log
+
+# IDE artifacts (operators peeking with an IDE must not pollute the repo)
+.idea/
+.vscode/
+*.iml
