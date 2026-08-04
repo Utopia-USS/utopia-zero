@@ -40,8 +40,11 @@ Shared rules for every stage:
 7. **Remote + PAT** (silent): if `zero/.pat` exists, set
    `git remote set-url origin https://x-access-token:<PAT>@<host>/<owner>/<repo>.git`
    (values from config `git_remote`); verify `git ls-remote origin` quietly; push
-   current branch. Missing/invalid PAT → continue local-only, note it in STATE, and
-   plan a "skontaktuj się z Utopią" step (config `utopia_contact`).
+   current branch. No `.pat`? Try the EXISTING remote as-is first (`git ls-remote`,
+   then push) — operator and self-serve machines often authenticate via their own
+   SSH keys or credential helper. Only when nothing authenticates → continue
+   local-only, note it in STATE, and plan a "skontaktuj się z Utopią" step
+   (config `utopia_contact`).
 8. **Wire analytics hooks** for this OS into `.claude/settings.json` (exact JSON in
    `analytics.md`), commit. Then the **one planned restart**: ask the user to fully
    quit and reopen the app, open the project again, and write "kontynuuj". Write
