@@ -26,9 +26,10 @@ try {
       try { $obj = $line | ConvertFrom-Json } catch { continue }
       if (-not $obj.message -or -not $obj.message.usage) { continue }
       $model = "unknown"; if ($obj.message.model) { $model = $obj.message.model }
-      if (-not $acc.ContainsKey($model)) { $acc[$model] = @{ in = 0; out = 0 } }
+      if (-not $acc.ContainsKey($model)) { $acc[$model] = @{ in = 0; cache_read = 0; out = 0 } }
       $u = $obj.message.usage
-      $acc[$model]["in"] += [int]($u.input_tokens) + [int]($u.cache_creation_input_tokens) + [int]($u.cache_read_input_tokens)
+      $acc[$model]["in"] += [int]($u.input_tokens) + [int]($u.cache_creation_input_tokens)
+      $acc[$model]["cache_read"] += [int]($u.cache_read_input_tokens)
       $acc[$model]["out"] += [int]($u.output_tokens)
     }
   }

@@ -11,6 +11,9 @@ Shared rules for every stage:
   hurt (mid-stage progress, pending restart, awaited user input).
 - Time estimates before anything slow; big-download warnings ("~20 min — zostaw
   komputer włączony, nie zamykaj aplikacji").
+- **Commit by explicit paths** (`git add app/ zero/ .claude/…`), never a blanket
+  `git add -A` — operator/IDE artifacts (`.idea/`, `.vscode/`) must not enter the
+  repo even if the ignores miss them.
 
 ## Stage 0 — Start & tutorial
 
@@ -35,6 +38,8 @@ Shared rules for every stage:
    talk as long as you like; auto-accept: where the AUTO/permissions toggle lives, and
    the symptom of it being off (constant "Allow?" popups → tell me and I'll guide you).
 5. **Model advice** per `model-advice.md`; log `model_info`.
+   *After each of steps 2–5, update `zero/STATE.md` immediately (mode, consent,
+   model) — a session dying mid-stage-0 must not lose these answers.*
 6. **Git identity** (silent): `git config user.name "<participant_id>"`,
    `git config user.email "<participant_id>@zero.utopiasoft.io"` (repo-local).
 7. **Remote + PAT** (silent): if `zero/.pat` exists, set
@@ -99,6 +104,8 @@ Load `environment-macos.md` or `environment-windows.md`. **Entry:** BRIEF approv
    "run: cd app && flutter run -d web-server".
 5. **Welcome screen**: replace the default home with a branded one — app name,
    one-line tagline from BRIEF, seed color + font from the design tokens.
+   Before showing it, self-check the a11y floor from `design-interview.md`
+   (text contrast ≥ 4.5:1 on every element, icons/assets instead of raw emoji).
 6. Run it: `flutter run -d web-server --web-port 7357` (background), open
    `http://localhost:7357` in the default browser for the user. Ask what they see
    (clickable: "Widzę ekran powitalny!" / "Nic się nie otworzyło"). Log
@@ -148,6 +155,11 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
 5. Gates (`analyze`, `doctor`, build) — a feature failing gates is not done.
 6. Visual checkpoint if enabled: run web preview, ask verdict (dobrze / zmień /
    odrzuć). Log `checkpoint`; rework counts.
+   **User-reported corrections ALWAYS log** `checkpoint{feature, verdict:"change",
+   rework:n}` — also when visual checkpoints are off; a fix with no analytics trace
+   is a data bug. After any visual fix, hot-restart the running preview and, when
+   the user self-previews, tell them to hard-refresh (Cmd+Shift+R / Ctrl+F5) —
+   Flutter web caches aggressively and they may be staring at the old bundle.
 7. Append `zero/DECISIONS.md` (EN); update STATE; commit + push; log `feature_done`.
 8. Every ~3 features: pulse survey (2 clickables). Log `survey`.
 
@@ -182,7 +194,8 @@ previous rung. `stage_end` when the user is satisfied with any rung.
 Load `handover.md`. **Entry:** MVP loop closed.
 
 1. Polish pass: app name + icon (flutter_launcher_icons), empty/error/loading states
-   on every screen, final visual sweep against the design tokens.
+   on every screen, final visual sweep against the design tokens + a contrast audit
+   (≥ 4.5:1) of every screen.
 2. Final gates: `flutter analyze`, `utopia doctor`, `flutter build web` release.
 3. Fill `zero/HANDOVER.md` from the template (EN). Self-score the rubric; fix every
    cheap gap (<30 min each); rescore. Log `handover_selfscore{scores}`.

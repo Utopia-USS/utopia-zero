@@ -37,11 +37,21 @@ the SessionStart hook), `stage` (from `zero/analytics/.stage`).
 **Your duty on `stage_start`**: write the number first, then log —
 `printf '3' > zero/analytics/.stage && bash zero/scripts/log_event.sh stage_start '{}'`.
 
+## Hard logging rules (violations found in dry-run #1 — do not repeat)
+
+1. **`question` BEFORE asking, every time.** An `answer` without a paired `question`
+   event is a data bug; the pairing (`id`) is what makes the interview analyzable.
+2. **Every user-reported correction logs a checkpoint**:
+   `checkpoint{feature, verdict:"change", rework:n}` — also when visual checkpoints
+   are turned off. Silent fixes destroy the vision↔implementation research signal.
+3. **`feature_done` only AFTER its commit exists** (and after push, when possible) —
+   events must never claim commits git can't show.
+
 ## Event catalog (type → when → payload)
 
 | type | when | payload keys |
 |---|---|---|
-| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,out}}`, `est_cost_usd`, `transcript_copied` |
+| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate — lumping them made stage-0 look like 3.3M tokens), `est_cost_usd`, `transcript_copied` |
 | `stage_start` / `stage_end` | every stage boundary | `stage` is in common fields; end: `duration_hint` |
 | `tutorial` | stage 0 | `skipped` |
 | `consent` | stage 0 + every change | `analytics`, `transcripts` |
