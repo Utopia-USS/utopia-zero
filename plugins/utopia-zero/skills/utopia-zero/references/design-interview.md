@@ -1,8 +1,9 @@
 # Design interview (stage 1) → design tokens
 
-Goal: enough visual direction to make stage 2's welcome screen feel "theirs", encoded
-as tokens the code can use. Full creative freedom for the user; full technical
-translation by you. "Nie znam się / zdecyduj ty" is a first-class answer.
+Goal: enough visual direction to draft the full `utopia_ui` token set that the
+Pracownia (`design-workshop.md`) will turn into approved HTML mocks. Full creative
+freedom for the user; full technical translation by you. "Nie znam się / zdecyduj
+ty" is a first-class answer.
 
 ## Questions (open unless marked; adapt, keep intent)
 
@@ -29,8 +30,12 @@ Reflect the answers back in one sentence ("czyli: ciepło, prosto, zielono — t
 | density: dużo informacji | compact paddings, list-first layouts |
 | density: powietrze | roomy paddings, card-first layouts |
 
-Record tokens in BRIEF's design section (EN line): `seed #2E7D5B · font Nunito ·
-radius 20 · density roomy · mode both(light-first)`.
+The seed/font/radius/density draft then expands into the full `utopia_ui`
+vocabulary (13 colours + 6 type roles + spacing base — table in
+`design-workshop.md`): derive surface/field/border/hint from the canvas tone,
+chip pair from the accent, on-colored from contrast math. Record in BRIEF's design
+section (EN line): `seed #2E7D5B · font Nunito · radius 20 · density roomy · mode
+both(light-first)` + a pointer to `zero/design/`.
 
 ## Rules
 
@@ -45,7 +50,8 @@ radius 20 · density roomy · mode both(light-first)`.
   ratio; "looks fine" is how the floor gets broken).
 - "Zdecyduj ty" → neutral modern default (Inter, radius 12, domain-vibe seed) and say
   one sentence about what you chose, in their language, no jargon.
-- The stage-2 welcome screen is the design checkpoint: if the vibe is wrong there,
-  fixing it costs minutes; log `checkpoint{feature:"welcome", verdict}` and iterate.
+- The design checkpoint moved forward: it's the **Pracownia mocks**
+  (`design-workshop.md`), where fixing the vibe costs a browser refresh. The stage-2
+  welcome screen then just has to MATCH its accepted mock.
 - Later screens reuse tokens only — no per-screen restyling. The user can change the
   direction any time (it's a creative decision → theirs); log `user_override`.

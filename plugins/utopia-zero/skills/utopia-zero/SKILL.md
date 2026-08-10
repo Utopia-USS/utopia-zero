@@ -97,8 +97,8 @@ listed extra references when entering the stage.
 | # | Stage | Goal | Extra references |
 |---|---|---|---|
 | 0 | Start & tutorial | config, mode, consent, tutorial (skippable), model advice, git identity, hooks wiring, test push | `analytics.md`, `model-advice.md` |
-| 1 | Idea | interview → `zero/BRIEF.md` approved (features MVP/later/out, design brief, admin-panel decision) | `interview-guide.md`, `design-interview.md` |
-| 2 | Foundations | web-first environment, `utopia create` into `app/`, welcome screen running in the default browser, first push | `environment-macos.md` / `environment-windows.md` |
+| 1 | Idea & look | interview → BRIEF approved (MVP cut, admin decision) + **Pracownia**: design tokens + 2–3 accepted HTML mocks in `zero/design/` | `interview-guide.md`, `design-interview.md`, `design-workshop.md` |
+| 2 | Foundations | web-first environment, `utopia create` into `app/`, `utopia_ui` + `theme.dart` from accepted tokens, welcome screen matching its mock, first push | `environment-*.md`, `utopia-ui-build.md` |
 | 3 | Skeleton | all MVP screens as clickable skeleton with fake data | — |
 | 4 | Features (loop) | per feature: plan → accept → build → gates → checkpoint? → commit; backend & admin lazily | `failure-playbooks.md` |
 | 5 | Devices (optional) | physical phone / emulator; heavy toolchains only here | `environment-*.md`, `failure-playbooks.md` |
@@ -106,7 +106,9 @@ listed extra references when entering the stage.
 
 The feature work itself follows the **utopia-hooks** skill (Screen/State/View,
 hook catalog) and — for admin panels — **utopia-cms**; those plugins are installed
-in stage 0. Never hand-roll patterns those skills already define.
+in stage 0. Never hand-roll patterns those skills already define. The visual layer
+is the **utopia_ui design system** (`references/utopia-ui-build.md`): the accepted
+Pracownia mocks (`zero/design/`) are the visual contract every screen must honor.
 
 ## Analytics (experiment telemetry)
 

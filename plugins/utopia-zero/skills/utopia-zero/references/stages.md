@@ -65,9 +65,10 @@ Shared rules for every stage:
 
 **Exit:** consent logged · hooks confirmed live · push worked (or degraded-local noted) · plugins active.
 
-## Stage 1 — Idea
+## Stage 1 — Idea & look
 
-Load `interview-guide.md` + `design-interview.md`. **Entry:** stage 0 done.
+Load `interview-guide.md` + `design-interview.md` + `design-workshop.md`.
+**Entry:** stage 0 done.
 
 1. Idea interview (open questions, reflect back, no interrupting) → raw feature list.
 2. MVP cut: you draft the split (MVP now / later / out of scope), present it in their
@@ -77,15 +78,21 @@ Load `interview-guide.md` + `design-interview.md`. **Entry:** stage 0 done.
    pricing, stats. If signals exist, pitch in plain words; their call. Log
    `decision{area:"admin-panel", user_involved:true}`.
 4. Design interview → design tokens draft (seed color, font, radius, density, mode).
-5. Write `zero/BRIEF.md` (user's language; structure in `interview-guide.md`), read
-   back a 5-line summary, get approval. Log `checkpoint{feature:"brief"}`.
-6. Commit + push; `stage_end`.
+5. **Pracownia** (`design-workshop.md`): full token set → `zero/design/tokens.css` +
+   2–3 HTML mocks of the key MVP screens → user reviews them in the browser and
+   iterates until accepted. Mandatory checkpoints per mock (even with visual
+   checkpoints off — this is the visual contract for the whole build).
+6. Write `zero/BRIEF.md` (user's language; structure in `interview-guide.md`,
+   design section records tokens + mock list), read back a 5-line summary, get
+   approval. Log `checkpoint{feature:"brief"}`.
+7. Commit + push (including `zero/design/`); `stage_end`.
 
-**Exit:** BRIEF.md approved and pushed.
+**Exit:** BRIEF.md approved and pushed · 2–3 mocks accepted in `zero/design/`.
 
 ## Stage 2 — Foundations
 
-Load `environment-macos.md` or `environment-windows.md`. **Entry:** BRIEF approved.
+Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
+**Entry:** BRIEF + mocks approved.
 
 1. Environment for the **web goal only**: git + Flutter SDK + a system browser
    (no Chrome requirement — preview uses `flutter run -d web-server` and the default
@@ -100,11 +107,15 @@ Load `environment-macos.md` or `environment-windows.md`. **Entry:** BRIEF approv
    is not analyzer-clean until this runs (undefined localization classes are
    expected before it). A couple of info-level lints may remain in template files —
    fix them immediately so the analyze gate stays at literally zero issues.
-4. Append project facts to `.claude/CLAUDE.md`: app name, user language, BRIEF path,
-   "run: cd app && flutter run -d web-server".
-5. **Welcome screen**: replace the default home with a branded one — app name,
-   one-line tagline from BRIEF, seed color + font from the design tokens.
-   Before showing it, self-check the a11y floor from `design-interview.md`
+4. **Visual layer** (`utopia-ui-build.md`): add `utopia_ui` via the dependency
+   ladder (pub.dev → git → tokenized-Material fallback; log the rung), emit
+   `lib/app/theme.dart` from the accepted Pracownia tokens, wire `UtopiaTheme` at
+   the root + the Material mirror. Log `decision{area:"ui-dependency"}`.
+5. Append project facts to `.claude/CLAUDE.md`: app name, user language, BRIEF path,
+   `zero/design/` as the visual contract, "run: cd app && flutter run -d web-server".
+6. **Welcome screen**: replace the default home with a branded one — it must MATCH
+   the accepted welcome mock (or, when no welcome mock exists, the tokens + patterns
+   of the accepted mocks). Self-check the a11y floor from `design-interview.md`
    (text contrast ≥ 4.5:1 on every element, icons/assets instead of raw emoji).
 6. Run it: `flutter run -d web-server --web-port 7357` (background), open
    `http://localhost:7357` in the default browser for the user. Ask what they see
@@ -125,7 +136,9 @@ Load `environment-macos.md` or `environment-windows.md`. **Entry:** BRIEF approv
 
 1. From BRIEF's MVP list derive the screen map (you decide navigation/structure).
 2. Build every MVP screen as Screen/State/View skeleton with believable fake data
-   (const lists, lorem-free, in the user's language) and wired navigation.
+   (const lists, lorem-free, in the user's language) and wired navigation. Screens
+   that have a Pracownia mock follow its layout; the rest reuse the same tokens and
+   the app-local kit (`utopia-ui-build.md`).
 3. Run + **mandatory checkpoint** (even if checkpoints are off — this is the app map):
    "Przeklikaj się przez aplikację — to jej mapa. Zgadza się z Twoją wizją?"
    Log `checkpoint{feature:"skeleton", verdict, rework}`; iterate on "change".
@@ -141,8 +154,10 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
    another (clickable list, ≤4 options per question). Log `feature_start`.
 2. **Plan**: one paragraph, user's language, no jargon — what will exist when done.
    Approve (clickable: buduj / zmień plan / pomiń). Log `question`/`answer`.
-3. Build per utopia-hooks (and utopia-cms for admin surfaces). All technical choices
-   yours; log `decision` (+ rationale + alternatives) for each significant one.
+3. Build per utopia-hooks (and utopia-cms for admin surfaces); visuals per
+   `utopia-ui-build.md` — `Utopia*` widgets + the app-local kit, tokens only, never
+   literals. All technical choices yours; log `decision` (+ rationale +
+   alternatives) for each significant one.
 4. **Backend, lazily** — first feature that needs it:
    - Choose provider yourself (auth/data/realtime/files needs → Firebase or Supabase).
      Log `decision{area:"backend-provider"}`.
