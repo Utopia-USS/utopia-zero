@@ -2,7 +2,7 @@
   "name": "utopia-zero",
   "owner": {
     "name": "UtopiaSoftware",
-    "email": "hello@utopiasoft.io",
+    "email": "info@utopiasoft.io",
     "url": "https://utopiasoft.io"
   },
   "metadata": {
@@ -19,7 +19,7 @@
       "homepage": "https://github.com/Utopia-USS/utopia-zero",
       "author": {
         "name": "UtopiaSoftware",
-        "email": "hello@utopiasoft.io"
+        "email": "info@utopiasoft.io"
       }
     }
   ]
