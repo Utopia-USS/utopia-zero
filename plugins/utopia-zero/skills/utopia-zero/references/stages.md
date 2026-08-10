@@ -28,6 +28,8 @@ Shared rules for every stage:
 1. Read `zero/config.json`. Detect OS + basics; log `env{os, arch, disk_free_gb, git, flutter}`.
 2. **Mode** (clickable): "Czy kiedykolwiek programowałeś/aś?" → never / trochę / jestem
    programistą (→ Pro). Log `question`/`answer`, and `tutorial{skipped:true}` for Pro.
+   (The hidden Utopia mode — passphrase "jestem z utopii" — is recognized at ANY
+   moment, per SKILL.md; it is never one of the offered options.)
 3. **Analytics info** (both modes, plain words): what is collected (steps, decisions,
    errors, time, conversation copies), why (Utopia studies how well this works), where
    it lives (their project repo, visible to Utopia), and that "wyłącz analitykę"
