@@ -147,8 +147,14 @@ Od tego momentu prowadzi skill. Powrót po przerwie = otwórz projekt, napisz �
   przez właściciela, treści, moderacja, cennik…) i proponuje ludzkim językiem („przyda Ci się miejsce,
   gdzie jako właściciel zmieniasz X bez dotykania aplikacji?"). Decyzja użytkownika.
 - **Wywiad designowy** (dogłębny, otwarty): nastrój, styl, kolory, aplikacje-wzorce, czego nie chce.
-  Pełna dowolność; przy „nie wiem / zdecyduj ty" skill projektuje wg dobrych praktyk
-  (w przyszłości: utopia_ui z domyślnymi komponentami — dziś jeszcze niegotowe).
+  Pełna dowolność; przy „nie wiem / zdecyduj ty" skill projektuje wg dobrych praktyk.
+- **Pracownia** (dodane 2026-08-10): pełny zestaw tokenów `utopia_ui` + **2–3 makiety HTML**
+  kluczowych ekranów MVP (stylowane CSS custom properties o nazwach 1:1 z tokenami),
+  oglądane i iterowane w przeglądarce uczestnika, commitowane do `zero/design/`.
+  Zaakceptowane makiety = kontrakt wizualny budowy; rework wyglądu dzieje się na tanim
+  HTML-u zamiast na kodzie Fluttera. Budowa (Etapy 2–4) idzie na `utopia_ui`
+  (drabinka zależności pub.dev → git → tokenizowany Material) + app-local kit na braki
+  pakietu (utopia-ui issue #2).
 - Wyjście: **`zero/BRIEF.md`** (język użytkownika) — wizja, persony, lista funkcji MVP, brief designowy,
   nazwa robocza. Użytkownik zatwierdza. To pierwszy artefakt „przejmowalności".
 
@@ -401,8 +407,13 @@ zgodę uczestników. Publiczne artefakty uczestnika (README startera, instrukcja
   web-first; backend na kontach Utopii; analityka w repo; eskalacja przez issues; ręczny checklist
   przygotowania repo (§12).
 - **v1.1**: `/utopia-zero:prepare` (automatyzacja przygotowania), skrypt do analizy `events.jsonl`.
-- **v2**: prowadzenie przez własne konta backendowe uczestnika; utopia_ui jako domyślny design system;
-  dashboard analityczny wielu eksperymentów; rozwinięty tryb Polish.
+- **v2**: prowadzenie przez własne konta backendowe uczestnika; dashboard analityczny
+  wielu eksperymentów; rozwinięty tryb Polish; **Claude Design (faza 2 warstwy wizualnej)**:
+  lustro utopia_ui jako projekt design-system na claude.ai/design (DesignSync — karty HTML
+  komponentów i tokenów), push makiet Pracowni do projektu uczestnika jako trwała galeria,
+  docelowo pętla zwrotna (edycje w Claude Design → tokeny). Świadomie odłożone (80/20,
+  2026-08-10): rdzeń wartości działa na lokalnych makietach w repo, a lustro wymaga
+  utrzymania przy żywym pakiecie 0.1.x.
 
 ### 15.1 Dry-run przed pilotem (na koncie Claude Pawła, świeże konto użytkownika macOS + VM Windows)
 
@@ -434,3 +445,8 @@ Wynik testu = lista tarć → poprawki → dopiero wtedy pilot z prawdziwym ucze
    `info@utopiasoft.io` wyłącznie jako fallback. (Zmienione po dry-runie #1 —
    pierwotnie „generyczny, bez konkretnej osoby", a domyślny adres hello@ był błędny.)
 9. ✅ Onboarding: auto-propozycja pluginów z ustawień startera jako ścieżka główna, wklejki jako fallback.
+10. ✅ Warstwa wizualna (2026-08-10, po dry-runie #1 „apka wygląda paskudnie"): design-before-code
+    na tokenach `utopia_ui` — Pracownia z 2–3 makietami HTML w Etapie 1, budowa na `utopia_ui`
+    + app-local kit; Claude Design jako świadomie odłożona faza 2 (80/20). Braki pakietu
+    delegowane zespołowi: utopia-ui issue #2; repo utopia-ui będzie publiczne; zmiany tam
+    wyłącznie przez PR.
