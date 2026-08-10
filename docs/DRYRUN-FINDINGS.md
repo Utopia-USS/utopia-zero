@@ -51,6 +51,27 @@ laika na nie-czystej maszynie — pilot z prawdziwym laikiem pozostaje właściw
    sesji w połowie = utrata odpowiedzi. → stages.md: aktualizuj STATE natychmiast po
    mode/language/consent.
 
+## Uzupełnienie po testach końcowych (2026-08-10)
+
+- **Zaliczone w praniu**: „kontynuuj" po 6 dniach przerwy (powrót w idealne miejsce,
+  samodzielne dopchnięcie zaległych pushy); opt-out/opt-in analityki (consent:false →
+  aktywność bez śladu → consent:true, czyste commity obu przełączeń); uczciwe
+  `survey{skipped by user}` przy pominiętej ankiecie.
+- **12. Ankieta zebrana, niezalogowana** — powtórzona ankieta końcowa nie wygenerowała
+  eventu ani aktualizacji STATE (wymagane dopiero po jawnym poleceniu użytkownika).
+  Ten sam wzorzec co (2); reguły twarde już są — patrz następny punkt.
+- **13. Długożyjące sesje nie widzą poprawek skilla** — sesja wizarda z 4.08 działała
+  ze starą wersją references mimo merge'a poprawek 5.08 (marketplace ścieżkowy czyta
+  na żywo, ale kontekst sesji nie). Wniosek operacyjny do pilota: po każdej
+  aktualizacji pluginu sugerować świeżą sesję („zamknij i napisz: kontynuuj").
+- **14. Polaryzacja skal ankiet** — payload `survey` nie mówi, czy 5 znaczy „dużo
+  frustracji" czy „brak frustracji". Reguła do analytics.md przy następnym PR:
+  wszystkie skale normalizowane do „wyżej = lepiej" (pytanie odwrócone → odwróć wynik
+  przed zalogowaniem).
+- **Edge-case opt-outu**: użytkownik wypełnił ankietę w oknie wyłączonej analityki →
+  dane przepadły zgodnie z designem. Reguła do stages.md: czynność badawczo istotna
+  przy wyłączonej analityce → jedno zdanie ostrzeżenia i pytanie, czy włączyć.
+
 ## Infra eksperymentu (v1.1, poza skillem)
 
 9. Restart aplikacji generuje parę sesji startup(2s, pustą)+resume — filtrować po
