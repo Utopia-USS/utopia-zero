@@ -25,9 +25,10 @@ for what's missing.
    `starter/` content into a new work dir.
 3. **Fill `zero/config.json`**: `participant_id`, `project_id` (= repo name),
    `project_name`, `language_default`, `git_remote`
-   (`https://github.com/<org>/<repo>.git`), `utopia_contact` (default
-   `hello@utopiasoft.io`; ask if the operator wants a different channel). Flags stay
-   `true`.
+   (`https://github.com/<org>/<repo>.git`), `utopia_contact` — the **operator's own
+   direct contact** (participants are friends of Utopia and write to a person they
+   know, not a mailbox; e.g. `Paweł — pawel@…`). Use `info@utopiasoft.io` only as a
+   last-resort fallback when no direct contact fits. Flags stay `true`.
 4. **Create + push**: `gh repo create <org>/<repo> --private
    --description "utopia-zero POC — <project name>"`; `git init -b main`, commit
    `zero: starter for <participant_id>`, push. (The initial push authenticates as

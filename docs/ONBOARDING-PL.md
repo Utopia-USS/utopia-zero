@@ -99,6 +99,6 @@ pamięta, na czym skończyliście.
 | Ciągłe pytania „Allow…?" | Tryb automatyczny wyłączony → krok 6. |
 | Komunikat o limicie użycia | Twój plan ma limity czasowe. Aplikacja pokazuje, kiedy limit się odnowi — wróć wtedy i napisz „kontynuuj". |
 | Coś wygląda na zepsute / nie wiesz, co się dzieje | Napisz po prostu: „co się dzieje?" — przewodnik wyjaśni ludzkim językiem. |
-| Nic nie pomaga | Napisz do Utopii: **hello@utopiasoft.io** (albo na kanał, którym dostałeś/aś paczkę). |
+| Nic nie pomaga | Odezwij się bezpośrednio do osoby z Utopii, od której masz paczkę (tym samym kanałem). Awaryjnie: **info@utopiasoft.io**. |
 
 Powodzenia! 🚀

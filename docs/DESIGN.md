@@ -173,8 +173,9 @@ Dla każdej funkcji z BRIEF (kolejność: user, z rekomendacją skilla):
 1. Plan 1-akapitowy w języku użytkownika → akceptacja (klik).
 2. Implementacja (konwencje utopia_hooks / Screen-State-View; decyzje techniczne w 100% skill).
 3. **Backend lazy**: pierwszy raz, gdy funkcja go wymaga — skill wybiera providera (Firebase/Supabase),
-   a konto: krok **„skontaktuj się z Utopią"** (v1: Utopia udostępnia konto/projekt; kontakt generyczny
-   z `zero/config.json`, bez konkretnej osoby; skill mówi, co przekazać, czeka na dane, konfiguruje).
+   a konto: krok **„skontaktuj się z Utopią"** (v1: Utopia udostępnia konto/projekt; kontakt =
+   KONKRETNA osoba z `zero/config.json` — członek Utopii, który przygotował projekt, bo uczestnicy
+   to znajomi Utopii; skill mówi, co przekazać, czeka na dane, konfiguruje).
    Sekrety → `.env`/gitignore, nie do repo.
 4. **Panel admina**: jeśli ustalony w Etapie 1 (lub potrzeba wynikła teraz) — `utopia_cms` w `admin/`.
 5. Weryfikacja: analyzer + doctor + build; opcjonalny checkpoint wizualny; wpis do `zero/DECISIONS.md`.
@@ -226,8 +227,8 @@ Zasada: **lazy toolchain** — instalujemy wyłącznie to, czego wymaga cel bie�
 ## 8. Backend i CMS
 
 - **v1 (pilot)**: konta backendowe dostarcza Utopia — wpisany w skill krok „skontaktuj się z Utopią"
-  (kanał generyczny z configu, bez konkretnej osoby; skill mówi, co przekazać). Skill konfiguruje
-  otrzymane dane, sekrety poza gitem.
+  (kontakt = osoba, która przygotowała projekt, z configu; fallback `info@utopiasoft.io`;
+  skill mówi, co przekazać). Skill konfiguruje otrzymane dane, sekrety poza gitem.
 - **Później**: pełne prowadzenie użytkownika przez zakładanie własnych kont (Firebase/Supabase)
   krok po kroku — skill mówi co klikać, ale **konta zakłada i loguje się użytkownik osobiście**
   (twarda zasada bezpieczeństwa: skill nie dotyka haseł/płatności — to również ograniczenie modelu, §13).
@@ -428,5 +429,8 @@ Wynik testu = lista tarć → poprawki → dopiero wtedy pilot z prawdziwym ucze
    podkatalog kopiowany przez prepare — bez funkcji „GitHub template" (repo uczestnika ma być czyste).
 6. ✅ Limit 5 prób samodzielnej naprawy przed planem B / eskalacją.
 7. ✅ macOS i Windows oba w v1; pilot: dowolna osoba.
-8. ✅ Kontakt do Utopii generyczny (pole w config), bez konkretnej osoby.
+8. ✅ Kontakt do Utopii: pole w config wskazuje KONKRETNEGO członka Utopii (operatora,
+   który przygotował projekt) — uczestnicy to znajomi i piszą bezpośrednio do niego;
+   `info@utopiasoft.io` wyłącznie jako fallback. (Zmienione po dry-runie #1 —
+   pierwotnie „generyczny, bez konkretnej osoby", a domyślny adres hello@ był błędny.)
 9. ✅ Onboarding: auto-propozycja pluginów z ustawień startera jako ścieżka główna, wklejki jako fallback.

@@ -146,8 +146,10 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
 4. **Backend, lazily** — first feature that needs it:
    - Choose provider yourself (auth/data/realtime/files needs → Firebase or Supabase).
      Log `decision{area:"backend-provider"}`.
-   - v1 accounts come from Utopia: give the user a ready message to send to
-     `utopia_contact` (what to ask for, what to include), wait, then configure.
+   - v1 accounts come from Utopia: point the user at **their Utopia person** —
+     `utopia_contact` in config names the member who prepared this project (the
+     participant knows them; never suggest a generic mailbox as the default) —
+     with a ready message (what to ask for, what to include); wait, then configure.
      Log `backend_step{delegated:true}`.
    - Secrets go to `app/.env` (gitignored) or `--dart-define` — never committed,
      never echoed back in chat. If the user pasted a secret, move it to the file and

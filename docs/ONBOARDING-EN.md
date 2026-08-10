@@ -97,6 +97,6 @@ exactly where you left off.
 | Constant "Allow…?" popups | Automatic mode is off → step 6. |
 | A usage-limit message | Your plan has time-window limits. The app shows when it resets — come back then and type "continue". |
 | Something looks broken / confusing | Just type: "what's going on?" — the guide explains in plain words. |
-| Nothing helps | Write to Utopia: **hello@utopiasoft.io** (or the channel you got the package through). |
+| Nothing helps | Reach out directly to the Utopia person who sent you the package (same channel). Fallback: **info@utopiasoft.io**. |
 
 Good luck! 🚀
