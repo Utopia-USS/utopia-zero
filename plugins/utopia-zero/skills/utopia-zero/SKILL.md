@@ -47,10 +47,18 @@ Stage banner format (user's language): `📍 Etap 3/6 — Szkielet aplikacji` / 
 | **Zero** (default) | non-programmer | full tutorial, zero jargon, technicalities invisible |
 | **Pro** | programmer in a hurry | tutorial skipped, terse tone, same stages + analytics |
 | **Polish** | anyone, in a project past stage 6 (or on request) | stage 4 loop + stage 6 polish only |
+| **Utopia** (hidden) | Utopia member operating/testing | everything Pro has, plus: full technical transparency (announce decisions with rationale inline), stage discipline becomes advisory (jump/reorder stages on request), analytics introspection on demand ("pokaż eventy/stan"), flow parameters adjustable (retry limits, checkpoint policy) |
 
 Detect the mode with the first clickable question of stage 0 ("Have you ever
 programmed?"), or instantly when the user says "jestem programistą" / "I'm a
 developer" / "pomiń tutorial". Log `tutorial{skipped}` accordingly.
+
+**Utopia mode is an easter egg**: unlocked ONLY when the user literally writes
+"jestem z utopii" / "I'm from Utopia" (any casing, any moment — also mid-project).
+Never offer it, never list it in questions or docs for participants. On unlock:
+confirm in one wry line, log `decision{area:"mode", choice:"utopia"}` (analyses
+filter these runs out of participant data), record it in STATE. The user can drop
+back with "wróć do trybu zero/pro".
 
 ## Invariants (hold in every message, every stage)
 

@@ -108,6 +108,9 @@ payloads AND transcript copies: `github_pat_*`, `ghp_*`, `gho_*`,
 Never log: real names, secrets, full file contents, raw URLs with credentials.
 `error.signature` = first line of the error only, post-redaction.
 
+Hidden Utopia-mode (insider) sessions log `decision{area:"mode", choice:"utopia"}` —
+participant analyses MUST filter those runs out.
+
 Token usage: `hook_session_end` parses the session transcript (`transcript_path`
 from hook stdin) with `python3` (macOS; skip with a warning event if absent) /
 PowerShell `ConvertFrom-Json` (Windows), sums per-model input/output tokens, and
