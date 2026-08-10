@@ -35,7 +35,10 @@ Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on
 
 ## Wiring (once, stage 2)
 
-1. **`lib/app/theme.dart`** — emit from the accepted tokens, in this exact shape
+1. **`lib/app/theme.dart`** — emit from the accepted tokens. If the package ships
+   `tokens/utopia.tokens.json` (design protocol), treat it as the authoritative
+   default-theme export: copy its structure/values and override only the branded
+   slots from the Pracownia. Either way the emitted Dart takes this exact shape
    (mirrors the package's own showcase themes):
    ```dart
    import 'package:flutter/material.dart';
@@ -105,8 +108,9 @@ token-driven (`context.colors`, `context.tokens`), zero literals:
   (`UtopiaTable` is a back-office grid; wrong for app lists).
 - `AppBottomNav` / tabs — `UtopiaSidebar` is desktop rail/drawer only.
 - `AppPageHeader` — title + optional back/action (no app bar in the package).
-- `AppGhostButton` — port the private `_GhostButton` pattern from the package's
-  confirm dialog (outlined, token-styled).
+- `AppGhostButton` — ONLY if the package doesn't export `UtopiaGhostButton`
+  (design-protocol snapshots already do); same for `UtopiaHeader` vs
+  `AppPageHeader`. Check the barrel first.
 - Avatar/badge/progress only if the BRIEF needs them.
 
 **Before hand-rolling, check whether the package caught up**: Utopia is filling

@@ -37,6 +37,22 @@ Runs right after the design interview, **before** BRIEF approval.
 7. All accepted → log `decision{area:"design-tokens", choice:"<one-line summary>",
    user_involved:true}`, commit `zero/design/`, fold tokens + mock list into BRIEF.
 
+## Protocol twin first (when the package ships it)
+
+If the resolved/vendored `utopia_ui` contains `twin/` + `tokens/` (the design
+protocol), do **not** hand-roll the vocabulary below — use the package's own,
+version-matched artifacts:
+
+- `twin/tokens.css` — the canonical CSS variable sheet (names AND default values);
+  inline it into the mock's `<style>` and override the branded variables after it.
+- `twin/components.css` + `twin/components.html` — faithful component twins;
+  compose mocks from these classes instead of the approximations below.
+- `twin/gallery.html` — everything at once; handy as the user's first look.
+- `tokens/utopia.tokens.json` (DTCG) — the machine-readable source when emitting
+  `theme.dart` (override the branded slots, keep the rest).
+
+The template below is the FALLBACK for packages without the protocol.
+
 ## Token vocabulary (CSS custom property ↔ utopia_ui)
 
 Use exactly these names — they mirror the canonical identifiers `utopia_ui` declares
