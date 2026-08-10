@@ -17,9 +17,13 @@ for what's missing.
 
 ## Steps
 
-1. **Preflight**: `gh auth status`; derive `REPO=poc-<slug>`; confirm the org with
-   the operator if not `Utopia-USS`. `gh repo view <org>/<repo>` must 404 (abort if
-   it exists — never overwrite).
+1. **Preflight**: `gh auth status`; derive `REPO=poc-<slug>`; confirm the owner with
+   the operator — an org (default `Utopia-USS`) **or the operator's personal
+   account**. Personal account = the no-approval path: fine-grained PATs for your own
+   repos work instantly, no org-owner blessing needed (org repos may require policy
+   enablement + per-token approval). Utopia teammates get access as collaborators;
+   the repo can be transferred into the org later without losing history.
+   `gh repo view <owner>/<repo>` must 404 (abort if it exists — never overwrite).
 2. **Fresh starter**: `git clone --depth 1 https://github.com/Utopia-USS/utopia-zero
    /tmp/utopia-zero-src` (or `git -C … pull` if already there this session) and copy
    `starter/` content into a new work dir.
@@ -35,7 +39,8 @@ for what's missing.
    the operator; the participant's PAT is only for their machine.)
 5. **PAT (operator does this in the browser — guide, don't automate)**:
    GitHub → Settings → Developer settings → Personal access tokens → Fine-grained →
-   Generate new: Resource owner = the org · Only select repositories = `<org>/<repo>`
+   Generate new: Resource owner = the repo owner (the org, or the operator's account
+   for the no-approval path) · Only select repositories = `<owner>/<repo>`
    · Repository permissions: **Contents: Read and write, Issues: Read and write** ·
    Expiration 90 days. Operator pastes the token **into the terminal prompt you give
    them, not into chat if avoidable**; write it to `zero/.pat` (gitignored — verify
