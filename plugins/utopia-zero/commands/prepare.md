@@ -33,11 +33,17 @@ for what's missing.
    direct contact** (participants are friends of Utopia and write to a person they
    know, not a mailbox; e.g. `Paweł — pawel@…`). Use `info@utopiasoft.io` only as a
    last-resort fallback when no direct contact fits. Flags stay `true`.
-4. **Create + push**: `gh repo create <org>/<repo> --private
+4. **Vendor utopia_ui** (required while the utopia-ui repo is private — participants
+   cannot fetch it themselves): clone/refresh `Utopia-USS/utopia-ui` with the
+   operator's access, copy `pubspec.yaml`, `lib/`, `fonts/`, `LICENSE` (skip
+   `example/`, `test/`, `.git`) into `<repo>/packages/utopia_ui/`, and write
+   `packages/utopia_ui/VENDORED.md` with the source commit hash + date. The app will
+   consume it as a `path` dependency (see the skill's `utopia-ui-build.md` ladder).
+5. **Create + push**: `gh repo create <org>/<repo> --private
    --description "utopia-zero POC — <project name>"`; `git init -b main`, commit
    `zero: starter for <participant_id>`, push. (The initial push authenticates as
    the operator; the participant's PAT is only for their machine.)
-5. **PAT (operator does this in the browser — guide, don't automate)**:
+6. **PAT (operator does this in the browser — guide, don't automate)**:
    GitHub → Settings → Developer settings → Personal access tokens → Fine-grained →
    Generate new: Resource owner = the repo owner (the org, or the operator's account
    for the no-approval path) · Only select repositories = `<owner>/<repo>`
@@ -47,14 +53,14 @@ for what's missing.
    with `git check-ignore zero/.pat` before ANY commit). If org settings reject
    fine-grained PATs, tell the operator the org owner must allow them (Org Settings
    → Third-party Access → Personal access tokens) and pause here.
-6. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
+7. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
    (`zip -r poc-<slug>.zip <dir> -x '*.DS_Store'`). State clearly: the ZIP contains
    a repo-scoped token — send it over a private channel only.
-7. **Hand-off summary** for the operator, ready to forward: ZIP path · link to
+8. **Hand-off summary** for the operator, ready to forward: ZIP path · link to
    `docs/ONBOARDING-PL.md` / `-EN.md` · the start prompt to send the participant:
    - PL: „Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji."
    - EN: "Let's start. Guide me from zero to my own app."
-8. **Verify before finishing**: fresh `git clone` of the new repo into /tmp shows
+9. **Verify before finishing**: fresh `git clone` of the new repo into /tmp shows
    starter files, NO `.pat`, NO real token anywhere (`git log -p | grep -c
    github_pat_` → 0). Report the checklist result.
 

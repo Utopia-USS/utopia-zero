@@ -8,14 +8,24 @@ app-local kit. This is what makes POCs look professional AND hand-over cleanly.
 
 Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on:
 
-1. **pub.dev**: `flutter pub add utopia_ui` — if the package is published.
-2. **git**: in `pubspec.yaml`:
+1. **Vendored copy** (the default for prepared participant repos while the utopia-ui
+   repo is private): if `packages/utopia_ui/` exists in the project root (put there
+   by `/utopia-zero:prepare`), use it:
+   ```yaml
+   utopia_ui:
+     path: ../packages/utopia_ui
+   ```
+   It's a frozen snapshot (source commit in `packages/utopia_ui/VENDORED.md`) —
+   works offline, no auth. The takeover team swaps it for a published dependency
+   later; say so in HANDOVER.
+2. **pub.dev**: `flutter pub add utopia_ui` — if the package is published.
+3. **git**: in `pubspec.yaml`:
    ```yaml
    utopia_ui:
      git: {url: https://github.com/Utopia-USS/utopia-ui.git}
    ```
    Works once the repo is public. Pin with `ref:` to a tag when tags exist.
-3. **Fallback (repo unreachable)**: build WITHOUT the package — Material 3 styled
+4. **Fallback (nothing above works)**: build WITHOUT the package — Material 3 styled
    from the same token values (seed = `--u-color-primary`, dark scheme from canvas,
    Google Font, radii). The mock contract still holds; note the fallback in
    `zero/DECISIONS.md` so the takeover team can swap the dependency in later.
