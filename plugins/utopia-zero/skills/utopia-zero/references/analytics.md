@@ -116,3 +116,6 @@ from hook stdin) with `python3` (macOS; skip with a warning event if absent) /
 PowerShell `ConvertFrom-Json` (Windows), sums per-model input/output tokens, and
 estimates cost informatively (the user is on a subscription - it's research data,
 not a bill).
+
+On-demand usage report: `/utopia-zero:report` aggregates `events.jsonl` into work
+time, per-model tokens, and API-equivalent cost (read-only; see the command file).
