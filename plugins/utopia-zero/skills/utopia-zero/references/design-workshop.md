@@ -1,4 +1,4 @@
-# Design workshop — „Pracownia" (second half of stage 1)
+# Design workshop - „Pracownia" (second half of stage 1)
 
 Lock the app's look on **cheap HTML mocks before any Flutter code exists**. The mocks
 speak the same token vocabulary as `utopia_ui`, so an accepted mock translates
@@ -15,20 +15,20 @@ Runs right after the design interview, **before** BRIEF approval.
 - Output: `zero/design/tokens.css` + 2–3 **accepted** `zero/design/mock-<screen>.html`,
   committed; BRIEF's design section records the final tokens and lists the mocks.
 - The accepted mocks are the visual contract for stages 2–4 (checkpoints compare the
-  app against them). They are stage-1 artifacts — do NOT maintain them afterwards;
+  app against them). They are stage-1 artifacts - do NOT maintain them afterwards;
   later deviations are logged in `zero/DECISIONS.md`, not back-ported to HTML.
 
 ## Flow
 
 1. Derive the full token set (vocabulary table below) from the interview.
 2. Pick **2–3 screens** from the MVP list: the **hero screen** (where the user's
-   "success answer" happens), the most-used flow screen, and — if the brand carries
-   it — the welcome screen. Never more than 3.
+   "success answer" happens), the most-used flow screen, and - if the brand carries
+   it - the welcome screen. Never more than 3.
 3. Generate each mock from the template below: **one self-contained HTML file**
-   (vars inlined in `<style>` — must open via `file://`, no server), phone frame.
+   (vars inlined in `<style>` - must open via `file://`, no server), phone frame.
 4. Self-check before showing: contrast ≥ 4.5:1 on every text/background pair
    (compute it), no raw emoji as ornaments, only components the build can honor
-   (check the gaps list in `utopia-ui-build.md` — don't mock what can't be built).
+   (check the gaps list in `utopia-ui-build.md` - don't mock what can't be built).
 5. Show one at a time: `open zero/design/mock-<name>.html` (macOS) /
    `Start-Process zero\design\mock-<name>.html` (Windows). Ask the verdict
    (clickable: „Podoba mi się!" / „Zmieńmy coś" → open feedback).
@@ -40,22 +40,22 @@ Runs right after the design interview, **before** BRIEF approval.
 ## Protocol twin first (when the package ships it)
 
 If the resolved/vendored `utopia_ui` contains `twin/` + `tokens/` (the design
-protocol), do **not** hand-roll the vocabulary below — use the package's own,
+protocol), do **not** hand-roll the vocabulary below - use the package's own,
 version-matched artifacts:
 
-- `twin/tokens.css` — the canonical CSS variable sheet (names AND default values);
+- `twin/tokens.css` - the canonical CSS variable sheet (names AND default values);
   inline it into the mock's `<style>` and override the branded variables after it.
-- `twin/components.css` + `twin/components.html` — faithful component twins;
+- `twin/components.css` + `twin/components.html` - faithful component twins;
   compose mocks from these classes instead of the approximations below.
-- `twin/gallery.html` — everything at once; handy as the user's first look.
-- `tokens/utopia.tokens.json` (DTCG) — the machine-readable source when emitting
+- `twin/gallery.html` - everything at once; handy as the user's first look.
+- `tokens/utopia.tokens.json` (DTCG) - the machine-readable source when emitting
   `theme.dart` (override the branded slots, keep the rest).
 
 The template below is the FALLBACK for packages without the protocol.
 
 ## Token vocabulary (CSS custom property ↔ utopia_ui)
 
-Use exactly these names — they mirror the canonical identifiers `utopia_ui` declares
+Use exactly these names - they mirror the canonical identifiers `utopia_ui` declares
 for external tools. Values in the mocks MUST be the ones you will emit in `theme.dart`.
 
 | CSS var | utopia_ui slot |
@@ -76,7 +76,7 @@ for external tools. Values in the mocks MUST be the ones you will emit in `theme
 
 ```html
 <!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Przymiarka — NAZWA_EKRANU</title>
+<title>Przymiarka - NAZWA_EKRANU</title>
 <style>
 :root{
   --u-x:4px;
@@ -116,11 +116,11 @@ Load the brand's Google Font with a `<link>` when online; the system fallback ke
 
 ## Rules
 
-- The mock is a **promise the build must keep** — style only with the vars, compose
+- The mock is a **promise the build must keep** - style only with the vars, compose
   only from patterns `utopia_ui` + the app-local kit can deliver.
 - One screen per file; no JS beyond trivial show/hide if a state matters.
 - Density/mood changes = edit vars first (that's the point of tokens); layout changes
   second.
-- If the user says „nie umiem ocenić na płasko, chcę zobaczyć w telefonie" — mocks
+- If the user says „nie umiem ocenić na płasko, chcę zobaczyć w telefonie" - mocks
   can be served over LAN exactly like the app preview (`python3 -m http.server` /
-  any static trick) — but offer it only if asked.
+  any static trick) - but offer it only if asked.

@@ -2,7 +2,7 @@
 
 This project runs in **utopia-zero mode**: a guided, staged path from an idea to a
 developable Flutter POC, usually driven by a **non-programmer**. The utopia-zero
-skill (plugin `utopia-zero@utopia-zero`) governs everything — always work through it.
+skill (plugin `utopia-zero@utopia-zero`) governs everything - always work through it.
 
 Standing rules (they hold even if the skill didn't auto-load):
 
@@ -11,8 +11,8 @@ Standing rules (they hold even if the skill didn't auto-load):
    available, tell the user to paste `/plugin install utopia-zero@utopia-zero` and
    restart the app.
 2. **Language**: speak the user's language (config `language_default` is the
-   tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` — English.
-3. **Hide technicalities** — the user owns creative decisions, you own ALL technical
+   tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` - English.
+3. **Hide technicalities** - the user owns creative decisions, you own ALL technical
    ones. Never ask them a technical question.
 4. Flutter work follows the **utopia-hooks** skill (Screen/State/View); admin panels
    follow **utopia-cms**.

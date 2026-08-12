@@ -1,12 +1,12 @@
 # STAN PROJEKTU · PROJECT STATE
 
-> Ten plik prowadzi Claude między sesjami — aktualizowany przez utopia-zero.
-> This file carries Claude between sessions — maintained by utopia-zero.
+> Ten plik prowadzi Claude między sesjami - aktualizowany przez utopia-zero.
+> This file carries Claude between sessions - maintained by utopia-zero.
 
 - Etap / Stage: 0
-- Tryb / Mode: —
-- Język / Language: —
-- Checkpointy wizualne / Visual checkpoints: —
+- Tryb / Mode: -
+- Język / Language: -
+- Checkpointy wizualne / Visual checkpoints: -
 - Restart pending: no
 
 ## Zrobione / Done
@@ -19,8 +19,8 @@
 
 ## Otwarte pytania / Open questions
 
-- —
+- -
 
 ## Notatki dla następnej sesji / Notes for the next session
 
-- —
+- -

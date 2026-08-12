@@ -1,12 +1,12 @@
 # 👾 utopia-zero
 
-**From zero to a developable app — with one skill.** An experimental Claude Code
+**From zero to a developable app - with one skill.** An experimental Claude Code
 plugin by [UtopiaSoftware](https://utopiasoft.io) that guides a complete
 non-programmer from an idea to a professional-grade POC/MVP: environment setup,
-plugin installation, a staged wizard from idea interview to handover — with
+plugin installation, a staged wizard from idea interview to handover - with
 built-in, opt-out analytics so every run can be studied afterwards.
 
-> ⚠️ **Experimental** — pilot phase, under active development.
+> ⚠️ **Experimental** - pilot phase, under active development.
 > Full design document (Polish): [docs/DESIGN.md](docs/DESIGN.md).
 
 ## For participants
@@ -29,15 +29,15 @@ The skill is public. In any Claude Code session:
 /plugin install utopia-zero@utopia-zero
 ```
 
-Then, in an empty folder, run `/utopia-zero:start` — the skill bootstraps the
+Then, in an empty folder, run `/utopia-zero:start` - the skill bootstraps the
 project shell itself (analytics stays local in your repo; no data goes to Utopia).
 
 ## For Utopia operators
 
 Preparing a participant repo (private `poc-<slug>`, config, PAT, ZIP):
-`/utopia-zero:prepare <slug> <participant_id>` — or follow the manual checklist in
+`/utopia-zero:prepare <slug> <participant_id>` - or follow the manual checklist in
 [docs/DESIGN.md](docs/DESIGN.md) §12. Escalations arrive as `[zero]`-prefixed
-issues in the participant repo; answer them there — the next session picks your
+issues in the participant repo; answer them there - the next session picks your
 reply up automatically.
 
 ## Repo layout
@@ -50,11 +50,11 @@ reply up automatically.
 
 ## How it relates to [utopia-flutter-skills](https://github.com/Utopia-USS/utopia-flutter-skills)
 
-`utopia-zero` doesn't duplicate the Utopia Flutter skills — it **orchestrates**
+`utopia-zero` doesn't duplicate the Utopia Flutter skills - it **orchestrates**
 them. The starter pre-declares `utopia-hooks`, `utopia-ai-arch`, `utopia-dart-lsp`,
 `utopia-cms`, and `utopia-reviews` from the `utopia-flutter-skills` marketplace,
 and the wizard drives them on the user's behalf.
 
 ## License
 
-BSD 2-Clause — see [LICENSE](LICENSE).
+BSD 2-Clause - see [LICENSE](LICENSE).

@@ -6,7 +6,7 @@
     "url": "https://utopiasoft.io"
   },
   "metadata": {
-    "description": "👾 utopia-zero by UtopiaSoftware — a guided zero-to-app wizard for non-programmers: staged idea-to-handover flow, web-first environment setup, multi-session state, and opt-out experiment analytics logged into the project repo.",
+    "description": "👾 utopia-zero by UtopiaSoftware - a guided zero-to-app wizard for non-programmers: staged idea-to-handover flow, web-first environment setup, multi-session state, and opt-out experiment analytics logged into the project repo.",
     "version": "0.1.0"
   },
   "plugins": [

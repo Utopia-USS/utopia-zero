@@ -1,11 +1,11 @@
 ---
-description: Start (or resume) the utopia-zero wizard — from idea to a developable app, guided end to end
+description: Start (or resume) the utopia-zero wizard - from idea to a developable app, guided end to end
 argument-hint: "[kontynuuj | pro | your first words about the idea]"
 allowed-tools: Skill, Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion, WebFetch, WebSearch, Agent, TodoWrite
 model: inherit
 ---
 
-# Utopia Zero — start
+# Utopia Zero - start
 
 Invoke the `utopia-zero` skill (Skill tool) and follow it end to end, starting with
 its **session entry protocol** (read `zero/config.json` + `zero/STATE.md`, detect

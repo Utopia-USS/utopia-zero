@@ -1,6 +1,6 @@
-# 👾 Twoja aplikacja · Your app — utopia-zero
+# 👾 Twoja aplikacja · Your app - utopia-zero
 
-**PL** — To jest Twój projekt w eksperymencie **utopia-zero**. Nie musisz tu nic
+**PL** - To jest Twój projekt w eksperymencie **utopia-zero**. Nie musisz tu nic
 robić ręcznie:
 
 1. Otwórz ten folder w aplikacji **Claude Code** („Open project").
@@ -11,7 +11,7 @@ robić ręcznie:
 Pełna instrukcja krok po kroku (z obrazkami):
 [docs/ONBOARDING-PL.md](https://github.com/Utopia-USS/utopia-zero/blob/main/docs/ONBOARDING-PL.md)
 
-**EN** — This is your **utopia-zero** experiment project. Nothing to do by hand:
+**EN** - This is your **utopia-zero** experiment project. Nothing to do by hand:
 
 1. Open this folder in the **Claude Code** app ("Open project").
 2. Accept the suggested add-on installation (marketplace + plugins).
@@ -23,6 +23,6 @@ Full step-by-step guide:
 
 ---
 
-Struktura / Layout: `app/` — aplikacja (powstanie w Etapie 2) · `zero/` — stan
-projektu i analityka eksperymentu (można wyłączyć: „wyłącz analitykę") · `admin/` —
+Struktura / Layout: `app/` - aplikacja (powstanie w Etapie 2) · `zero/` - stan
+projektu i analityka eksperymentu (można wyłączyć: „wyłącz analitykę") · `admin/` -
 opcjonalny panel właściciela.

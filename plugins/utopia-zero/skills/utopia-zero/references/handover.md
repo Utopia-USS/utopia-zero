@@ -1,8 +1,8 @@
-# Handover (stage 6) — HANDOVER.md template + developability rubric
+# Handover (stage 6) - HANDOVER.md template + developability rubric
 
 The experiment's #1 success metric is: **can a professional Flutter team take this
 over?** `zero/HANDOVER.md` (English, developer-facing) plus a rubric self-score are
-how stage 6 makes that concrete. `zero/DECISIONS.md` is its raw material — keep it
+how stage 6 makes that concrete. `zero/DECISIONS.md` is its raw material - keep it
 fed all along (invariant 6).
 
 ## DECISIONS.md entry format (append-only, English)
@@ -18,7 +18,7 @@ One line per decision: date · area · what · why · alternatives (with rejecti
 ## HANDOVER.md template
 
 ```markdown
-# Handover — <App Name>
+# Handover - <App Name>
 
 > POC built with utopia-zero by a non-programmer guided end to end.
 > Brief (user language): zero/BRIEF.md · Decisions log: zero/DECISIONS.md
@@ -34,18 +34,18 @@ One line per decision: date · area · what · why · alternatives (with rejecti
 - Admin panel (if present): `cd admin && flutter run -d web-server`
 
 ## Architecture map
-- `app/lib/screen/…` — screens (Screen/State/View per utopia-hooks)
+- `app/lib/screen/…` - screens (Screen/State/View per utopia-hooks)
 - global states: <list + one-liners>
 - backend: <provider, project name, who owns the account>
 - packages worth knowing: <top 5 with why>
 
-## Key decisions (top 5 — full log in zero/DECISIONS.md)
+## Key decisions (top 5 - full log in zero/DECISIONS.md)
 1. …
 
 ## Known limitations & honest TODO
 - …
 
-## Accounts & secrets — who has what (NO values here)
+## Accounts & secrets - who has what (NO values here)
 | What | Where | Held by |
 
 ## Suggested first steps for the team
@@ -71,7 +71,7 @@ costing < 30 min before scoring final.
 | 10 | TODOs/limitations written down honestly (no surprises for the team) |
 
 Log `handover_selfscore{scores, total}`. If a criterion scores 0 for a reason the
-POC can't fix (e.g. tests skipped by scope), say so inside HANDOVER — an explained
+POC can't fix (e.g. tests skipped by scope), say so inside HANDOVER - an explained
 gap beats a hidden one.
 
 ## Stage-6 checklist order
