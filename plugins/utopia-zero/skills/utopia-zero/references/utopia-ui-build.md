@@ -15,27 +15,27 @@ Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on
    utopia_ui:
      path: ../packages/utopia_ui
    ```
-   It's a frozen snapshot (source commit in `packages/utopia_ui/VENDORED.md`) —
+   It's a frozen snapshot (source commit in `packages/utopia_ui/VENDORED.md`) -
    works offline, no auth. The takeover team swaps it for a published dependency
    later; say so in HANDOVER.
-2. **pub.dev**: `flutter pub add utopia_ui` — if the package is published.
+2. **pub.dev**: `flutter pub add utopia_ui` - if the package is published.
 3. **git**: in `pubspec.yaml`:
    ```yaml
    utopia_ui:
      git: {url: https://github.com/Utopia-USS/utopia-ui.git}
    ```
    Works once the repo is public. Pin with `ref:` to a tag when tags exist.
-4. **Fallback (nothing above works)**: build WITHOUT the package — Material 3 styled
+4. **Fallback (nothing above works)**: build WITHOUT the package - Material 3 styled
    from the same token values (seed = `--u-color-primary`, dark scheme from canvas,
    Google Font, radii). The mock contract still holds; note the fallback in
    `zero/DECISIONS.md` so the takeover team can swap the dependency in later.
 
 `utopia_ui` requires Dart SDK ^3.11 (fine on current stable) and pulls
-`utopia_hooks` — same stack the scaffold already uses.
+`utopia_hooks` - same stack the scaffold already uses.
 
 ## Wiring (once, stage 2)
 
-1. **`lib/app/theme.dart`** — emit from the accepted tokens. If the package ships
+1. **`lib/app/theme.dart`** - emit from the accepted tokens. If the package ships
    `tokens/utopia.tokens.json` (design protocol), treat it as the authoritative
    default-theme export: copy its structure/values and override only the branded
    slots from the Pracownia. Either way the emitted Dart takes this exact shape
@@ -76,8 +76,8 @@ Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on
    ```
 2. **Root wiring**: wrap the app in `UtopiaTheme(data: appUtopiaTheme, child: …)`.
 3. **Material mirror** (until the package ships a bridge): give `MaterialApp` a
-   `ThemeData` derived from the SAME values — `ColorScheme.fromSeed(seedColor:
-   primary, brightness: …)`, `scaffoldBackgroundColor: canvas`, the same text theme —
+   `ThemeData` derived from the SAME values - `ColorScheme.fromSeed(seedColor:
+   primary, brightness: …)`, `scaffoldBackgroundColor: canvas`, the same text theme -
    so Material internals (snackbars, pickers, scrollbars) don't clash. Read widgets
    through `context.colors` / `context.tokens` extensions; **never** hardcode a
    colour/gap/radius in a screen.
@@ -89,9 +89,9 @@ Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on
 | primary action | `UtopiaButton` (hero component; `loading:`, `dense:` built in) |
 | secondary/ghost action | app-local `AppGhostButton` (see kit below) |
 | text input / search / dropdown / date | `UtopiaTextField`, `UtopiaSearchField`, `UtopiaDropdownField<T>`, `UtopiaDatePicker` |
-| confirm / form dialog | `UtopiaConfirmDialog.show(danger:)`, `UtopiaDialog.form` — **adaptive**: real bottom-sheet on mobile widths |
+| confirm / form dialog | `UtopiaConfirmDialog.show(danger:)`, `UtopiaDialog.form` - **adaptive**: real bottom-sheet on mobile widths |
 | tags / status | `UtopiaChip`, `UtopiaChipList` |
-| container | `UtopiaCard` (child-only — pad inside yourself) |
+| container | `UtopiaCard` (child-only - pad inside yourself) |
 | loading / skeleton | `UtopiaLoader`, `UtopiaMockLoadingBox`, `UtopiaThreeBounce` |
 | empty state | `UtopiaTableEmpty` (generic despite the name: icon/title/subtitle/actions) |
 | toggles | `UtopiaSwitchField`, `UtopiaCheckRow` |
@@ -101,25 +101,25 @@ unexported internals; `UtopiaButtonVariant` does not exist (charter naming examp
 
 ## App-local kit (`lib/common/widget/`)
 
-`utopia_ui` v0.1 has no consumer-mobile idiom for these — build them ONCE per app,
+`utopia_ui` v0.1 has no consumer-mobile idiom for these - build them ONCE per app,
 token-driven (`context.colors`, `context.tokens`), zero literals:
 
-- `AppListTile` — leading/title/subtitle/trailing, `tileHeight` from theme
+- `AppListTile` - leading/title/subtitle/trailing, `tileHeight` from theme
   (`UtopiaTable` is a back-office grid; wrong for app lists).
-- `AppBottomNav` / tabs — `UtopiaSidebar` is desktop rail/drawer only.
-- `AppPageHeader` — title + optional back/action (no app bar in the package).
-- `AppGhostButton` — ONLY if the package doesn't export `UtopiaGhostButton`
+- `AppBottomNav` / tabs - `UtopiaSidebar` is desktop rail/drawer only.
+- `AppPageHeader` - title + optional back/action (no app bar in the package).
+- `AppGhostButton` - ONLY if the package doesn't export `UtopiaGhostButton`
   (design-protocol snapshots already do); same for `UtopiaHeader` vs
   `AppPageHeader`. Check the barrel first.
 - Avatar/badge/progress only if the BRIEF needs them.
 
 **Before hand-rolling, check whether the package caught up**: Utopia is filling
-these gaps (utopia-ui issue #2) — inspect the barrel / CHANGELOG of the version you
+these gaps (utopia-ui issue #2) - inspect the barrel / CHANGELOG of the version you
 resolved; use the real component when it exists.
 
 ## Gates addition
 
 Stage 2–4 checkpoints compare the running app against the accepted Pracownia mocks
 (`zero/design/`). A screen that has a mock must match its layout, palette, and type
-scale; deviations the user asks for later are fine — log `user_override` and note
+scale; deviations the user asks for later are fine - log `user_override` and note
 them in `zero/DECISIONS.md` (don't back-port to the mock files).

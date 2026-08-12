@@ -1,7 +1,7 @@
-# Dry-run — karta testera (operacjonalizacja DESIGN §15.1)
+# Dry-run - karta testera (operacjonalizacja DESIGN §15.1)
 
 Cel: przejść ścieżkę uczestnika **1:1 na czystej maszynie** i zebrać tarcia, zanim
-zaproszą prawdziwego uczestnika. Testujesz proces, nie produkt — pomysł na apkę ma
+zaproszą prawdziwego uczestnika. Testujesz proces, nie produkt - pomysł na apkę ma
 być mały (np. lista zakupów).
 
 ## Przygotowanie
@@ -15,32 +15,32 @@ być mały (np. lista zakupów).
 ## Zasady grania laika
 
 1. **Nie pomagaj technicznie.** Nie podpowiadaj komend, nie poprawiaj PATH-a, nie
-   otwieraj terminala. Mów, czego chcesz — jak klient, nie jak deweloper.
-2. **Mów głosem** (dyktowanie systemowe) — długie, chaotyczne wypowiedzi są
+   otwieraj terminala. Mów, czego chcesz - jak klient, nie jak deweloper.
+2. **Mów głosem** (dyktowanie systemowe) - długie, chaotyczne wypowiedzi są
    pożądane; testujemy, czy skill je układa.
-3. Gdy coś się wysypie — **pozwól mu się ratować samemu** (ma 5 prób + plany B).
+3. Gdy coś się wysypie - **pozwól mu się ratować samemu** (ma 5 prób + plany B).
    Interweniujesz dopiero, gdy poprosi Cię o coś wprost albo definitywnie utknie.
 4. **Notuj każde tarcie**: minuta, co się stało, czego się spodziewałeś/aś.
    Tarcie = wszystko, co zaskoczyło, zmyliło, trwało za długo albo wymagało
    wiedzy, której laik nie ma.
 
-## Sesja 1 — onboarding → ekran powitalny
+## Sesja 1 - onboarding → ekran powitalny
 
 Idź po [ONBOARDING-PL](ONBOARDING-PL.md) krok po kroku. Punkty obserwacyjne:
 
 - [ ] Instalacja + logowanie Claude Code bez pomocy.
 - [ ] Otwarcie folderu → dialog **Trust** → propozycja instalacji dodatków
       (oba marketplace'y + pluginy). Pojawiła się? Zrozumiała? Fallback potrzebny?
-- [ ] Restart po instalacji + tryb **AUTO** — czy instrukcja wystarczyła.
+- [ ] Restart po instalacji + tryb **AUTO** - czy instrukcja wystarczyła.
 - [ ] Prompt startowy → **Etap 0**: tutorial zrozumiały? informacja o analityce
       jasna? doradzenie modelu sensowne? restart „na hooki" przeszedł gładko?
-- [ ] **Etap 1**: wywiad — czy BRIEF (odczytany na głos przez skill) wiernie oddaje
+- [ ] **Etap 1**: wywiad - czy BRIEF (odczytany na głos przez skill) wiernie oddaje
       pomysł; czy pytania klikane/otwarte były we właściwych miejscach.
 - [ ] **Etap 2**: instalacje z uczciwymi szacunkami czasu; codegen; **ekran
       powitalny w przeglądarce** zgodny z briefem designowym; push (operator:
       potwierdź commit + `events.jsonl` po sesji).
 
-## Sesja 2 — odporność
+## Sesja 2 - odporność
 
 - [ ] „kontynuuj" po restarcie aplikacji → stan wraca (STATE wstrzyknięty hookiem).
 - [ ] **Celowa awaria**: zepsuj coś ręcznie (np. edytuj plik .dart wprowadzając

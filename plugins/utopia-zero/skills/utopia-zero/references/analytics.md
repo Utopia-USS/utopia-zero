@@ -1,4 +1,4 @@
-# Analytics — schema, scripts, hooks, privacy
+# Analytics - schema, scripts, hooks, privacy
 
 Principles: everything lives **inside the project repo** (`zero/analytics/`), pushed
 like code; the user can turn it off at any moment; secrets never enter events or
@@ -7,9 +7,9 @@ never a name.
 
 ## Config flags (`zero/config.json`)
 
-- `analytics_enabled` — master switch; `false` → `log_event` is a silent no-op and
+- `analytics_enabled` - master switch; `false` → `log_event` is a silent no-op and
   hooks skip everything except STATE injection.
-- `transcripts_enabled` — session transcript copies on/off (independent of events).
+- `transcripts_enabled` - session transcript copies on/off (independent of events).
 
 Opt-out procedure (user says "wyłącz analitykę" / "disable analytics"): log one final
 `consent{analytics:false}`, flip the flag(s) in config, commit, confirm in plain
@@ -34,24 +34,24 @@ Common fields are added by the script: `ts` (ISO-8601 UTC), `participant_id`,
 `project_id` (from config), `session_id` (from `zero/analytics/.session`, written by
 the SessionStart hook), `stage` (from `zero/analytics/.stage`).
 
-**Your duty on `stage_start`**: write the number first, then log —
+**Your duty on `stage_start`**: write the number first, then log -
 `printf '3' > zero/analytics/.stage && bash zero/scripts/log_event.sh stage_start '{}'`.
 
-## Hard logging rules (violations found in dry-run #1 — do not repeat)
+## Hard logging rules (violations found in dry-run #1 - do not repeat)
 
 1. **`question` BEFORE asking, every time.** An `answer` without a paired `question`
    event is a data bug; the pairing (`id`) is what makes the interview analyzable.
 2. **Every user-reported correction logs a checkpoint**:
-   `checkpoint{feature, verdict:"change", rework:n}` — also when visual checkpoints
+   `checkpoint{feature, verdict:"change", rework:n}` - also when visual checkpoints
    are turned off. Silent fixes destroy the vision↔implementation research signal.
-3. **`feature_done` only AFTER its commit exists** (and after push, when possible) —
+3. **`feature_done` only AFTER its commit exists** (and after push, when possible) -
    events must never claim commits git can't show.
 
 ## Event catalog (type → when → payload)
 
 | type | when | payload keys |
 |---|---|---|
-| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate — lumping them made stage-0 look like 3.3M tokens), `est_cost_usd`, `transcript_copied` |
+| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `est_cost_usd`, `transcript_copied` |
 | `stage_start` / `stage_end` | every stage boundary | `stage` is in common fields; end: `duration_hint` |
 | `tutorial` | stage 0 | `skipped` |
 | `consent` | stage 0 + every change | `analytics`, `transcripts` |
@@ -86,7 +86,7 @@ macOS:
 }
 ```
 
-Windows — same structure, commands:
+Windows - same structure, commands:
 `powershell -NoProfile -ExecutionPolicy Bypass -File zero/scripts/hook_session_start.ps1`
 (and `…session_end.ps1`).
 
@@ -108,11 +108,11 @@ payloads AND transcript copies: `github_pat_*`, `ghp_*`, `gho_*`,
 Never log: real names, secrets, full file contents, raw URLs with credentials.
 `error.signature` = first line of the error only, post-redaction.
 
-Hidden Utopia-mode (insider) sessions log `decision{area:"mode", choice:"utopia"}` —
+Hidden Utopia-mode (insider) sessions log `decision{area:"mode", choice:"utopia"}` -
 participant analyses MUST filter those runs out.
 
 Token usage: `hook_session_end` parses the session transcript (`transcript_path`
 from hook stdin) with `python3` (macOS; skip with a warning event if absent) /
 PowerShell `ConvertFrom-Json` (Windows), sums per-model input/output tokens, and
-estimates cost informatively (the user is on a subscription — it's research data,
+estimates cost informatively (the user is on a subscription - it's research data,
 not a bill).

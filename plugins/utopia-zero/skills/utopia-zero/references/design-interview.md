@@ -7,16 +7,16 @@ ty" is a first-class answer.
 
 ## Questions (open unless marked; adapt, keep intent)
 
-1. **Charakter**: "Gdyby Twoja aplikacja była osobą — jaka jest? Rzuć kilka
+1. **Charakter**: "Gdyby Twoja aplikacja była osobą - jaka jest? Rzuć kilka
    przymiotników." (poważna, ciepła, zabawowa, elegancka, surowa…)
 2. **Inspiracje**: "Pokaż lub wymień 2–3 aplikacje albo strony, które Ci się PODOBAJĄ
    wizualnie. Co Ci się w nich podoba?"
 3. **Kolory**: "Masz ulubione kolory, kolory marki, albo takie, których nie znosisz?"
-4. Clickable — **tryb**: jasny / ciemny / oba (domyślnie: oba, start od jasnego).
-5. Clickable — **gęstość**: "Dużo informacji na ekranie" / "Dużo powietrza, mniej naraz".
-6. Clickable — **ton skali**: bardzo poważna / neutralna / zabawowa.
+4. Clickable - **tryb**: jasny / ciemny / oba (domyślnie: oba, start od jasnego).
+5. Clickable - **gęstość**: "Dużo informacji na ekranie" / "Dużo powietrza, mniej naraz".
+6. Clickable - **ton skali**: bardzo poważna / neutralna / zabawowa.
 
-Reflect the answers back in one sentence ("czyli: ciepło, prosto, zielono — tak?").
+Reflect the answers back in one sentence ("czyli: ciepło, prosto, zielono - tak?").
 
 ## Mapping answers → tokens (yours, silent)
 
@@ -31,7 +31,7 @@ Reflect the answers back in one sentence ("czyli: ciepło, prosto, zielono — t
 | density: powietrze | roomy paddings, card-first layouts |
 
 The seed/font/radius/density draft then expands into the full `utopia_ui`
-vocabulary (13 colours + 6 type roles + spacing base — table in
+vocabulary (13 colours + 6 type roles + spacing base - table in
 `design-workshop.md`): derive surface/field/border/hint from the canvas tone,
 chip pair from the accent, on-colored from contrast math. Record in BRIEF's design
 section (EN line): `seed #2E7D5B · font Nunito · radius 20 · density roomy · mode
@@ -41,11 +41,11 @@ both(light-first)` + a pointer to `zero/design/`.
 
 - Google Fonts only (offline-safe via `google_fonts` package); one display + one body
   font max.
-- **No raw emoji characters in UI** — Flutter web has no guaranteed emoji font
+- **No raw emoji characters in UI** - Flutter web has no guaranteed emoji font
   (tofu boxes). Use Material icons or bundled assets; emoji are fine inside
   user-generated TEXT content, never as UI ornaments.
 - Accessibility floor regardless of answers: text contrast ≥ 4.5:1, touch targets
-  ≥ 48dp — never trade these away. This is a **check, not a vibe**: before every
+  ≥ 48dp - never trade these away. This is a **check, not a vibe**: before every
   visual checkpoint, verify the actual fg/bg color pairs you used (compute the
   ratio; "looks fine" is how the floor gets broken).
 - "Zdecyduj ty" → neutral modern default (Inter, radius 12, domain-vibe seed) and say
@@ -53,5 +53,5 @@ both(light-first)` + a pointer to `zero/design/`.
 - The design checkpoint moved forward: it's the **Pracownia mocks**
   (`design-workshop.md`), where fixing the vibe costs a browser refresh. The stage-2
   welcome screen then just has to MATCH its accepted mock.
-- Later screens reuse tokens only — no per-screen restyling. The user can change the
+- Later screens reuse tokens only - no per-screen restyling. The user can change the
   direction any time (it's a creative decision → theirs); log `user_override`.
