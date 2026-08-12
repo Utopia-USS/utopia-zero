@@ -19,12 +19,18 @@ Parse the JSONL (python3 on macOS/Linux, PowerShell on Windows - one script, not
 per-line tool calls). Skip malformed lines silently.
 
 1. **Work time**
-   - Pair `session_start`/`session_end` by `session_id`; a session's duration =
-     `session_end.ts − session_start.ts`. For a session without `session_end`
-     (crash/restart), use its last event's `ts` instead; mark these `~`.
-   - Report: number of sessions, total time (sum of durations, `h:mm`), calendar
-     span (first event → last event), and time per `stage` (attribute each
-     session to the stage of its `session_start`).
+   - **A `session_id` is reused across resumes** - one id can hold several
+     start/end EPISODES days apart. Never compute first-start → last-end
+     (verified on poc-dryrun: that yields 144h instead of the real 7h). Walk
+     each session's events chronologically: `session_start` opens an episode,
+     `session_end` closes it; an episode without a clean end closes at its last
+     event (mark `~`). Events before the first `session_start` of an id (pre-hook
+     era) form one episode ending at their `session_end`.
+   - Per-stage time: sum the deltas between consecutive in-episode events,
+     attributed to the earlier event's `stage` - NOT the episode's start stage
+     (a single evening episode can span stages 0→4).
+   - Report: episode count, total time (`h:mm`), calendar span (first event →
+     last event), and the per-stage split.
 2. **Tokens per model**
    - Sum `session_end.payload.models` across sessions: per model, `in`,
      `cache_read` (treat a missing key as 0), `out`.
