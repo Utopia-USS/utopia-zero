@@ -111,7 +111,9 @@ Masz trzy opcje (od najprostszej):
 2. **Dyktowanie systemowe po polsku** (polecane):
    - **Windows**: naciśnij **Win + H**, wybierz język polski i mów - tekst
      wpisuje się prosto do pola rozmowy.
-   - **Mac**: Ustawienia → Klawiatura → Dyktowanie (skrót: 2× Control).
+   - **Mac**: Ustawienia systemowe → Klawiatura → Dyktowanie - włącz;
+     uruchamia się klawiszem 🎤 (F5) albo podwójnym Fn (🌐) - dokładny skrót
+     widać w tym samym miejscu ustawień.
 3. **Aplikacja oparta na Whisper** (dla chętnych - najlepsza polszczyzna,
    działa offline): poproś osobę z Utopii o aktualną rekomendację i pomoc w
    instalacji dla Twojego systemu.

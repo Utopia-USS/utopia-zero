@@ -45,7 +45,10 @@ Shared rules for every stage:
    On "tak", recommend in this order and guide the setup click-by-click:
    - **Windows: Win+H** (set the language to the user's; on Win10 needs online
      speech recognition toggled on - guide through Settings if it refuses).
-   - **macOS: system dictation** (Settings → Keyboard → Dictation, 2× Ctrl).
+   - **macOS: system dictation** (System Settings → Keyboard → Dictation:
+     enable it; the trigger is the 🎤/F5 key or double-press Fn (🌐) by
+     default - the exact shortcut is shown/changeable right there, so read it
+     from the user's settings instead of asserting one).
    - Mention the **Claude Code mic** honestly: great for English, weaker in
      other languages.
    - Power option, only if the user is keen or system dictation disappoints:
