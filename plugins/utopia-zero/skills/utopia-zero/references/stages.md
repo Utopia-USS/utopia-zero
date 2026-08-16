@@ -157,8 +157,10 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
 2. **Plan**: one paragraph, user's language, no jargon - what will exist when done.
    Approve (clickable: buduj / zmień plan / pomiń). Log `question`/`answer`.
 3. Build per utopia-hooks (and utopia-cms for admin surfaces); visuals per
-   `utopia-ui-build.md` - `Utopia*` widgets + the app-local kit, tokens only, never
-   literals. All technical choices yours; log `decision` (+ rationale +
+   `utopia-ui-build.md` - `Utopia*` widgets + project components, tokens only, never
+   literals. An element no manifest component covers = GAP: report it (screen
+   skill format) and scaffold a project component or file it upstream - never a
+   silent hand-roll (`utopia-ui-build.md`, gap discipline). All technical choices yours; log `decision` (+ rationale +
    alternatives) for each significant one.
 4. **Backend, lazily** - first feature that needs it:
    - Choose provider yourself (auth/data/realtime/files needs → Firebase or Supabase).

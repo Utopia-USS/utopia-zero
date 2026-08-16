@@ -48,7 +48,12 @@ artifacts:
   inline it into the mock's `<style>` and override the branded variables after it.
 - `twin/components.css` + `twin/components.html` - faithful component twins;
   compose mocks from these classes instead of the approximations below.
-- `twin/gallery.html` - everything at once; handy as the user's first look.
+- **User's first look = `components.html` rebranded to the project**: after
+  the token draft, generate the twin in the PROJECT's brand (sync skill /
+  `generate_twin`) and serve it (`python3 -m http.server`) - a browsable
+  component shop in the user's own colors before any screen mock exists.
+  Do NOT show `gallery.html` for this - it overrides the consumer rebrand
+  with the package showcase theme (utopia-ui issue #10).
 - `tokens/utopia.tokens.json` (DTCG) - the machine-readable source when emitting
   `theme.dart` (override the branded slots, keep the rest).
 

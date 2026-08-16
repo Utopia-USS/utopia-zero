@@ -12,7 +12,10 @@ ty" is a first-class answer.
 2. **Inspiracje**: "Pokaż lub wymień 2–3 aplikacje albo strony, które Ci się PODOBAJĄ
    wizualnie. Co Ci się w nich podoba?"
 3. **Kolory**: "Masz ulubione kolory, kolory marki, albo takie, których nie znosisz?"
-4. Clickable - **tryb**: jasny / ciemny / oba (domyślnie: oba, start od jasnego).
+4. Clickable - **tryb**: jasny / ciemny (JEDEN - protokół designu v0 trzyma
+   jedną paletę; domyślnie wg vibe'u domeny: impreza/rozrywka → ciemny,
+   reszta → jasny). Jeśli user chce oba: wybieramy główny, a drugi uczciwie
+   odkładamy do czasu trybów w protokole - zapisz w zero/DECISIONS.md.
 5. Clickable - **gęstość**: "Dużo informacji na ekranie" / "Dużo powietrza, mniej naraz".
 6. Clickable - **ton skali**: bardzo poważna / neutralna / zabawowa.
 
@@ -35,7 +38,7 @@ vocabulary (13 colours + 6 type roles + spacing base - table in
 `design-workshop.md`): derive surface/field/border/hint from the canvas tone,
 chip pair from the accent, on-colored from contrast math. Record in BRIEF's design
 section (EN line): `seed #2E7D5B · font Nunito · radius 20 · density roomy · mode
-both(light-first)` + a pointer to `zero/design/`.
+dark` + a pointer to `zero/design/`.
 
 ## Rules
 

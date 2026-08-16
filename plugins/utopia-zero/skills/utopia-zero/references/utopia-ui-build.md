@@ -35,17 +35,17 @@ same stack the scaffold already uses.
 
 ## Wiring (once, stage 2)
 
-0. **Design protocol first**: current utopia_ui main ships the full protocol
-   (NOTE: the token document is SINGLE-context in protocol v0 - it cannot carry
-   light AND dark palettes at once; a "both modes" app keeps the second mode as
-   a plain Dart theme outside the protocol, or ships one mode in the POC)
-   (`tokens/utopia.tokens.json`, `twin/`, `manifest/`, `tool/utopia_design_tools`
-   with `generate_theme --check`). If the `utopia-design` plugin
-   (utopia-flutter-skills marketplace) is available, PREFER its flow: `tokens`
-   skill bootstraps `design/tokens.json` from the package default, you override
-   the branded slots from the Pracownia, `sync` generates the theme code. The
-   manual emission below is the fallback for older vendored snapshots or when
-   the plugin isn't installed.
+0. **Design protocol IS the path** (proven in the field on the Paplanina
+   migration): the `utopia-design` plugin is enabled in prepared repos - use it.
+   Flow: `tokens` skill bootstraps `design/tokens.json` from the package
+   default → override the branded slots from the Pracownia →
+   `flutter pub add --dev utopia_design_tools` → `sync` regenerates the theme
+   (`validate_tokens` → `validate_manifest` → `generate_theme`, freshness
+   proved with `generate_theme --check`). Never hand-edit generated Dart.
+   NOTE: the token document is SINGLE-context in protocol v0 - one palette;
+   the mode was chosen in the design interview (a second mode is out of scope
+   until the protocol grows modes). The manual emission below is ONLY for
+   offline machines or stale vendored snapshots without the protocol.
 1. **`lib/app/theme.dart`** (manual fallback) - emit from the accepted tokens,
    using `tokens/utopia.tokens.json` as the authoritative default-theme export
    (override only the branded slots). The emitted Dart takes this exact shape
@@ -116,8 +116,17 @@ unexported internals; `UtopiaButtonVariant` does not exist (charter naming examp
 
 ## App-local kit (`lib/common/widget/`)
 
-`utopia_ui` v0.1 has no consumer-mobile idiom for these - build them ONCE per app,
-token-driven (`context.colors`, `context.tokens`), zero literals:
+**Gap discipline first (field-proven on Paplanina):** an element no manifest
+component covers is a GAP - never a silent hand-roll. Report it in the `screen`
+skill's 5-part format (element / rejected candidate ids + why / missing
+capability / suggested action / component-spec seed), then either scaffold it
+as a PROJECT component via the `component` skill (overlay YAML in
+`design/overlay/`, regenerated manifests, namespaced `app:*` id) or file it
+upstream (utopia-ui issue; check #2 "Mobile app kit" for duplicates first).
+Every participant POC thus feeds the utopia-ui backlog instead of hiding gaps.
+
+Known consumer-mobile gaps you will likely hit (build as project components,
+token-driven - `context.colors` / `context.tokens`, zero literals):
 
 - `AppListTile` - leading/title/subtitle/trailing, `tileHeight` from theme
   (`UtopiaTable` is a back-office grid; wrong for app lists).
@@ -126,9 +135,10 @@ token-driven (`context.colors`, `context.tokens`), zero literals:
   are typography, not an app bar - compose them inside).
 - Avatar/badge/progress only if the BRIEF needs them.
 
-When the `utopia-design` plugin is installed, register reusable app-local
-components through its `component` skill (manifest overlay) instead of leaving
-them undocumented.
+The Paplanina migration produced five such project components
+(`app:brand-backdrop`, `app:category-card`, `app:category-chip`,
+`app:question-card`, `app:question-tile`) - use them as reference
+implementations of the pattern.
 
 **Before hand-rolling, check whether the package caught up**: Utopia is filling
 these gaps (utopia-ui issue #2) - inspect the barrel / CHANGELOG of the version you
