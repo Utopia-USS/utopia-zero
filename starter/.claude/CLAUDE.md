@@ -6,10 +6,19 @@ skill (plugin `utopia-zero@utopia-zero`) governs everything - always work throug
 
 Standing rules (they hold even if the skill didn't auto-load):
 
-1. **First action of every session**: read `zero/STATE.md` and `zero/config.json`,
-   then follow the utopia-zero skill's session entry protocol. If the skill is not
-   available, tell the user to paste `/plugin install utopia-zero@utopia-zero` and
-   restart the app.
+1. **ANY first message starts the wizard.** "cześć", "start", "co teraz?", a
+   question - whatever the user writes, read `zero/STATE.md` + `zero/config.json`
+   and enter the utopia-zero skill's session entry protocol. Never wait for a
+   magic phrase, never answer "how can I help" - fresh project → greet warmly in
+   the user's language, one sentence about what happens next, and begin stage 0;
+   STATE mid-flight → resume. The user was told everything happens by itself.
+1a. **If the utopia-zero skill is NOT available** (plugins not installed yet):
+   do NOT dump commands. Warmly explain that a one-time add-on install is needed
+   and walk them through it ONE step per message, confirming each: (1) paste
+   `/plugin marketplace add Utopia-USS/utopia-zero`, (2) paste
+   `/plugin install utopia-zero@utopia-zero`, (3) close and reopen the app,
+   open this folder again, write anything. If an install popup appears instead,
+   tell them to accept everything and restart.
 2. **Language**: speak the user's language (config `language_default` is the
    tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` - English.
 3. **Hide technicalities** - the user owns creative decisions, you own ALL technical

@@ -4,9 +4,10 @@
 robić ręcznie:
 
 1. Otwórz ten folder w aplikacji **Claude Code** („Open project").
-2. Zgódź się na zaproponowaną instalację dodatków (marketplace + pluginy).
-3. Napisz: **„Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji."**
-4. Wracasz po przerwie? Po prostu napisz: **„kontynuuj"**.
+2. Jeśli wyskoczy pytanie o zaufanie folderowi albo o instalację dodatków -
+   **zgadzaj się na wszystko** (i zrestartuj aplikację, jeśli poprosi).
+3. **Napisz cokolwiek** - np. „start" albo „cześć". Przewodnik się przedstawi
+   i poprowadzi Cię za rękę. Wracasz po przerwie? Też po prostu napisz cokolwiek.
 
 Pełna instrukcja krok po kroku (z obrazkami):
 [docs/ONBOARDING-PL.md](https://github.com/Utopia-USS/utopia-zero/blob/main/docs/ONBOARDING-PL.md)
@@ -14,9 +15,10 @@ Pełna instrukcja krok po kroku (z obrazkami):
 **EN** - This is your **utopia-zero** experiment project. Nothing to do by hand:
 
 1. Open this folder in the **Claude Code** app ("Open project").
-2. Accept the suggested add-on installation (marketplace + plugins).
-3. Type: **"Let's start. Guide me from zero to my own app."**
-4. Coming back? Just type: **"continue"**.
+2. If asked about trusting the folder or installing add-ons - **accept
+   everything** (and restart the app if it asks).
+3. **Type anything** - e.g. "start" or "hi". The guide introduces itself and
+   takes it from there. Coming back after a break? Just type anything too.
 
 Full step-by-step guide:
 [docs/ONBOARDING-EN.md](https://github.com/Utopia-USS/utopia-zero/blob/main/docs/ONBOARDING-EN.md)

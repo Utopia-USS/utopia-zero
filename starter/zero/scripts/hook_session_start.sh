@@ -16,6 +16,15 @@ SRC="$(val source)"
 
 bash "$ROOT/zero/scripts/log_event.sh" session_start "{\"source\":\"${SRC:-unknown}\"}" || true
 
+# --- first-session banner (fresh project) ---
+if grep -q "nic jeszcze / nothing yet" "$ROOT/zero/STATE.md" 2>/dev/null; then
+  echo "=== utopia-zero: PIERWSZA SESJA ==="
+  echo "This is the participant's very first session. Whatever their first message"
+  echo "says, greet them warmly in their language and start the wizard (stage 0)."
+  echo "They were told everything happens by itself - do not wait for any prompt."
+  echo "=== koniec / end ==="
+fi
+
 # --- context injection: project state ---
 if [ -f "$ROOT/zero/STATE.md" ]; then
   echo "=== utopia-zero: zero/STATE.md (stan projektu / project state) ==="
