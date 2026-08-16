@@ -5,7 +5,9 @@ Shared rules for every stage:
 - **Idempotent**: before each action, check whether it already happened (file exists,
   tool responds, STATE says done). Re-running a stage never breaks anything.
 - **Events**: log `stage_start` when entering (and write the stage number to
-  `zero/analytics/.stage`), `stage_end` when the exit criteria pass. Log the
+  `zero/analytics/.stage`), `stage_end` when the exit criteria pass; on a Pro
+  plan also suggest the fresh-session reset from `model-advice.md` (token
+  economy). Log the
   per-action events named below.
 - **STATE**: update `zero/STATE.md` at stage end AND after any step whose loss would
   hurt (mid-stage progress, pending restart, awaited user input).
