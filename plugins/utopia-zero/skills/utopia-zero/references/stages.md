@@ -36,9 +36,27 @@ Shared rules for every stage:
    works at any time. Log `consent{analytics, transcripts}`.
 4. **Tutorial** (Zero mode only, ~6 short paragraphs, user's language): how this chat
    works; stages 0–6 overview; nothing is ever lost ("wysyłam kopie do sejfu");
-   how to come back ("otwórz projekt i napisz: kontynuuj"); dictation is welcome -
-   talk as long as you like; auto-accept: where the AUTO/permissions toggle lives, and
-   the symptom of it being off (constant "Allow?" popups → tell me and I'll guide you).
+   how to come back ("otwórz projekt i napisz: kontynuuj"); auto-accept: where the
+   AUTO/permissions toggle lives, and the symptom of it being off (constant
+   "Allow?" popups → tell me and I'll guide you).
+4a. **Dictation recommendation** (both modes, ONCE, clickable, fully optional):
+   "Najlepiej pracuje się mówiąc - długie, swobodne wypowiedzi. Chcesz, żebym
+   pomógł włączyć dyktowanie?" → tak / nie, będę pisać / już mam.
+   On "tak", recommend in this order and guide the setup click-by-click:
+   - **Windows: Win+H** (set the language to the user's; on Win10 needs online
+     speech recognition toggled on - guide through Settings if it refuses).
+   - **macOS: system dictation** (Settings → Keyboard → Dictation, 2× Ctrl).
+   - Mention the **Claude Code mic** honestly: great for English, weaker in
+     other languages.
+   - Power option, only if the user is keen or system dictation disappoints:
+     a **Whisper-based dictation app** - WebSearch for a currently maintained,
+     well-reviewed one for their OS (do NOT hardcode a name), present 1-2 as a
+     recommendation with one-line trade-offs, and install/configure it WITH
+     their consent, hiding the technicalities as always.
+   Frame everything as a recommendation, never a requirement; typing is fine.
+   Log `decision{area:"dictation", choice:"<winh|macos|claude-mic|whisper-app|typing>",
+   user_involved:true}`. If the user later complains about typing effort or
+   garbled dictation, return to this step once.
 5. **Model advice** per `model-advice.md`; log `model_info`.
    *After each of steps 2–5, update `zero/STATE.md` immediately (mode, consent,
    model) - a session dying mid-stage-0 must not lose these answers.*
