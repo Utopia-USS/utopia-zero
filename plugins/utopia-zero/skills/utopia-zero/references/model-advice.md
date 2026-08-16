@@ -1,9 +1,11 @@
 # Model advice + token economy (stage 0, and whenever it changes)
 
-Quality of stages 1–4 decides developability - the experiment's #1 metric - but
-most participants run on the BASE subscription (Pro-class, ~100 zł), where limits
-are tight 5-hour windows. Advice is therefore **plan-aware**: the strongest model
-the user's plan can sustain for a whole build evening, not the strongest on paper.
+Quality of stages 1–4 decides developability - the experiment's #1 metric - and
+**quality wins over token economy** (Utopia's explicit call): use the better model
+and the higher effort even when it is slower and eats more of the limit. Most
+participants run on the base subscription (Pro-class, ~100 zł) with tight 5-hour
+windows - the answer to that is hygiene and honest pauses, never a quiet
+downgrade. Plan detection below exists to set expectations, not to lower the bar.
 
 ## Step 1: learn the plan (once, stage 0 - detect silently, ask only as fallback)
 
@@ -25,16 +27,16 @@ missing, or anything else → **unknown**. On unknown ONLY, ask (clickable):
 assume Pro (the safe default for participants). Log it inside
 `model_info{plan, plan_source:"detected"|"asked"|"assumed"}`.
 
-## Step 2: the advice matrix
+## Step 2: the advice matrix (quality first, on every plan)
 
-| Plan | Stages 1–4 (build) | Late-game tweaks + stage 6 | Never |
+| Plan | Stages 1–4 (build) | Late-game cosmetic tweaks + stage 6 copy | Never |
 |---|---|---|---|
-| **Pro (default)** | **Sonnet-class, effort medium** - near-Opus quality at a fraction of the limit burn; a full evening fits in the window | Sonnet-class, effort low | Haiku-class for building; Opus-class as the *default* (limit dies mid-stage) |
-| **Max / Team** | strongest available (Opus-class), high effort | Sonnet-class fine | Haiku-class for building |
+| **Max / Team** | strongest available (Opus-class), **high effort** | Sonnet-class fine | Haiku-class for building |
+| **Pro (participants' default)** | **same: strongest available, high effort** - accept that the 5h window may end mid-evening; warn once up front: "przy Twoim planie zrobimy czasem przerwę - to normalne" | Sonnet-class fine (quality can't suffer there) | Haiku-class for building; silent downgrades to stretch the limit |
 
-Pro escape hatch: for a genuinely hard, isolated moment (architecture knot, a bug
-that survived the 5-strategy ladder) it is fine to switch to Opus-class FOR THAT
-TASK and switch back - say so in one sentence, log `model_info{source:"user"}`.
+On Pro the levers for the tight window are the token-economy rules below (they
+cost zero quality) and honest pauses when the limit hits - NOT a weaker model or
+lower effort on design/build work.
 
 How to deliver (Zero mode, user's language, one breath): "Sprawdź, jaki model jest
 wybrany przy polu wiadomości - na czas budowania najlepszy będzie <model>. Pokażę
@@ -50,12 +52,16 @@ Context is the silent limit-eater: a long session re-reads its whole history eve
 turn. Data point from our dry-runs: ~98% of consumed input was context re-reads,
 not new work.
 
+These rules save the limit without touching quality - apply them on Pro always,
+on Max when convenient:
+
 1. **Fresh session per stage.** STATE.md is designed to carry everything between
    sessions. At every `stage_end` on a Pro plan, actively suggest: "Zamknij okno i
    otwórz projekt na nowo - napisz cokolwiek, będę pamiętał. To oszczędza Twój
    limit." (Bonus: new sessions pick up plugin updates.) Never force it mid-stage.
-2. **No parallel subagent fan-outs on Pro.** Sequential feature work; parallel
-   agent batches are a Max-plan luxury (they multiply context N times).
+2. **Prefer sequential subagent work on Pro.** Parallel agent batches multiply
+   context N times; use them on Pro only when they genuinely buy quality or the
+   user asked for speed - never as the default.
 3. **Targeted reads.** Read the fragment you need, not whole generated files
    repeatedly; never re-`cat` a file you just wrote.
 4. **Short outputs** are already invariant 13 (calibrated messages) - it also
