@@ -52,6 +52,21 @@ for what's missing.
    with `git check-ignore zero/.pat` before ANY commit). If org settings reject
    fine-grained PATs, tell the operator the org owner must allow them (Org Settings
    → Third-party Access → Personal access tokens) and pause here.
+6a. **Participant's own GitHub account (optional, recommended)**: when the
+   participant has (or will create) a GitHub account, invite them as a repo
+   COLLABORATOR - repo-level, no organization membership involved, instant on a
+   personal-owner repo:
+   ```bash
+   gh api -X PUT repos/<owner>/<repo>/collaborators/<participant-username> -f permission=push
+   ```
+   `push` (write) is enough: clone, push, open issues - never `admin`. The
+   participant accepts the e-mail invitation (it expires after 7 days).
+   NOTE: this does NOT replace `zero/.pat` - a fine-grained PAT can only be
+   issued by the repo owner, so the participant's own fine-grained PAT will not
+   work on this repo. The shipped `zero/.pat` keeps powering pushes and the
+   escalation channel; the collaborator invite gives the participant web access
+   to their project and lets them authenticate as themselves (gh login or a
+   classic PAT) if they ever need to.
 7. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
    (`zip -r poc-<slug>.zip <dir> -x '*.DS_Store'`). State clearly: the ZIP contains
    a repo-scoped token - send it over a private channel only.
