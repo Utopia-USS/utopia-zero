@@ -36,6 +36,9 @@ same stack the scaffold already uses.
 ## Wiring (once, stage 2)
 
 0. **Design protocol first**: current utopia_ui main ships the full protocol
+   (NOTE: the token document is SINGLE-context in protocol v0 - it cannot carry
+   light AND dark palettes at once; a "both modes" app keeps the second mode as
+   a plain Dart theme outside the protocol, or ships one mode in the POC)
    (`tokens/utopia.tokens.json`, `twin/`, `manifest/`, `tool/utopia_design_tools`
    with `generate_theme --check`). If the `utopia-design` plugin
    (utopia-flutter-skills marketplace) is available, PREFER its flow: `tokens`
