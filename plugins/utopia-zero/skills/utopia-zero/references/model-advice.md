@@ -5,11 +5,25 @@ most participants run on the BASE subscription (Pro-class, ~100 zł), where limi
 are tight 5-hour windows. Advice is therefore **plan-aware**: the strongest model
 the user's plan can sustain for a whole build evening, not the strongest on paper.
 
-## Step 1: learn the plan (once, stage 0, clickable)
+## Step 1: learn the plan (once, stage 0 - detect silently, ask only as fallback)
 
-"Jaki masz plan Claude?" → Pro (podstawowy) / Max / nie wiem. On "nie wiem", guide:
-the plan name is in app settings / on claude.com/settings - or just assume Pro
-(the safe default for participants). Log it inside `model_info{plan}`.
+**Detect first, silently**, from the local Claude Code config (an internal file -
+format may drift, so treat failures as "unknown", never block):
+
+- macOS/Linux: `~/.claude.json` → `oauthAccount.userRateLimitTier`
+  ```bash
+  python3 -c "import json,pathlib;print(json.loads((pathlib.Path.home()/'.claude.json').read_text()).get('oauthAccount',{}).get('userRateLimitTier',''))" 2>/dev/null
+  ```
+- Windows (PowerShell):
+  ```powershell
+  (Get-Content "$env:USERPROFILE\.claude.json" -Raw | ConvertFrom-Json).oauthAccount.userRateLimitTier
+  ```
+
+Map the tier string: contains `max` → **Max**; contains `pro` → **Pro**; empty,
+missing, or anything else → **unknown**. On unknown ONLY, ask (clickable):
+"Jaki masz plan Claude?" → Pro (podstawowy) / Max / nie wiem - and on "nie wiem"
+assume Pro (the safe default for participants). Log it inside
+`model_info{plan, plan_source:"detected"|"asked"|"assumed"}`.
 
 ## Step 2: the advice matrix
 
