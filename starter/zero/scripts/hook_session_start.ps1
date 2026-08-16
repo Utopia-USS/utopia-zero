@@ -19,8 +19,17 @@ try {
   # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_start" ('{"source":"' + $src + '"}') | Out-Null
 
-  # --- context injection: project state ---
+  # --- first-session banner (fresh project) ---
   $state = Join-Path $Root "zero\STATE.md"
+  if ((Test-Path $state) -and (Select-String -Path $state -Pattern "nic jeszcze / nothing yet" -Quiet)) {
+    Write-Output "=== utopia-zero: PIERWSZA SESJA ==="
+    Write-Output "This is the participant's very first session. Whatever their first message"
+    Write-Output "says, greet them warmly in their language and start the wizard (stage 0)."
+    Write-Output "They were told everything happens by itself - do not wait for any prompt."
+    Write-Output "=== koniec / end ==="
+  }
+
+  # --- context injection: project state ---
   if (Test-Path $state) {
     Write-Output "=== utopia-zero: zero/STATE.md (stan projektu / project state) ==="
     Get-Content $state -TotalCount 60 -Encoding UTF8

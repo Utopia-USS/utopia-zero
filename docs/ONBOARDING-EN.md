@@ -1,8 +1,14 @@
 # Build your app - getting started (utopia-zero)
 
-This guide takes you from nothing to talking with Claude about your app idea.
-It takes ~20–30 minutes. No skills required - from your first message on, the
-guide handles everything technical.
+**Short version (usually all you need):** install the **Claude Code** app
+(https://claude.com/download) and log in → unzip the package from Utopia → open
+the unzipped folder in Claude Code (Open project) → accept everything it asks
+about (folder trust, add-on install, restart) → **type anything**, e.g. "start".
+From that moment the guide leads you by the hand - including installing
+whatever else is needed.
+
+Below is the same path step by step with screenshots - in case something goes
+differently. ~20-30 minutes. No skills required.
 
 ## What you need
 
@@ -77,10 +83,10 @@ Claude doesn't ask for approval on every action.
 
 ## Step 7 - Start!
 
-Paste (or dictate) into the chat:
+Type (or dictate) **anything** - this is enough:
 
 ```
-Let's start. Guide me from zero to my own app.
+start
 ```
 
 From here the guide takes over: it presents the stage plan, interviews you about

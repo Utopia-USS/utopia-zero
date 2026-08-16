@@ -1,8 +1,14 @@
 # Zbuduj swoją aplikację - instrukcja startu (utopia-zero)
 
-Ta instrukcja prowadzi od zera do momentu, w którym rozmawiasz z Claude'em o swojej
-aplikacji. Zajmie ~20–30 minut. Nie musisz nic umieć - od chwili wklejenia
-pierwszej wiadomości wszystkim zajmuje się przewodnik.
+**Wersja krótka (zwykle wystarczy):** zainstaluj aplikację **Claude Code**
+(https://claude.com/download) i zaloguj się → rozpakuj ZIP od Utopii → otwórz
+rozpakowany folder w Claude Code (Open project) → zgadzaj się na wszystko, o co
+zapyta (zaufanie folderowi, instalacja dodatków, restart) → **napisz cokolwiek**,
+np. „start". Od tej chwili przewodnik prowadzi Cię za rękę - łącznie z
+instalacją wszystkiego, czego zabraknie.
+
+Poniżej ta sama droga krok po kroku z obrazkami - na wypadek, gdyby coś poszło
+inaczej. Zajmie ~20-30 minut. Nie musisz nic umieć.
 
 ## Co będzie potrzebne
 
@@ -79,10 +85,10 @@ temu Claude nie będzie pytał o zgodę przy każdej czynności.
 
 ## Krok 7 - Zacznij!
 
-Wklej (albo podyktuj) do okna rozmowy:
+Napisz (albo podyktuj) **cokolwiek** - wystarczy:
 
 ```
-Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji.
+start
 ```
 
 Od tej chwili prowadzi Cię przewodnik: przedstawi plan etapów, zada pytania o Twój

@@ -28,6 +28,10 @@ professional Flutter team can take over, judged by the handover rubric in
 
 ## Session entry protocol (every session, before anything else)
 
+The start phrase is OPTIONAL - in a project with `zero/config.json`, ANY first
+user message ("cześć", "start", a stray question) enters this protocol. Fresh
+STATE → greet and begin stage 0; never reply with a generic "how can I help".
+
 1. Read `zero/config.json` (participant, project, flags, contact) and `zero/STATE.md`
    (stage, done, next). Missing both → see **Self-serve bootstrap** below.
 2. Detect language from the user's message (Polish → Polish, English → English,
