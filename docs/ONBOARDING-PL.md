@@ -12,6 +12,18 @@ pierwszej wiadomości wszystkim zajmuje się przewodnik.
 - **Paczka ZIP od Utopii** (Twój projekt) - dostajesz ją mailem/komunikatorem.
 - ~30 minut spokoju na start.
 
+## Jakie programy się zainstalują (i kto to robi)
+
+| Program | Do czego | Kto instaluje |
+|---|---|---|
+| **Claude Code** | aplikacja, w której rozmawiasz i powstaje Twój projekt | **Ty** - krok 1 poniżej (jedyna ręczna instalacja) |
+| **Git** | „sejf" zapisujący każdy krok pracy | **przewodnik**, w trakcie - poprosi tylko o zgodę |
+| **Flutter** | silnik, na którym działa Twoja aplikacja | **przewodnik**, w trakcie (duże pobieranie, ~15 min) |
+| dyktowanie (opcjonalnie) | mówisz zamiast pisać | Ty - patrz sekcja „Dyktowanie" na dole |
+
+Czyli: ręcznie instalujesz tylko Claude Code. Resztą zajmuje się przewodnik -
+gdy poprosi o zgodę na instalację, po prostu się zgódź.
+
 > 🔒 Prywatność: projekt zapisuje przebieg pracy (kroki, decyzje, kopie rozmów) w
 > Twoim prywatnym repozytorium, żeby Utopia mogła badać, jak działa ten proces.
 > W każdej chwili możesz to wyłączyć - wystarczy napisać: **„wyłącz analitykę"**.
@@ -83,10 +95,23 @@ Ciebie i można go zmienić w każdej chwili.
 Otwórz Claude Code → otwórz swój folder → napisz: **„kontynuuj"**. Przewodnik
 pamięta, na czym skończyliście.
 
+## Dyktowanie - mów, nie pisz
+
+Najlepsze odpowiedzi to swobodne, długie wypowiedzi - przewodnik sam je poukłada.
+Masz trzy opcje (od najprostszej):
+
+1. **Mikrofon w Claude Code** - ikona mikrofonu przy polu rozmowy. Uwaga:
+   najlepiej rozumie **angielski**; po polsku bywa niedokładny.
+2. **Dyktowanie systemowe po polsku** (polecane):
+   - **Windows**: naciśnij **Win + H**, wybierz język polski i mów - tekst
+     wpisuje się prosto do pola rozmowy.
+   - **Mac**: Ustawienia → Klawiatura → Dyktowanie (skrót: 2× Control).
+3. **Aplikacja oparta na Whisper** (dla chętnych - najlepsza polszczyzna,
+   działa offline): poproś osobę z Utopii o aktualną rekomendację i pomoc w
+   instalacji dla Twojego systemu.
+
 ## Dobre nawyki
 
-- **Mów, nie pisz** - włącz dyktowanie w systemie i opowiadaj swobodnie, długie
-  wypowiedzi są najlepsze. Przewodnik sam je poukłada.
 - Podczas dużych pobierań (np. „to potrwa ~20 minut") zostaw komputer włączony
   i nie zamykaj aplikacji.
 - Niczego nie da się bezpowrotnie zepsuć - każdy krok jest zapisywany „w sejfie".
