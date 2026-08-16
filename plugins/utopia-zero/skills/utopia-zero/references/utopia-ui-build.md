@@ -8,37 +8,44 @@ app-local kit. This is what makes POCs look professional AND hand-over cleanly.
 
 Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on:
 
-1. **Vendored copy** (the default for prepared participant repos while the utopia-ui
-   repo is private): if `packages/utopia_ui/` exists in the project root (put there
-   by `/utopia-zero:prepare`), use it:
-   ```yaml
-   utopia_ui:
-     path: ../packages/utopia_ui
-   ```
-   It's a frozen snapshot (source commit in `packages/utopia_ui/VENDORED.md`) -
-   works offline, no auth. The takeover team swaps it for a published dependency
-   later; say so in HANDOVER.
-2. **pub.dev**: `flutter pub add utopia_ui` - if the package is published.
-3. **git**: in `pubspec.yaml`:
+1. **pub.dev**: `flutter pub add utopia_ui` - if the package is published (as of
+   2026-08 it is not yet; check before skipping).
+2. **git** (the DEFAULT - the repo is public): in `pubspec.yaml`:
    ```yaml
    utopia_ui:
      git: {url: https://github.com/Utopia-USS/utopia-ui.git}
    ```
-   Works once the repo is public. Pin with `ref:` to a tag when tags exist.
+   Tracks main; pin with `ref:` to a tag when tags exist. Needs network only at
+   `pub get` time.
+3. **Vendored copy** (offline fallback): if `packages/utopia_ui/` exists in the
+   project root (older prepared repos), use it:
+   ```yaml
+   utopia_ui:
+     path: ../packages/utopia_ui
+   ```
+   Frozen snapshot (source commit in `packages/utopia_ui/VENDORED.md`). Prefer
+   swapping to the git dependency when online; note the choice in HANDOVER.
 4. **Fallback (nothing above works)**: build WITHOUT the package - Material 3 styled
    from the same token values (seed = `--u-color-primary`, dark scheme from canvas,
    Google Font, radii). The mock contract still holds; note the fallback in
    `zero/DECISIONS.md` so the takeover team can swap the dependency in later.
 
-`utopia_ui` requires Dart SDK ^3.11 (fine on current stable) and pulls
-`utopia_hooks` - same stack the scaffold already uses.
+`utopia_ui` requires Dart SDK ^3.11 / Flutter 3.44+ and pulls `utopia_hooks` -
+same stack the scaffold already uses.
 
 ## Wiring (once, stage 2)
 
-1. **`lib/app/theme.dart`** - emit from the accepted tokens. If the package ships
-   `tokens/utopia.tokens.json` (design protocol), treat it as the authoritative
-   default-theme export: copy its structure/values and override only the branded
-   slots from the Pracownia. Either way the emitted Dart takes this exact shape
+0. **Design protocol first**: current utopia_ui main ships the full protocol
+   (`tokens/utopia.tokens.json`, `twin/`, `manifest/`, `tool/utopia_design_tools`
+   with `generate_theme --check`). If the `utopia-design` plugin
+   (utopia-flutter-skills marketplace) is available, PREFER its flow: `tokens`
+   skill bootstraps `design/tokens.json` from the package default, you override
+   the branded slots from the Pracownia, `sync` generates the theme code. The
+   manual emission below is the fallback for older vendored snapshots or when
+   the plugin isn't installed.
+1. **`lib/app/theme.dart`** (manual fallback) - emit from the accepted tokens,
+   using `tokens/utopia.tokens.json` as the authoritative default-theme export
+   (override only the branded slots). The emitted Dart takes this exact shape
    (mirrors the package's own showcase themes):
    ```dart
    import 'package:flutter/material.dart';
@@ -86,15 +93,20 @@ Try in order; log a `decision{area:"ui-dependency"}` with the rung you landed on
 
 | Need | Use |
 |---|---|
-| primary action | `UtopiaButton` (hero component; `loading:`, `dense:` built in) |
-| secondary/ghost action | app-local `AppGhostButton` (see kit below) |
-| text input / search / dropdown / date | `UtopiaTextField`, `UtopiaSearchField`, `UtopiaDropdownField<T>`, `UtopiaDatePicker` |
+| primary action | `UtopiaButton` (hero component; `loading:`, `dense:` built in; resting height 48px) |
+| secondary/ghost action | `UtopiaGhostButton` |
+| text input / search / dropdown / date | `UtopiaTextField`, `UtopiaSearchField`, `UtopiaDropdownField<T>`, `UtopiaDatePicker` (48px controls, themed states) |
 | confirm / form dialog | `UtopiaConfirmDialog.show(danger:)`, `UtopiaDialog.form` - **adaptive**: real bottom-sheet on mobile widths |
 | tags / status | `UtopiaChip`, `UtopiaChipList` |
-| container | `UtopiaCard` (child-only - pad inside yourself) |
-| loading / skeleton | `UtopiaLoader`, `UtopiaMockLoadingBox`, `UtopiaThreeBounce` |
+| container / layout | `UtopiaCard` (child-only - pad inside yourself), `UtopiaPageWrapper`, `UtopiaGradientBackground`, `UtopiaDivider` |
+| headings | `UtopiaHeader`, `UtopiaTitle` |
+| loading / skeleton | `UtopiaLoader`, `UtopiaLoadingBox`, `UtopiaThreeBounce` |
 | empty state | `UtopiaTableEmpty` (generic despite the name: icon/title/subtitle/actions) |
-| toggles | `UtopiaSwitchField`, `UtopiaCheckRow` |
+| toggles / selection | `UtopiaSwitchField`, `UtopiaCheckRow`, `UtopiaCheckbox`, `UtopiaRadio`, `UtopiaSlider` |
+
+Metrics worth knowing (palette v2, protocol era): controls are 48px tall, the
+radius ladder is chip (6) < controls (12) < cards/dialogs (16) - override via
+tokens if the accepted mock says otherwise, don't fight it per-widget.
 
 Import ONLY the barrel (`package:utopia_ui/utopia_ui.dart`). Do not reference
 unexported internals; `UtopiaButtonVariant` does not exist (charter naming example).
@@ -107,11 +119,13 @@ token-driven (`context.colors`, `context.tokens`), zero literals:
 - `AppListTile` - leading/title/subtitle/trailing, `tileHeight` from theme
   (`UtopiaTable` is a back-office grid; wrong for app lists).
 - `AppBottomNav` / tabs - `UtopiaSidebar` is desktop rail/drawer only.
-- `AppPageHeader` - title + optional back/action (no app bar in the package).
-- `AppGhostButton` - ONLY if the package doesn't export `UtopiaGhostButton`
-  (design-protocol snapshots already do); same for `UtopiaHeader` vs
-  `AppPageHeader`. Check the barrel first.
+- `AppPageHeader` - app-bar row with back/action (`UtopiaHeader`/`UtopiaTitle`
+  are typography, not an app bar - compose them inside).
 - Avatar/badge/progress only if the BRIEF needs them.
+
+When the `utopia-design` plugin is installed, register reusable app-local
+components through its `component` skill (manifest overlay) instead of leaving
+them undocumented.
 
 **Before hand-rolling, check whether the package caught up**: Utopia is filling
 these gaps (utopia-ui issue #2) - inspect the barrel / CHANGELOG of the version you
