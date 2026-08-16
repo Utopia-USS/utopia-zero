@@ -1,31 +1,54 @@
-# Model advice (stage 0 + whenever it changes)
+# Model advice + token economy (stage 0, and whenever it changes)
 
-Quality of stages 1–4 decides developability - the experiment's #1 metric - so the
-default advice is simple: **the strongest model available on the user's plan, with
-high reasoning effort, for designing and building.** Economy is allowed only where
-it can't hurt the architecture.
+Quality of stages 1–4 decides developability - the experiment's #1 metric - but
+most participants run on the BASE subscription (Pro-class, ~100 zł), where limits
+are tight 5-hour windows. Advice is therefore **plan-aware**: the strongest model
+the user's plan can sustain for a whole build evening, not the strongest on paper.
 
-| Work | Advice |
-|---|---|
-| Stages 1–4: interview, architecture, features, debugging | strongest available (Claude 5 family - e.g. Fable 5 / Opus-class), extended thinking / high effort ON |
-| Stage 4 late-game: long series of small cosmetic tweaks | a fast strong model (Sonnet-class) is acceptable |
-| Stage 6 polish + copywriting | Sonnet-class fine |
-| Never for building | small/fast tiers (Haiku-class) |
+## Step 1: learn the plan (once, stage 0, clickable)
 
-How to deliver the advice (Zero mode, user's language, one breath): "Sprawdź, jaki
-model jest wybrany przy polu wiadomości - na czas budowania najlepszy będzie
-<model>. Pokażę Ci gdzie to przełączyć." Describe the model selector generically
-(desktop app: selector at the composer / conversation header) - UI details drift, so
-point at the concept, ask what they see, guide from there.
+"Jaki masz plan Claude?" → Pro (podstawowy) / Max / nie wiem. On "nie wiem", guide:
+the plan name is in app settings / on claude.com/settings - or just assume Pro
+(the safe default for participants). Log it inside `model_info{plan}`.
 
-Then log `model_info{model, effort, source: "advised"|"user"}` - also every time the
-user changes the model later (`source:"user"`).
+## Step 2: the advice matrix
 
-Subscription limits: when usage warnings appear or replies get throttled, be honest
-("limit planu odnowi się <kiedy> - zróbmy przerwę / wróćmy jutra"), and prefer a
-pause over downgrading the model mid-architecture. Downgrade willingly only for the
-economy rows above. Log the moment as `error{category:"claude-limits"}` + the chosen
-path as `decision`.
+| Plan | Stages 1–4 (build) | Late-game tweaks + stage 6 | Never |
+|---|---|---|---|
+| **Pro (default)** | **Sonnet-class, effort medium** - near-Opus quality at a fraction of the limit burn; a full evening fits in the window | Sonnet-class, effort low | Haiku-class for building; Opus-class as the *default* (limit dies mid-stage) |
+| **Max / Team** | strongest available (Opus-class), high effort | Sonnet-class fine | Haiku-class for building |
 
-> Maintenance note (Utopia): refresh the model names here as the lineup changes;
-> the table speaks in tiers on purpose so it survives releases.
+Pro escape hatch: for a genuinely hard, isolated moment (architecture knot, a bug
+that survived the 5-strategy ladder) it is fine to switch to Opus-class FOR THAT
+TASK and switch back - say so in one sentence, log `model_info{source:"user"}`.
+
+How to deliver (Zero mode, user's language, one breath): "Sprawdź, jaki model jest
+wybrany przy polu wiadomości - na czas budowania najlepszy będzie <model>. Pokażę
+Ci, gdzie to przełączyć." Describe the selector generically (UI drifts); ask what
+they see, guide from there.
+
+Log `model_info{model, effort, plan, source:"advised"|"user"}` - also whenever the
+user changes the model later.
+
+## Token economy (holds for the whole project, mostly on Pro)
+
+Context is the silent limit-eater: a long session re-reads its whole history every
+turn. Data point from our dry-runs: ~98% of consumed input was context re-reads,
+not new work.
+
+1. **Fresh session per stage.** STATE.md is designed to carry everything between
+   sessions. At every `stage_end` on a Pro plan, actively suggest: "Zamknij okno i
+   otwórz projekt na nowo - napisz cokolwiek, będę pamiętał. To oszczędza Twój
+   limit." (Bonus: new sessions pick up plugin updates.) Never force it mid-stage.
+2. **No parallel subagent fan-outs on Pro.** Sequential feature work; parallel
+   agent batches are a Max-plan luxury (they multiply context N times).
+3. **Targeted reads.** Read the fragment you need, not whole generated files
+   repeatedly; never re-`cat` a file you just wrote.
+4. **Short outputs** are already invariant 13 (calibrated messages) - it also
+   saves output tokens.
+5. **Limits hit anyway?** Be honest ("limit odnowi się <kiedy> - zróbmy przerwę"),
+   prefer a pause over a mid-architecture downgrade to Haiku-class. Log
+   `error{category:"claude-limits"}` + the chosen path as `decision`.
+
+> Maintenance note (Utopia): refresh model names as the lineup changes; the tables
+> speak in tiers on purpose so they survive releases.
