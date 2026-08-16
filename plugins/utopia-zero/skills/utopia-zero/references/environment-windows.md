@@ -8,6 +8,22 @@ the topic comes up, say it plainly and offer the phone-browser rung (LAN preview
 On Windows prefer PowerShell for anything you script; the analytics hooks use the
 `.ps1` variants. Long dictated paths with spaces → always quote.
 
+## Weak hardware (old CPU, pre-2016 laptops)
+
+Detect via `(Get-CimInstance Win32_Processor).Name` in the same silent pass. On a
+weak CPU (old AMD APU / 2-core era) the flow does not change - web-first is built
+for this - but expectations do:
+
+- Say ONCE, up front, in plain words: "Ten laptop da rade, ale pierwsze
+  uruchomienia potrwaja kilka minut - to normalne, nie przerywaj." Then never
+  mention the hardware again (no shaming, no repeated warnings).
+- First `flutter pub get` / first build: minutes, not seconds - do not treat as
+  hung before ~10 min; Defender scanning new toolchains stacks on top.
+- **Never suggest the Android emulator** on such machines (stage 5 included) -
+  go straight to the physical-phone rung: LAN preview first, USB device only if
+  the user insists. Log `decision{area:"preview-target", choice:"lan"}`.
+- Suggest closing heavy apps (browser z 30 kartami) before long builds, once.
+
 ## Detect first (silent, log `env`)
 
 ```powershell
