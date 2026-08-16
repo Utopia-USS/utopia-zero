@@ -109,7 +109,9 @@ simplest first:
 2. **System dictation in your language** (recommended):
    - **Windows**: press **Win + H**, pick your language and speak - text goes
      straight into the chat box.
-   - **Mac**: Settings → Keyboard → Dictation (shortcut: press Control twice).
+   - **Mac**: System Settings → Keyboard → Dictation - turn it on; trigger is
+     the 🎤 (F5) key or double-press Fn (🌐) - the exact shortcut is shown in
+     that same settings pane.
 3. **A Whisper-based app** (for the curious - best quality, works offline):
    ask your Utopia contact for a current recommendation for your system.
 
