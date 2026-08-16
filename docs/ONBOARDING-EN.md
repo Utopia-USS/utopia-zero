@@ -12,6 +12,18 @@ guide handles everything technical.
 - **The ZIP package from Utopia** (your project), sent to you directly.
 - ~30 calm minutes to start.
 
+## What gets installed (and by whom)
+
+| Program | What for | Who installs it |
+|---|---|---|
+| **Claude Code** | the app where you talk and your project gets built | **You** - step 1 below (the only manual install) |
+| **Git** | the "safe" that records every step of the work | **the guide**, along the way - it only asks for your OK |
+| **Flutter** | the engine your app runs on | **the guide**, along the way (big download, ~15 min) |
+| dictation (optional) | speak instead of typing | you - see the "Dictation" section below |
+
+So: you manually install Claude Code only. The guide handles the rest - when it
+asks for permission to install something, just agree.
+
 > 🔒 Privacy: the project records how the work goes (steps, decisions, conversation
 > copies) into your private repository so Utopia can study how well this process
 > works. You can turn it off at any moment by typing: **"disable analytics"**.
@@ -81,10 +93,22 @@ language follows you and can be switched at any time.
 Open Claude Code → open your folder → type: **"continue"**. The guide remembers
 exactly where you left off.
 
+## Dictation - talk, don't type
+
+Free-flowing, long answers work best - the guide sorts them out. Three options,
+simplest first:
+
+1. **The microphone in Claude Code** - the mic icon by the chat box. Note: it
+   understands **English** best; other languages can be hit-and-miss.
+2. **System dictation in your language** (recommended):
+   - **Windows**: press **Win + H**, pick your language and speak - text goes
+     straight into the chat box.
+   - **Mac**: Settings → Keyboard → Dictation (shortcut: press Control twice).
+3. **A Whisper-based app** (for the curious - best quality, works offline):
+   ask your Utopia contact for a current recommendation for your system.
+
 ## Good habits
 
-- **Talk, don't type** - enable system dictation and speak freely; long answers are
-  the best answers. The guide will structure them.
 - During big downloads ("this will take ~20 minutes") keep the computer awake and
   the app open.
 - Nothing can be permanently broken - every step is saved "to the safe".
