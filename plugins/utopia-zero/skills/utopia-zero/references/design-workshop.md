@@ -37,11 +37,12 @@ Runs right after the design interview, **before** BRIEF approval.
 7. All accepted → log `decision{area:"design-tokens", choice:"<one-line summary>",
    user_involved:true}`, commit `zero/design/`, fold tokens + mock list into BRIEF.
 
-## Protocol twin first (when the package ships it)
+## Protocol twin first (the default - current utopia_ui main always ships it)
 
-If the resolved/vendored `utopia_ui` contains `twin/` + `tokens/` (the design
-protocol), do **not** hand-roll the vocabulary below - use the package's own,
-version-matched artifacts:
+Every current `utopia_ui` version contains `twin/` + `tokens/` (the design
+protocol); only stale vendored snapshots may lack it. When present, do **not**
+hand-roll the vocabulary below - use the package's own, version-matched
+artifacts:
 
 - `twin/tokens.css` - the canonical CSS variable sheet (names AND default values);
   inline it into the mock's `<style>` and override the branded variables after it.

@@ -33,12 +33,11 @@ for what's missing.
    direct contact** (participants are friends of Utopia and write to a person they
    know, not a mailbox; e.g. `Paweł - pawel@…`). Use `info@utopiasoft.io` only as a
    last-resort fallback when no direct contact fits. Flags stay `true`.
-4. **Vendor utopia_ui** (required while the utopia-ui repo is private - participants
-   cannot fetch it themselves): clone/refresh `Utopia-USS/utopia-ui` with the
-   operator's access, copy `pubspec.yaml`, `lib/`, `fonts/`, `LICENSE` (skip
-   `example/`, `test/`, `.git`) into `<repo>/packages/utopia_ui/`, and write
-   `packages/utopia_ui/VENDORED.md` with the source commit hash + date. The app will
-   consume it as a `path` dependency (see the skill's `utopia-ui-build.md` ladder).
+4. **utopia_ui dependency**: the utopia-ui repo is PUBLIC - participants fetch it
+   themselves via the git dependency (the wizard adds it in stage 2; see the
+   skill's `utopia-ui-build.md` ladder). No vendoring by default. Vendor a copy
+   into `<repo>/packages/utopia_ui/` (with `VENDORED.md`: source commit + date)
+   ONLY when the participant is expected to work offline.
 5. **Create + push**: `gh repo create <org>/<repo> --private
    --description "utopia-zero POC - <project name>"`; `git init -b main`, commit
    `zero: starter for <participant_id>`, push. (The initial push authenticates as
