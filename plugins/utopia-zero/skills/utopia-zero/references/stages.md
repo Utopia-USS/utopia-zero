@@ -83,9 +83,11 @@ Shared rules for every stage:
 9. **Verify plugins**: the starter's `.claude/settings.json` declares both
    marketplaces and the plugin set (utopia-zero + utopia-hooks, utopia-ai-arch,
    utopia-dart-lsp, utopia-cms, utopia-reviews). Check they're active (skills
-   available). If not: try `claude plugin install <name>@<marketplace>` via Bash;
-   if the CLI refuses, give the user the exact `/plugin install …` lines to paste
-   (one by one, in order) and wait.
+   available). If not: try `claude plugin marketplace add …` / `claude plugin install
+   <name>@<marketplace>` via Bash. If the CLI is missing or refuses, walk the user
+   through a **full quit → reopen app → open this folder → accept the add-on popup**
+   (do NOT tell a desktop-app user to paste `/plugin …` - that command exists only in
+   the Claude Code terminal; offer those lines only if they are in a terminal).
 10. `stage_end`; STATE → stage 1 with a one-line teaser of what's next.
 
 **Exit:** consent logged · hooks confirmed live · push worked (or degraded-local noted) · plugins active.

@@ -125,7 +125,7 @@ simplest first:
 
 | Symptom | What to do |
 |---|---|
-| No add-on prompt (step 5) | Paste two lines, one at a time: `/plugin marketplace add Utopia-USS/utopia-zero`, then `/plugin install utopia-zero@utopia-zero`. Quit and reopen the app. The guide will fetch the rest itself. |
+| No add-on prompt (step 5) | **Fully quit** the app (not just the window), open it again and open the same folder - the add-on install popup should appear; accept everything. Then type anything - the guide fetches the rest itself (and if no popup shows up, it will try to install the add-ons silently). Note: `/plugin ...` commands **do not work in the app** - only in Claude Code in a terminal (there: `/plugin marketplace add Utopia-USS/utopia-zero`, then `/plugin install utopia-zero@utopia-zero`). |
 | Constant "Allow…?" popups | Automatic mode is off → step 6. |
 | A usage-limit message | Your plan has time-window limits. The app shows when it resets - come back then and type "continue". |
 | Something looks broken / confusing | Just type: "what's going on?" - the guide explains in plain words. |

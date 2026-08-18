@@ -128,7 +128,7 @@ Masz trzy opcje (od najprostszej):
 
 | Objaw | Co zrobić |
 |---|---|
-| Brak propozycji instalacji dodatków (krok 5) | Wklej po kolei dwie linijki: `/plugin marketplace add Utopia-USS/utopia-zero`, potem `/plugin install utopia-zero@utopia-zero`. Zamknij i otwórz aplikację. Resztę dodatków przewodnik dociągnie sam. |
+| Brak propozycji instalacji dodatków (krok 5) | Zamknij aplikację **całkowicie** (nie tylko okno), otwórz ją ponownie i otwórz ten sam folder - okienko instalacji dodatków powinno się pojawić; zaakceptuj wszystko. Potem napisz cokolwiek - przewodnik dociągnie resztę sam (a jeśli okienka nie widać, spróbuje doinstalować dodatki po cichu). Uwaga: komendy `/plugin ...` **nie działają w aplikacji** - tylko w Claude Code w terminalu (tam: `/plugin marketplace add Utopia-USS/utopia-zero`, potem `/plugin install utopia-zero@utopia-zero`). |
 | Ciągłe pytania „Allow…?" | Tryb automatyczny wyłączony → krok 6. |
 | Komunikat o limicie użycia | Twój plan ma limity czasowe. Aplikacja pokazuje, kiedy limit się odnowi - wróć wtedy i napisz „kontynuuj". |
 | Coś wygląda na zepsute / nie wiesz, co się dzieje | Napisz po prostu: „co się dzieje?" - przewodnik wyjaśni ludzkim językiem. |
