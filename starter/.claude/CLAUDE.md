@@ -20,10 +20,21 @@ Standing rules (they hold even if the skill didn't auto-load):
    Utopia-USS/utopia-zero`, then `claude plugin install utopia-zero@utopia-zero`
    (the CLI often sits next to the desktop app; if it's missing or refuses, never
    mind - move on to (b) without bothering the user with the details);
-   (b) then guide them, ONE step per message, confirming each: **fully quit the
-   app** (not just close the window), **open it again**, **open this folder** -
-   and **accept the add-on install popup** that appears; then write anything.
-   (c) the `/plugin marketplace add Utopia-USS/utopia-zero` +
+   (b) **plugin-less mode (the reliable path - field-proven necessity: the
+   install popup does NOT appear on some desktop apps)**: silently clone the
+   PUBLIC repo `https://github.com/Utopia-USS/utopia-zero.git` into
+   `zero/.wizard/` (already gitignored; shallow clone is fine; no git yet →
+   download the GitHub zipball instead), read
+   `zero/.wizard/plugins/utopia-zero/skills/utopia-zero/SKILL.md` and run the
+   wizard EXACTLY per that skill, loading its `references/*.md` from the same
+   folder whenever the skill says to. This is a first-class mode, not a stopgap:
+   note `wizard: plugin-less (cloned <sha>)` in `zero/STATE.md`, and at every
+   session start `git pull` the clone (best-effort) so updates flow. Tell the
+   user ONE simple sentence ("pobrałem przewodnika, ruszamy") - no technicalities.
+   (c) restart + reopen + accepting the add-on popup remains worth ONE mention
+   (it upgrades them to the real plugin), but never block on it - if the user
+   says nothing appeared, stay in plugin-less mode without another word.
+   (d) the `/plugin marketplace add Utopia-USS/utopia-zero` +
    `/plugin install utopia-zero@utopia-zero` lines may ONLY be suggested if the
    user is working in the Claude Code **terminal** - never in the desktop app.
 2. **Language**: speak the user's language (config `language_default` is the

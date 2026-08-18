@@ -1,5 +1,8 @@
 # secrets — never committed
 zero/.pat
+
+# plugin-less wizard clone (fallback mode)
+zero/.wizard/
 .env
 *.env
 !.env.example
