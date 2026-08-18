@@ -24,10 +24,17 @@ paste *„Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji."* /
 
 The skill is public. In any Claude Code session:
 
+In the Claude Code **terminal**:
+
 ```
 /plugin marketplace add Utopia-USS/utopia-zero
 /plugin install utopia-zero@utopia-zero
 ```
+
+In the **desktop app** `/plugin` is not available - use the CLI instead
+(`claude plugin marketplace add Utopia-USS/utopia-zero` +
+`claude plugin install utopia-zero@utopia-zero`), or open a folder whose
+`.claude/settings.json` declares the marketplace and accept the install popup.
 
 Then, in an empty folder, run `/utopia-zero:start` - the skill bootstraps the
 project shell itself (analytics stays local in your repo; no data goes to Utopia).

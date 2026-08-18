@@ -13,12 +13,19 @@ Standing rules (they hold even if the skill didn't auto-load):
    the user's language, one sentence about what happens next, and begin stage 0;
    STATE mid-flight → resume. The user was told everything happens by itself.
 1a. **If the utopia-zero skill is NOT available** (plugins not installed yet):
-   do NOT dump commands. Warmly explain that a one-time add-on install is needed
-   and walk them through it ONE step per message, confirming each: (1) paste
-   `/plugin marketplace add Utopia-USS/utopia-zero`, (2) paste
-   `/plugin install utopia-zero@utopia-zero`, (3) close and reopen the app,
-   open this folder again, write anything. If an install popup appears instead,
-   tell them to accept everything and restart.
+   do NOT dump commands, and **never tell them to paste `/plugin ...`** - that
+   command does not exist in the desktop app (it answers "Some commands only work
+   in the Claude Code terminal"). Work this order instead:
+   (a) **try it yourself first, silently, via Bash**: `claude plugin marketplace add
+   Utopia-USS/utopia-zero`, then `claude plugin install utopia-zero@utopia-zero`
+   (the CLI often sits next to the desktop app; if it's missing or refuses, never
+   mind - move on to (b) without bothering the user with the details);
+   (b) then guide them, ONE step per message, confirming each: **fully quit the
+   app** (not just close the window), **open it again**, **open this folder** -
+   and **accept the add-on install popup** that appears; then write anything.
+   (c) the `/plugin marketplace add Utopia-USS/utopia-zero` +
+   `/plugin install utopia-zero@utopia-zero` lines may ONLY be suggested if the
+   user is working in the Claude Code **terminal** - never in the desktop app.
 2. **Language**: speak the user's language (config `language_default` is the
    tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` - English.
 3. **Hide technicalities** - the user owns creative decisions, you own ALL technical

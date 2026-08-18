@@ -119,8 +119,11 @@ na jej podstawie) + **paczkę ZIP** (jego repo `poc-<projekt>` z configiem) + te
 3. Otwórz ten folder w Claude Code („Open project") - **aplikacja sama zaproponuje instalację
    marketplace'ów i pluginów** (deklaracje `extraKnownMarketplaces` + `enabledPlugins`
    w `starter/.claude/settings.json`); zaakceptuj.
-   *Fallback w instrukcji, gdyby propozycja się nie pojawiła: wklej dwie linijki
-   `/plugin marketplace add …` + `/plugin install utopia-zero@utopia-zero`.*
+   *Fallback w instrukcji, gdyby propozycja się nie pojawiła: całkowicie zamknij
+   aplikację, otwórz ponownie, otwórz folder i zaakceptuj okienko. Komendy `/plugin …`
+   działają WYŁĄCZNIE w Claude Code w terminalu - w aplikacji desktopowej zwracają
+   „Some commands only work in the Claude Code terminal"; skill próbuje wtedy po cichu
+   `claude plugin install …` przez Bash.*
 4. Włącz tryb automatyczny (auto-accept) - screenshot w instrukcji. (Starter i tak ustawia
    `permissions.defaultMode: acceptEdits` + szeroki allowlist - pas i szelki.)
 5. Wklej **prompt startowy** (po polsku lub angielsku - to ustawia język):
