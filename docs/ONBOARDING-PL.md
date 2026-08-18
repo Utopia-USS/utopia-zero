@@ -1,7 +1,8 @@
 # Zbuduj swoją aplikację - instrukcja startu (utopia-zero)
 
 **Wersja krótka (zwykle wystarczy):** zainstaluj aplikację **Claude Code**
-(https://claude.com/download) i zaloguj się → rozpakuj ZIP od Utopii → otwórz
+(https://claude.com/product/claude-code - uwaga: to INNA aplikacja niż zwykły
+"Claude"!) i zaloguj się → rozpakuj ZIP od Utopii → otwórz
 rozpakowany folder w Claude Code (Open project) → zgadzaj się na wszystko, o co
 zapyta (zaufanie folderowi, instalacja dodatków, restart) → **napisz cokolwiek**,
 np. „start". Od tej chwili przewodnik prowadzi Cię za rękę - łącznie z
@@ -36,8 +37,12 @@ gdy poprosi o zgodę na instalację, po prostu się zgódź.
 
 ## Krok 1 - Zainstaluj aplikację Claude Code
 
-Wejdź na **https://claude.com/download** i pobierz aplikację **Claude Code** dla
+Wejdź na **https://claude.com/product/claude-code** i kliknij **Download** dla
 swojego systemu (Mac / Windows). Zainstaluj jak każdy inny program.
+
+> ⚠️ **Uwaga: "Claude" i "Claude Code" to DWIE RÓŻNE aplikacje.** Potrzebujesz
+> **Claude Code** (do budowania). Jeśli masz już zwykłego "Claude" (czat) -
+> to nie ten program; doinstaluj Claude Code z linku powyżej.
 
 `[SCREENSHOT: strona pobierania z zaznaczonym przyciskiem]`
 

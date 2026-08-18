@@ -3,7 +3,7 @@
 **PL** - To jest Twój projekt w eksperymencie **utopia-zero**. Nie musisz tu nic
 robić ręcznie:
 
-1. Otwórz ten folder w aplikacji **Claude Code** („Open project").
+1. Otwórz ten folder w aplikacji **Claude Code** (pobierz: https://claude.com/product/claude-code - to INNA aplikacja niż zwykły „Claude"!) - „Open project".
 2. Jeśli wyskoczy pytanie o zaufanie folderowi albo o instalację dodatków -
    **zgadzaj się na wszystko** (i zrestartuj aplikację, jeśli poprosi).
 3. **Napisz cokolwiek** - np. „start" albo „cześć". Przewodnik się przedstawi
@@ -14,7 +14,7 @@ Pełna instrukcja krok po kroku (z obrazkami):
 
 **EN** - This is your **utopia-zero** experiment project. Nothing to do by hand:
 
-1. Open this folder in the **Claude Code** app ("Open project").
+1. Open this folder in the **Claude Code** app (get it: https://claude.com/product/claude-code - a DIFFERENT app than plain "Claude"!) - "Open project".
 2. If asked about trusting the folder or installing add-ons - **accept
    everything** (and restart the app if it asks).
 3. **Type anything** - e.g. "start" or "hi". The guide introduces itself and
