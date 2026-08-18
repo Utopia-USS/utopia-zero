@@ -1,7 +1,8 @@
 # Build your app - getting started (utopia-zero)
 
 **Short version (usually all you need):** install the **Claude Code** app
-(https://claude.com/download) and log in → unzip the package from Utopia → open
+(https://claude.com/product/claude-code - note: a DIFFERENT app than plain
+"Claude"!) and log in → unzip the package from Utopia → open
 the unzipped folder in Claude Code (Open project) → accept everything it asks
 about (folder trust, add-on install, restart) → **type anything**, e.g. "start".
 From that moment the guide leads you by the hand - including installing
@@ -36,8 +37,12 @@ asks for permission to install something, just agree.
 
 ## Step 1 - Install the Claude Code app
 
-Go to **https://claude.com/download** and install **Claude Code** for your system
-(Mac / Windows), like any other app.
+Go to **https://claude.com/product/claude-code** and click **Download** for your
+system (Mac / Windows). Install it like any other program.
+
+> ⚠️ **"Claude" and "Claude Code" are TWO DIFFERENT apps.** You need
+> **Claude Code** (the building one). If you already have plain "Claude" (chat) -
+> that is not it; install Claude Code from the link above.
 
 `[SCREENSHOT: download page with the button highlighted]`
 
