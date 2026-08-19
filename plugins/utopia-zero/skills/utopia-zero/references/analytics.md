@@ -15,13 +15,24 @@ Opt-out procedure (user says "wyłącz analitykę" / "disable analytics"): log o
 `consent{analytics:false}`, flip the flag(s) in config, commit, confirm in plain
 words. Re-enable symmetrically.
 
+**When the user asks to DELETE already-collected data** (transcripts, events): do it,
+but say one plain sentence of truth first - removed files stay in git history unless
+the history is rewritten, and offer that rewrite (or the planned move to a fresh repo)
+as the actual erasure. Never let "usunięte" mean less than the user thinks it means
+(dry-run #2: 21 "deleted" transcripts still sat in history at handover).
+
 ## Scripts (in `starter/zero/scripts/`)
 
 | Script | Called by | Does |
 |---|---|---|
-| `log_event.sh` / `.ps1` | you (skill) + other scripts | appends one JSONL event, auto-fills common fields, redacts |
-| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, `session_start` event, STATE summary → stdout (context), new `[zero]`-issue replies → stdout |
-| `hook_session_end.sh` / `.ps1` | SessionEnd hook | `session_end` event with token usage from the transcript, transcript copy (redacted), auto-commit+push of `zero/` analytics files |
+| `log_event.sh` / `.ps1` | you (skill) + other scripts | appends one JSONL event, auto-fills common fields, redacts, **enforces the catalog** (see below), keeps the pulse counter |
+| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, **`.stage` reconciled with STATE.md**, `session_start` event, STATE summary → stdout (context), pulse-survey reminder, new `[zero]`-issue replies → stdout |
+| `hook_session_end.sh` / `.ps1` | SessionEnd hook | `session_end` event with token usage from the transcript (cumulative per session - see catalog), transcript copy (redacted), auto-commit+push of `zero/` analytics files |
+
+`VERSION` in the same directory numbers the script set. Participant repos carry
+COPIES of these scripts, so fixes do not reach them through the plugin - the
+session entry protocol (SKILL.md) compares the local `VERSION` against the
+canonical one on GitHub and refreshes the copies when it is behind.
 
 Call form (always from the project root):
 
@@ -37,21 +48,38 @@ the SessionStart hook), `stage` (from `zero/analytics/.stage`).
 **Your duty on `stage_start`**: write the number first, then log -
 `printf '3' > zero/analytics/.stage && bash zero/scripts/log_event.sh stage_start '{}'`.
 
-## Hard logging rules (violations found in dry-run #1 - do not repeat)
+## Hard logging rules (violations found in dry-runs #1 and #2 - do not repeat)
 
 1. **`question` BEFORE asking, every time.** An `answer` without a paired `question`
    event is a data bug; the pairing (`id`) is what makes the interview analyzable.
+   This includes the stage-4 plan approvals (loop step 2) - dry-run #2 logged 11
+   questions against 43 features.
 2. **Every user-reported correction logs a checkpoint**:
    `checkpoint{feature, verdict:"change", rework:n}` - also when visual checkpoints
    are turned off. Silent fixes destroy the vision↔implementation research signal.
 3. **`feature_done` only AFTER its commit exists** (and after push, when possible) -
    events must never claim commits git can't show.
+4. **Fill the catalog keys, then add prose.** `log_event` now warns on stderr and
+   stamps `_schema_warning` into the payload when a required key is missing or the
+   type is unknown. A warning is a DATA BUG you just created: keep working, but log
+   the next event of that type with the full catalog payload. Extra keys are always
+   welcome (`found_by`, `tests`, `note`, ...) - required keys are not negotiable,
+   because they are the columns every analysis groups by. In dry-run #2 the payloads
+   drifted into prose after day one and the rework metric became uncomputable.
+5. **`feature_start` before every `feature_done`.** Time per feature is a research
+   question; 11 starts against 43 dones made it unanswerable in dry-run #2.
+6. **Survey scales are normalized "higher = better"** before logging. A reversed
+   question (e.g. frustration) gets its score flipped (6 minus the answer on 1-5),
+   and the payload key says what was asked, e.g. `calm_at_stuck` not `frustration`.
 
 ## Event catalog (type → when → payload)
 
+Required keys (enforced by `log_event`) are the ones named below; anything extra
+is welcome on top.
+
 | type | when | payload keys |
 |---|---|---|
-| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `est_cost_usd`, `transcript_copied` |
+| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `cumulative:true` (sums cover the WHOLE transcript incl. earlier resumes - analyses take the LAST snapshot per `session_id`, never the sum), `est_cost_usd`, `transcript_copied` |
 | `stage_start` / `stage_end` | every stage boundary | `stage` is in common fields; end: `duration_hint` |
 | `tutorial` | stage 0 | `skipped` |
 | `consent` | stage 0 + every change | `analytics`, `transcripts` |
@@ -61,19 +89,26 @@ the SessionStart hook), `stage` (from `zero/analytics/.stage`).
 | `decision` | every significant technical choice | `area`, `choice`, `rationale`, `alternatives[]`, `user_involved` |
 | `user_override` | user changes any prior decision | `ref`, `from`, `to` |
 | `build` | every run/build attempt | `target: web\|android\|ios`, `ok`, `duration_s`, `attempt` |
-| `error` | every surfaced failure | `category`, `signature` (first error line, redacted) |
+| `error` | every surfaced failure | `category`, `signature` (first error line, redacted), `found_by: author\|test\|simulator\|device\|analyzer\|wizard` (who/what surfaced it - the most interesting column of dry-run #2) |
 | `fix_attempt` | every ladder step | `n`, `strategy`, `ok` |
 | `stuck` | ladder exhausted | `attempts`, `action: issue_created\|plan_b\|deferred` |
 | `checkpoint` | every visual checkpoint | `feature`, `verdict: accept\|change\|reject`, `rework` |
-| `feature_start` / `feature_done` | stage-4 loop | `name`; done: `commits` |
+| `feature_start` / `feature_done` | stage-4 loop | `name`; done: `commits`; parallel-agent work adds `parallel_agents:n` |
 | `scope_request` | out-of-BRIEF ask | `summary`, `handled: done\|declined_logged` |
 | `backend_step` | backend setup moments | `provider`, `step`, `delegated` |
 | `language_switch` | language change | `from`, `to` |
-| `survey` | pulses + final | `stage`, `scores{}`, `free_text` |
+| `survey` | pulses + final | `stage`, `scores{}` (normalized: higher = better), `free_text` |
 | `handover_selfscore` | stage 6 | `scores{criterion:0-2}`, `total` |
 
 Unlisted momentary needs → prefer `decision`/`error` with a good payload over
-inventing new types; if a new type is truly needed, use it and note it in HANDOVER.
+inventing new types; if a new type is truly needed, use it (accepting the
+`_schema_warning` it earns) and note it in HANDOVER.
+
+**Pulse cadence is mechanical, not remembered**: `log_event` counts `feature_done`
+into `zero/analytics/.pulse` and resets it on `survey`; the SessionStart hook
+surfaces "pulse overdue" at ≥ 3. When you see that banner, run the 2-question
+pulse at the next natural break - dry-run #2 collected 0 of ~15 due pulses on
+memory alone.
 
 ## Hook wiring (stage 0 writes this into `.claude/settings.json`)
 
