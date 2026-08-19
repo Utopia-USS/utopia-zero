@@ -20,6 +20,9 @@ try {
   $tp = $null; if ($in -and $in.transcript_path) { $tp = $in.transcript_path }
 
   # --- token usage from transcript ---
+  # NOTE: the transcript covers the WHOLE session including earlier resumes, so the
+  # sums are cumulative per session_id; analyses must take the LAST snapshot per
+  # session, never the sum (dry-run #2: summing overstated cost by 84%).
   $acc = @{}
   if ($tp -and (Test-Path $tp)) {
     foreach ($line in Get-Content $tp -Encoding UTF8) {
@@ -41,7 +44,7 @@ try {
 
   # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_end" `
-      ('{"models":' + $models + ',"est_cost_usd":null,"transcript_copied":' + $copied.ToString().ToLower() + '}') | Out-Null
+      ('{"models":' + $models + ',"cumulative":true,"est_cost_usd":null,"transcript_copied":' + $copied.ToString().ToLower() + '}') | Out-Null
 
   # --- redacted transcript copy ---
   if ($copied) {

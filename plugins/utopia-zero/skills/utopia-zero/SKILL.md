@@ -41,6 +41,16 @@ STATE → greet and begin stage 0; never reply with a generic "how can I help".
 3. Print the stage banner and a one-breath recap: where we are, what's next.
 4. If `zero/STATE.md` says a stage is mid-flight, resume it - never restart a
    completed step (all stage scripts are idempotent; see `references/stages.md`).
+5. **Scripts sync** (best-effort, silent when current, ONCE per session): participant
+   repos carry COPIES of `zero/scripts/`, so fixes don't arrive with the plugin.
+   Compare `zero/scripts/VERSION` (missing file = 1) against
+   `https://raw.githubusercontent.com/Utopia-USS/utopia-zero/main/starter/zero/scripts/VERSION`
+   (curl, ~5 s timeout). Upstream higher → download from the same raw base over the
+   local copies: `VERSION`, `log_event.sh|.ps1`, `hook_session_start.sh|.ps1`,
+   `hook_session_end.sh|.ps1`; keep them executable; commit
+   `zero: scripts sync v<N>`; tell the user in ONE plain sentence (mode-calibrated),
+   and note that hooks pick the new scripts up next session. Offline or any error →
+   skip silently, never block or retry.
 
 Stage banner format (user's language): `📍 Etap 3/6 - Szkielet aplikacji` / `📍 Stage 3/6 - App skeleton`.
 
@@ -85,7 +95,9 @@ back with "wróć do trybu zero/pro".
 7. **Log analytics events** at the moments listed in `references/analytics.md` via
    `zero/scripts/log_event.sh` (macOS) / `log_event.ps1` (Windows). Analytics off in
    config → the script is a no-op; never log secrets (the script redacts, but don't
-   feed them either).
+   feed them either). Payloads fill the CATALOG KEYS first, prose after - the script
+   prints a SCHEMA WARNING when a required key is missing; treat every warning as a
+   bug in your own logging and correct the next event of that type.
 8. **Commit + push after every completed step** (stage end, feature done, fix
    confirmed). Small commits, English imperative messages. Git stays invisible to the
    user beyond the "safe" metaphor.

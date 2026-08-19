@@ -16,6 +16,9 @@ SID="$(val session_id)"; [ -z "${SID:-}" ] && SID="$(cat "$AN/.session" 2>/dev/n
 TP="$(val transcript_path)"
 
 # --- token usage from transcript (python3 best-effort) ---
+# NOTE: the transcript covers the WHOLE session including earlier resumes, so the
+# sums are cumulative per session_id; analyses must take the LAST snapshot per
+# session, never the sum (dry-run #2: summing overstated cost by 84%).
 MODELS="{}"
 if command -v python3 >/dev/null 2>&1 && [ -n "${TP:-}" ] && [ -f "$TP" ]; then
   MODELS="$(python3 - "$TP" <<'PYEOF' 2>/dev/null || echo '{}'
@@ -52,7 +55,7 @@ if [ "$(flag transcripts_enabled)" != "false" ] && [ "$(flag analytics_enabled)"
 fi
 
 bash "$ROOT/zero/scripts/log_event.sh" session_end \
-  "{\"models\":$MODELS,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
+  "{\"models\":$MODELS,\"cumulative\":true,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
 
 # --- redacted transcript copy ---
 if [ "$COPIED" = "true" ]; then

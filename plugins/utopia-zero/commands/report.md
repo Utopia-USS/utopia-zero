@@ -26,14 +26,26 @@ per-line tool calls). Skip malformed lines silently.
      `session_end` closes it; an episode without a clean end closes at its last
      event (mark `~`). Events before the first `session_start` of an id (pre-hook
      era) form one episode ending at their `session_end`.
+   - **Noise filter**: episodes shorter than 2 minutes whose `session_end` carries
+     no token data are app restarts, not work (poc-zatoczenie: 27 of 46 ends).
+     Exclude them from the episode count; report the excluded number in a footnote.
+   - Long idle gaps inside an episode are real (the user walked away with the app
+     open). Alongside the raw total, report an "active time" figure with
+     inter-event gaps capped at 30 min, and name the cap.
    - Per-stage time: sum the deltas between consecutive in-episode events,
      attributed to the earlier event's `stage` - NOT the episode's start stage
      (a single evening episode can span stages 0→4).
    - Report: episode count, total time (`h:mm`), calendar span (first event →
      last event), and the per-stage split.
 2. **Tokens per model**
-   - Sum `session_end.payload.models` across sessions: per model, `in`,
-     `cache_read` (treat a missing key as 0), `out`.
+   - **A `session_end` snapshot is CUMULATIVE for its `session_id`.** The hook
+     parses the whole transcript, and a resumed session appends to the same
+     transcript - so one `session_id` can emit several growing snapshots, days
+     apart. Summing them double-counts (verified on poc-zatoczenie: the naive sum
+     overstated cost by 84%, $1794 vs $975). Per `session_id`, take the LAST
+     snapshot only (ties/max by `out`), then sum those per model: `in`,
+     `cache_read` (treat a missing key as 0), `out`. This applies retroactively -
+     old events (without the explicit `cumulative:true` flag) were cumulative too.
    - `in` already includes cache WRITES (the hook lumps fresh input +
      cache-creation) - say this in one footnote line.
    - **Old-format events**: `session_end` entries where a model has NO

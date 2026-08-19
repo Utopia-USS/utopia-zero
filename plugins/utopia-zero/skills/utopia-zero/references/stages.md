@@ -112,7 +112,14 @@ Load `interview-guide.md` + `design-interview.md` + `design-workshop.md`.
 6. Write `zero/BRIEF.md` (user's language; structure in `interview-guide.md`,
    design section records tokens + mock list), read back a 5-line summary, get
    approval. Log `checkpoint{feature:"brief"}`.
-7. Commit + push (including `zero/design/`); `stage_end`.
+7. **STATE names the visual contract**: write one line into `zero/STATE.md` -
+   `Kontrakt wizualny / Visual contract: zero/design/`. The contract may later
+   graduate (dry-run #2: an in-app workshop under `app/web/design/` plus a
+   generated design-system page beat the static mocks) - graduating is welcome,
+   but ONLY with the STATE line updated to the new location and a
+   `decision{area:"design-contract"}` logged. A contract nobody can find is
+   a broken protocol, not flexibility.
+8. Commit + push (including `zero/design/`); `stage_end`.
 
 **Exit:** BRIEF.md approved and pushed · 2–3 mocks accepted in `zero/design/`.
 
@@ -213,6 +220,23 @@ Out-of-BRIEF requests at any point: do it if feasible (log
 `scope_request{handled:"done"}`), otherwise explain kindly, park it in BRIEF "Później"
 (log `scope_request{handled:"declined_logged"}`).
 
+**Parallel agents / worktrees** (Pro and Utopia modes only): allowed for
+independent features, with duties - log `decision{area:"parallelism",
+choice:"<n> agents", rationale, user_involved:false}` once per burst, add
+`parallel_agents:n` to the affected `feature_start`/`feature_done`, and know that
+per-feature timing for that burst is lost to the analysis. Every merged
+`worktree-agent-*` / scratch branch is deleted at the latest in stage 6
+(dry-run #2 left six and lost the repo-hygiene point for it).
+
+**MVP close is a ceremony, not a vibe.** When the BRIEF's MVP list is done (or the
+user says "wystarczy na MVP"): log `stage_end{duration_hint, note:"MVP closed"}`,
+update STATE ("MVP zamknięte <date>"), and ask the user what's next (clickable):
+finish & hand over (→ stage 6) / keep building (→ **Polish mode**). Choosing to
+keep building switches the mode in STATE, logs `decision{area:"mode",
+choice:"polish"}`, and the loop continues with all the same duties - post-MVP work
+must not float outside any stage (dry-run #2: 60% of all work happened in an
+unmarked afterlife of stage 4).
+
 **Exit (to stage 6):** all MVP features done, or the user says "wystarczy na MVP".
 
 ## Stage 5 - Devices (optional, on demand)
@@ -243,6 +267,15 @@ Load `handover.md`. **Entry:** MVP loop closed.
    on every screen, final visual sweep against the design tokens + a contrast audit
    (≥ 4.5:1) of every screen.
 2. Final gates: `flutter analyze`, `utopia doctor`, `flutter build web` release.
+2a. **Platform reality check**: every platform the app declares (android/ios/web
+   folders present) has been LAUNCHED at least once during the project - a build
+   alone does not count (dry-run #2 handed over an Android that had never run).
+   Can't launch one here (no emulator, no device)? Don't fake it: name it in
+   HANDOVER "Known limitations" in the first three bullets, with an effort
+   estimate for the takeover team.
+2b. **Branch hygiene**: delete every fully-merged work branch (worktree-agent-*,
+   scratch, design experiments the user does not want as history); what stays,
+   stays by the user's explicit word, recorded in HANDOVER.
 3. Fill `zero/HANDOVER.md` from the template (EN). Self-score the rubric; fix every
    cheap gap (<30 min each); rescore. Log `handover_selfscore{scores}`.
 4. Tag: `git tag poc-v1 && git push origin poc-v1`.

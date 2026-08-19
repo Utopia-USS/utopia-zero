@@ -14,6 +14,17 @@ SID="$(val session_id)"
 [ -n "${SID:-}" ] && printf '%s' "$SID" > "$AN/.session" 2>/dev/null
 SRC="$(val source)"
 
+# --- reconcile .stage with STATE.md (the STATE stage line is the source of truth;
+# a stale .stage once mislabeled 197 events - dry-run #2) ---
+STATE_STAGE="$(grep -m1 -Eo 'Etap ?/ ?Stage: ?\*\*[0-9]+' "$ROOT/zero/STATE.md" 2>/dev/null | grep -Eo '[0-9]+$' || true)"
+if [ -n "${STATE_STAGE:-}" ]; then
+  CUR="$(cat "$AN/.stage" 2>/dev/null || echo '')"
+  if [ "$CUR" != "$STATE_STAGE" ]; then
+    printf '%s' "$STATE_STAGE" > "$AN/.stage" 2>/dev/null
+    echo "=== utopia-zero: .stage reconciled with STATE.md (${CUR:-none} -> $STATE_STAGE) ==="
+  fi
+fi
+
 bash "$ROOT/zero/scripts/log_event.sh" session_start "{\"source\":\"${SRC:-unknown}\"}" || true
 
 # --- first-session banner (fresh project) ---
@@ -30,6 +41,16 @@ if [ -f "$ROOT/zero/STATE.md" ]; then
   echo "=== utopia-zero: zero/STATE.md (stan projektu / project state) ==="
   head -60 "$ROOT/zero/STATE.md" 2>/dev/null
   echo "=== koniec STATE / end of STATE ==="
+fi
+
+# --- pulse-survey reminder (counter kept by log_event: feature_done +1, survey resets) ---
+P="$(cat "$AN/.pulse" 2>/dev/null || echo 0)"
+case "$P" in (*[!0-9]*|'') P=0 ;; esac
+if [ "$P" -ge 3 ]; then
+  echo "=== utopia-zero: puls satysfakcji zaległy / pulse survey overdue ==="
+  echo "$P feature_done since the last survey. Run the 2-question pulse (stages.md,"
+  echo "stage 4 step 8) at the next natural break and log survey{stage, scores}."
+  echo "=== koniec / end ==="
 fi
 
 # --- Utopia replies on [zero] issues (best-effort; needs python3 + PAT) ---

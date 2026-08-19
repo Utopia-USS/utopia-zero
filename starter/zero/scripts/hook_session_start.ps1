@@ -16,6 +16,23 @@ try {
   if ($in -and $in.session_id) { Set-Content -Path (Join-Path $an ".session") -Value $in.session_id -NoNewline }
   $src = "unknown"; if ($in -and $in.source) { $src = $in.source }
 
+  # --- reconcile .stage with STATE.md (the STATE stage line is the source of truth;
+  # a stale .stage once mislabeled 197 events - dry-run #2) ---
+  $statePath = Join-Path $Root "zero\STATE.md"
+  if (Test-Path $statePath) {
+    $m = [regex]::Match((Get-Content $statePath -Raw -Encoding UTF8), 'Etap ?/ ?Stage: ?\*\*(\d+)')
+    if ($m.Success) {
+      $stf = Join-Path $an ".stage"
+      $cur = ""
+      if (Test-Path $stf) { $cur = (Get-Content $stf -Raw).Trim() }
+      if ($cur -ne $m.Groups[1].Value) {
+        $encS = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText($stf, $m.Groups[1].Value, $encS)
+        Write-Output ("=== utopia-zero: .stage reconciled with STATE.md (" + $(if ($cur) { $cur } else { "none" }) + " -> " + $m.Groups[1].Value + ") ===")
+      }
+    }
+  }
+
   # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_start" ('{"source":"' + $src + '"}') | Out-Null
 
@@ -34,6 +51,20 @@ try {
     Write-Output "=== utopia-zero: zero/STATE.md (stan projektu / project state) ==="
     Get-Content $state -TotalCount 60 -Encoding UTF8
     Write-Output "=== koniec STATE / end of STATE ==="
+  }
+
+  # --- pulse-survey reminder (counter kept by log_event: feature_done +1, survey resets) ---
+  $pulseFile = Join-Path $an ".pulse"
+  $pc = 0
+  if (Test-Path $pulseFile) {
+    $pv = (Get-Content $pulseFile -Raw).Trim()
+    if ($pv -match '^\d+$') { $pc = [int]$pv }
+  }
+  if ($pc -ge 3) {
+    Write-Output "=== utopia-zero: puls satysfakcji zalegly / pulse survey overdue ==="
+    Write-Output "$pc feature_done since the last survey. Run the 2-question pulse (stages.md,"
+    Write-Output "stage 4 step 8) at the next natural break and log survey{stage, scores}."
+    Write-Output "=== koniec / end ==="
   }
 
   # --- Utopia replies on [zero] issues (best-effort) ---
