@@ -92,9 +92,14 @@ utopia --help | Out-Null; echo ok
 ## Web preview (default run mode)
 
 ```powershell
-cd app; flutter run -d web-server --web-port 7357     # keep running (background)
-Start-Process http://localhost:7357                    # default browser (Edge ok)
+cd app; flutter run -d web-server --web-port 7357 --release   # keep running (background)
+Start-Process http://localhost:7357                            # default browser (Edge ok)
 ```
+
+**`--release` for anything the user looks at.** Debug web-server serves through
+dwds, which accepts one debug connection - a second or stale tab shows a blank
+white page (pilot #1 chased it as a broken app). Debug is fine for your own
+single-tab checks; the user's preview is always a release build.
 
 Phone preview, zero installs: add `--web-hostname 0.0.0.0`, LAN IP via
 `(Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.PrefixOrigin -eq "Dhcp"}).IPAddress`,

@@ -70,9 +70,14 @@ utopia --help >/dev/null && echo ok
 ## Web preview (default run mode)
 
 ```bash
-cd app && flutter run -d web-server --web-port 7357   # keep running (background)
-open http://localhost:7357                             # default browser
+cd app && flutter run -d web-server --web-port 7357 --release   # keep running (background)
+open http://localhost:7357                                       # default browser
 ```
+
+**`--release` for anything the user looks at.** Debug web-server serves through
+dwds, which accepts one debug connection - a second or stale tab shows a blank
+white page (pilot #1 chased it as a broken app). Debug is fine for your own
+single-tab checks; the user's preview is always a release build.
 
 Phone preview without any toolchain: add `--web-hostname 0.0.0.0`, find the LAN IP
 (`ipconfig getifaddr en0`), user opens `http://<ip>:7357` on the phone (same Wi-Fi).

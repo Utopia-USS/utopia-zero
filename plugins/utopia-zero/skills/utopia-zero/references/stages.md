@@ -152,6 +152,13 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    build config + its generated stubs), keep every UI string inline in the user's
    language, and log `decision{area:"localization", choice:"inline strings"}`.
    (Multi-language is a post-handover concern; a real sheet can be wired then.)
+   **Dropping the generator must NOT drop Flutter's own localization delegates.**
+   Keep `flutter_localizations` in the pubspec and, on the root `MaterialApp`,
+   `localizationsDelegates` (GlobalMaterial/GlobalWidgets/GlobalCupertino) plus
+   `supportedLocales: [Locale('<user language>')]`. Without them the FIRST
+   `TextField` the app renders throws `No MaterialLocalizations found` at runtime -
+   the analyzer stays green, so it detonates on a screen the user is looking at
+   (pilot #1 hit exactly this after the strip).
    Then run the scaffold's code generation BEFORE any gate:
    `dart run build_runner build --delete-conflicting-outputs` - the fresh scaffold
    is not analyzer-clean until this runs (undefined generated classes are
@@ -162,19 +169,25 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    `lib/app/theme.dart` from the accepted Pracownia tokens, wire `UtopiaTheme` at
    the root + the Material mirror. Log `decision{area:"ui-dependency"}`.
 5. Append project facts to `.claude/CLAUDE.md`: app name, user language, BRIEF path,
-   `zero/design/` as the visual contract, "run: cd app && flutter run -d web-server".
+   `zero/design/` as the visual contract, "run: cd app && flutter run -d web-server
+   --web-port 7357 --release" (the user-facing preview is always `--release`).
 6. **Welcome screen**: replace the default home with a branded one - it must MATCH
    the accepted welcome mock (or, when no welcome mock exists, the tokens + patterns
    of the accepted mocks). Self-check the a11y floor from `design-interview.md`
    (text contrast ≥ 4.5:1 on every element, icons/assets instead of raw emoji).
-6. Run it: `flutter run -d web-server --web-port 7357` (background), open
-   `http://localhost:7357` in the default browser for the user. Ask what they see
+7. Run it: `flutter run -d web-server --web-port 7357 --release` (background), open
+   `http://localhost:7357` in the default browser for the user. **Every preview the
+   USER looks at is a release build.** A debug web-server serves through dwds, which
+   accepts a single debug connection - a second (or stale) browser tab leaves them
+   staring at a blank white page and reporting "nic się nie otworzyło" (pilot #1
+   burned a fix ladder on this). Debug is yours alone, for one tab you control; the
+   release build costs a couple of minutes and is what the user sees. Ask what they see
    (clickable: "Widzę ekran powitalny!" / "Nic się nie otworzyło"). Log
    `build{target:"web"}` + `checkpoint{feature:"welcome"}`.
-7. Gates: `flutter analyze` + `utopia doctor` (from `app/`). Fix until clean.
-8. Ask the **visual checkpoint preference** (once): after each feature - show the app
+8. Gates: `flutter analyze` + `utopia doctor` (from `app/`). Fix until clean.
+9. Ask the **visual checkpoint preference** (once): after each feature - show the app
    / don't show / "sam odpalam na telefonie". Save to STATE; log `decision`.
-9. Commit + push. **Pulse survey #1** (two 1–5 clickables: "Czy czujesz, że masz
+10. Commit + push. **Pulse survey #1** (two 1–5 clickables: "Czy czujesz, że masz
    kontrolę nad tym, co powstaje?", "Na ile jasne jest to, co się teraz dzieje?").
    Log `survey{stage:2}`. `stage_end`.
 
@@ -189,6 +202,13 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    (const lists, lorem-free, in the user's language) and wired navigation. Screens
    that have a Pracownia mock follow its layout; the rest reuse the same tokens and
    the app-local kit (`utopia-ui-build.md`).
+2a. **A web POC must survive a browser refresh.** The user WILL hit F5 (and reopen
+   the tab tomorrow). Flutter web rebuilds the route from the URL without the
+   arguments it was pushed with, so any screen that reads route arguments renders
+   an empty or grey page. Route through a startup/splash screen that re-derives
+   state from storage instead of passing objects between routes, and check it by
+   refreshing every screen yourself before the checkpoint (pilot #1: a grey screen
+   after refresh cost a whole feature's debugging).
 3. Run + **mandatory checkpoint** (even if checkpoints are off - this is the app map):
    "Przeklikaj się przez aplikację - to jej mapa. Zgadza się z Twoją wizją?"
    Log `checkpoint{feature:"skeleton", verdict, rework}`; iterate on "change".
@@ -209,7 +229,11 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
    literals. An element no manifest component covers = GAP: report it (screen
    skill format) and scaffold a project component or file it upstream - never a
    silent hand-roll (`utopia-ui-build.md`, gap discipline). All technical choices yours; log `decision` (+ rationale +
-   alternatives) for each significant one.
+   alternatives) for each significant one. **The loop is where decisions go missing**
+   (pilot #1: 13 decisions across stages 0-3, ZERO in stage 4 while picking a
+   persistence mechanism, a startup/routing shape and a preview mode). If a feature
+   made you choose a package, a storage layer, a navigation shape or a data format,
+   that is a `decision` - the handover reader has no other way to learn why.
 4. **Backend, lazily** - first feature that needs it:
    - Choose provider yourself (auth/data/realtime/files needs → Firebase or Supabase).
      Log `decision{area:"backend-provider"}`.
