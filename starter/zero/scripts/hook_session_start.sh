@@ -16,7 +16,10 @@ SRC="$(val source)"
 
 # --- reconcile .stage with STATE.md (the STATE stage line is the source of truth;
 # a stale .stage once mislabeled 197 events - dry-run #2) ---
-STATE_STAGE="$(grep -m1 -Eo 'Etap ?/ ?Stage: ?\*\*[0-9]+' "$ROOT/zero/STATE.md" 2>/dev/null | grep -Eo '[0-9]+$' || true)"
+# The stage number may or may not be bolded: the starter template writes
+# "Etap / Stage: 3", some wizards write "**3**" (pilot #1: bold-only regex
+# never matched, the mechanism was silently dead).
+STATE_STAGE="$(grep -m1 -Eo 'Etap ?/ ?Stage: ?\*{0,2}[0-9]+' "$ROOT/zero/STATE.md" 2>/dev/null | grep -Eo '[0-9]+$' || true)"
 if [ -n "${STATE_STAGE:-}" ]; then
   CUR="$(cat "$AN/.stage" 2>/dev/null || echo '')"
   if [ "$CUR" != "$STATE_STAGE" ]; then
