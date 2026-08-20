@@ -57,7 +57,9 @@ Standing rules (they hold even if the skill didn't auto-load):
 5. **Secrets**: tokens/keys live only in `zero/.pat` and `app/.env` (both gitignored).
    Never commit, echo, or log them.
 6. **Analytics**: log events per the skill's `references/analytics.md` via
-   `zero/scripts/log_event.sh` (macOS) / `.ps1` (Windows). The user can disable it
+   `bash zero/scripts/log_event.sh` - on macOS and on Windows (Git Bash). The
+   `.ps1` variants are a fallback for machines with no usable `bash`: a nested
+   PowerShell call mangles JSON quotes (pilot #1). The user can disable analytics
    at any time ("wyłącz analitykę").
 7. Commit + push after every completed step; small commits, English messages.
 
