@@ -80,6 +80,14 @@ Shared rules for every stage:
    quit and reopen the app, open the project again, and write "kontynuuj". Write
    `STATE: restart pending` first so the resume path knows to verify hooks
    (`zero/analytics/events.jsonl` gains a `session_start` line) and move on.
+   **If the restart brings no `session_start`**: re-check per analytics.md
+   (settings JSON validity, path, project folder - not a parent - opened), allow
+   ONE more planned restart, and if the line still does not appear, switch to the
+   **manual hook dispatch** fallback (analytics.md) - from then on you run the
+   hook scripts yourself at every session entry and wrap-up. Log the `error`,
+   note `hooks: manual dispatch` in STATE, and keep going - never a third restart
+   (pilot #1: the Windows desktop app never dispatched hooks despite correct
+   wiring; the user must not pay for that in restarts).
 9. **Verify plugins**: the starter's `.claude/settings.json` declares both
    marketplaces and the plugin set (utopia-zero + utopia-hooks, utopia-ai-arch,
    utopia-dart-lsp, utopia-cms, utopia-reviews). Check they're active (skills
@@ -90,7 +98,7 @@ Shared rules for every stage:
    the Claude Code terminal; offer those lines only if they are in a terminal).
 10. `stage_end`; STATE → stage 1 with a one-line teaser of what's next.
 
-**Exit:** consent logged · hooks confirmed live · push worked (or degraded-local noted) · plugins active.
+**Exit:** consent logged · hooks confirmed live (or manual dispatch noted in STATE) · push worked (or degraded-local noted) · plugins active.
 
 ## Stage 1 - Idea & look
 
@@ -136,9 +144,17 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    `utopia create --help` first and adapt; target directory `app/`). If `utopia
    create` fails twice, fall back to `flutter create` + manual `utopia_hooks` wiring
    per the utopia-hooks skill, and log `error` + `fix_attempt`.
+   **Strip the sheet-backed localization generator BEFORE the first codegen.**
+   The scaffold arrives wired to `utopia_localization_generator` with placeholder
+   sheet ids (DOCID/SHEETID); on pilot #1 codegen fetched the sheet, got an HTML
+   error page, baked it into `app_localizations` and blocked the build. A zero
+   POC is single-language by design: remove the generator wiring (dependency +
+   build config + its generated stubs), keep every UI string inline in the user's
+   language, and log `decision{area:"localization", choice:"inline strings"}`.
+   (Multi-language is a post-handover concern; a real sheet can be wired then.)
    Then run the scaffold's code generation BEFORE any gate:
    `dart run build_runner build --delete-conflicting-outputs` - the fresh scaffold
-   is not analyzer-clean until this runs (undefined localization classes are
+   is not analyzer-clean until this runs (undefined generated classes are
    expected before it). A couple of info-level lints may remain in template files -
    fix them immediately so the analyze gate stays at literally zero issues.
 4. **Visual layer** (`utopia-ui-build.md`): add `utopia_ui` via the dependency

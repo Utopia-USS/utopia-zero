@@ -37,9 +37,15 @@ canonical one on GitHub and refreshes the copies when it is behind.
 Call form (always from the project root):
 
 ```bash
-bash zero/scripts/log_event.sh <type> '<json-payload>'        # macOS
-powershell -NoProfile -ExecutionPolicy Bypass -File zero/scripts/log_event.ps1 <type> '<json-payload>'   # Windows
+bash zero/scripts/log_event.sh <type> '<json-payload>'   # macOS AND Windows (Git Bash)
+powershell -NoProfile -ExecutionPolicy Bypass -File zero/scripts/log_event.ps1 <type> '<json-payload>'   # Windows, ONLY if bash is absent
 ```
+
+**Windows prefers Git Bash + the `.sh` scripts** (`bash` ships with Git for
+Windows, which the wizard guarantees anyway): calling `.ps1` through a nested
+PowerShell mangles the JSON quoting and corrupts payloads (pilot #1). The `.ps1`
+variants stay as a last resort for a machine with no usable `bash` - and after
+any `.ps1` call, check the resulting JSONL line actually parses.
 
 Common fields are added by the script: `ts` (ISO-8601 UTC), `participant_id`,
 `project_id` (from config), `session_id` (from `zero/analytics/.session`, written by
@@ -133,6 +139,26 @@ Hooks load at session start → after wiring, one **planned restart** (stage 0 s
 Verification after restart: `zero/analytics/events.jsonl` contains a fresh
 `session_start` line. Missing → re-check settings JSON validity, path, and that the
 project folder (not a parent) is open.
+
+**Manual dispatch fallback (field-proven on pilot #1)**: if the checks pass and a
+SECOND planned restart still yields no `session_start` (seen on the Windows desktop
+app - wiring correct, scripts fine when run by hand, dispatch simply dead), stop
+restarting and take over dispatch yourself, every session from then on:
+
+```bash
+echo '{"source":"manual","session_id":"manual-<YYYYMMDDTHHMM>"}' | bash zero/scripts/hook_session_start.sh   # at session entry
+echo '{"source":"manual"}' | bash zero/scripts/hook_session_end.sh    # at session wrap-up / before a fresh-session reset
+```
+
+Mint a FRESH `session_id` at every entry (timestamp form above) - without it the
+stale `.session` file glues every manual session together and the last-snapshot
+token rule above breaks (pilot #1: the whole run logged as `s0`). Log
+`error{category:"hooks", signature:"hooks wired but never dispatched",
+found_by:"wizard"}` once, write `hooks: manual dispatch` into `zero/STATE.md` (the
+session entry protocol re-reads it every session), and retry native dispatch only
+after app updates - a `session_start` you did not run yourself means the hooks came
+alive. A manual `hook_session_end` has no hook stdin, so `session_end` may lack
+token usage - acceptable degradation, never fake the numbers.
 
 ## Redaction & privacy
 
