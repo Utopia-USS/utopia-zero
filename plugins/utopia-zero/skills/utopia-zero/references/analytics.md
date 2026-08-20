@@ -74,7 +74,11 @@ the SessionStart hook), `stage` (from `zero/analytics/.stage`).
    drifted into prose after day one and the rework metric became uncomputable.
 5. **`feature_start` before every `feature_done`.** Time per feature is a research
    question; 11 starts against 43 dones made it unanswerable in dry-run #2.
-6. **Survey scales are normalized "higher = better"** before logging. A reversed
+6. **Stage 4 logs `decision` like every other stage.** The loop is the stage where
+   this rule dies: pilot #1 logged 13 decisions across stages 0-3 and ZERO in stage 4,
+   while choosing a persistence mechanism, a startup/routing shape and a preview mode.
+   Package, storage layer, navigation shape, data format → `decision`, every time.
+7. **Survey scales are normalized "higher = better"** before logging. A reversed
    question (e.g. frustration) gets its score flipped (6 minus the answer on 1-5),
    and the payload key says what was asked, e.g. `calm_at_stuck` not `frustration`.
 

@@ -51,6 +51,15 @@ STATE → greet and begin stage 0; never reply with a generic "how can I help".
    `zero: scripts sync v<N>`; tell the user in ONE plain sentence (mode-calibrated),
    and note that hooks pick the new scripts up next session. Offline or any error →
    skip silently, never block or retry.
+5a. **Wizard self-update (plugin-less mode only)**: when STATE says
+   `wizard: plugin-less`, you are reading yourself out of `zero/.wizard/` - a clone
+   that goes stale the moment upstream is fixed. Before following any stage script:
+   `git -C zero/.wizard pull --ff-only` (best-effort, ~5 s), then refresh the
+   `wizard: plugin-less (cloned <sha>)` line in STATE with the CURRENT short sha.
+   A sha that never moves across sessions means the pull is not happening - say so
+   in one plain sentence and fall back to a fresh clone. Pilot #1 ran four sessions
+   against a clone pinned to its install-day sha, so merged fixes never arrived and
+   nobody noticed, because nothing in the protocol ever re-read that line.
 
 Stage banner format (user's language): `📍 Etap 3/6 - Szkielet aplikacji` / `📍 Stage 3/6 - App skeleton`.
 
