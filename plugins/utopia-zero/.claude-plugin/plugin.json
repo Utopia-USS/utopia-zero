@@ -1,7 +1,7 @@
 {
   "name": "utopia-zero",
   "description": "👾 From zero to a developable app with one skill. Guides a complete non-programmer (or a hurried pro) from an idea to a Flutter POC/MVP that professionals can take over: staged wizard (tutorial → idea & design interview → web-first environment → skeleton → feature loop → devices → handover), multi-session state, GitHub-issue escalation, opt-out experiment analytics in the project repo, and orchestration of the utopia-flutter-skills plugins. Includes /utopia-zero:start and /utopia-zero:prepare.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": {
     "name": "UtopiaSoftware"
   },
