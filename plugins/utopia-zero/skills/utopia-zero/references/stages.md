@@ -187,7 +187,13 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
 8. Gates: `flutter analyze` + `utopia doctor` (from `app/`). Fix until clean.
 9. Ask the **visual checkpoint preference** (once): after each feature - show the app
    / don't show / "sam odpalam na telefonie". Save to STATE; log `decision`.
-10. Commit + push. **Pulse survey #1** (two 1–5 clickables: "Czy czujesz, że masz
+10. Commit + push. **The app is now online**: if `.github/workflows/deploy-web.yml`
+   exists and the push went through, the preview builds itself at
+   `https://<repo>.pages.dev` (~4 min). Tell the user in one warm sentence and
+   give them the link - for a beginner, "my app has an address other people can
+   open" is a bigger moment than any gate. Never promise it when the repo has no
+   workflow or the push failed; a broken link costs more trust than no link.
+   **Pulse survey #1** (two 1–5 clickables: "Czy czujesz, że masz
    kontrolę nad tym, co powstaje?", "Na ile jasne jest to, co się teraz dzieje?").
    Log `survey{stage:2}`. `stage_end`.
 

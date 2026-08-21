@@ -1,0 +1,96 @@
+# utopia-zero: publish the app as a live web preview on every push to main.
+#
+# The participant gets a link they can send to friends; Utopia gets a preview of
+# the work in progress. The source stays in this private repo - only the built
+# web bundle is published.
+#
+# Setup (operator, once per repo - /utopia-zero:prepare does it automatically):
+#   gh secret set CLOUDFLARE_API_TOKEN  --repo <owner>/<repo>   # token with "Cloudflare Pages: Edit"
+#   gh secret set CLOUDFLARE_ACCOUNT_ID --repo <owner>/<repo>
+# Without those secrets the workflow skips itself and stays green - it must
+# never show a red X in a beginner's repo.
+
+name: Web preview
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/deploy-web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A newer push makes an in-flight build pointless - and Actions minutes are
+# finite on the free plan.
+concurrency:
+  group: web-preview
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check configuration
+        id: guard
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ ! -d app ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No app/ directory yet (the wizard creates it in stage 2) - nothing to deploy."
+          elif [ -z "$TOKEN" ] || [ -z "$ACCOUNT" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID are not set - skipping the web preview. This is not a failure."
+          else
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: subosito/flutter-action@v2
+        if: steps.guard.outputs.configured == 'true'
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dependencies
+        if: steps.guard.outputs.configured == 'true'
+        working-directory: app
+        run: flutter pub get
+
+      - name: Code generation (only when the project uses it)
+        if: steps.guard.outputs.configured == 'true'
+        working-directory: app
+        run: |
+          if grep -rqE "^part .+\.(g|freezed)\.dart[\"'];" lib/; then
+            dart run build_runner build --delete-conflicting-outputs
+          else
+            echo "No generated parts in lib/ - skipping codegen."
+          fi
+
+      - name: Build web
+        if: steps.guard.outputs.configured == 'true'
+        working-directory: app
+        run: flutter build web --release
+
+      - name: Publish to Cloudflare Pages
+        if: steps.guard.outputs.configured == 'true'
+        working-directory: app
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          PROJECT: ${{ github.event.repository.name }}
+        run: |
+          # The first run creates the project; later runs reuse it.
+          npx --yes wrangler@4 pages project list | grep -qw "$PROJECT" \
+            || npx --yes wrangler@4 pages project create "$PROJECT" --production-branch main
+          npx --yes wrangler@4 pages deploy build/web --project-name "$PROJECT" --branch main
+          {
+            echo "### Podglad / Preview"
+            echo ""
+            echo "https://$PROJECT.pages.dev"
+          } >> "$GITHUB_STEP_SUMMARY"

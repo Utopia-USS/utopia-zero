@@ -69,6 +69,21 @@ for what's missing.
    escalation channel; the collaborator invite gives the participant web access
    to their project and lets them authenticate as themselves (gh login or a
    classic PAT) if they ever need to.
+6b. **Web preview secrets (silent, ~10 s)**: the starter ships
+   `.github/workflows/deploy-web.yml`, which publishes the built app to
+   Cloudflare Pages on every push that touches `app/` - the participant gets a
+   link they can send to friends, Utopia gets a live view of the work. Set both
+   secrets now so the very first stage-2 push deploys itself:
+   ```bash
+   gh secret set CLOUDFLARE_API_TOKEN  --repo <owner>/<repo> --body "$CF_TOKEN"
+   gh secret set CLOUDFLARE_ACCOUNT_ID --repo <owner>/<repo> --body "$CF_ACCOUNT"
+   ```
+   The operator supplies both once (Cloudflare → My Profile → API Tokens, template
+   permission **Cloudflare Pages: Edit**; account id sits on the dashboard sidebar) -
+   read them from the operator's environment or prompt for them in the terminal,
+   never into chat. The URL will be `https://<repo>.pages.dev`; put it in the repo
+   description after the first green run. No Cloudflare account? Skip this step -
+   the workflow detects the missing secrets and stays green.
 7. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
    (`zip -r poc-<slug>.zip <dir> -x '*.DS_Store'`). State clearly: the ZIP contains
    a repo-scoped token - send it over a private channel only.
