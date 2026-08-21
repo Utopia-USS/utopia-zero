@@ -20,7 +20,8 @@ try {
   # a stale .stage once mislabeled 197 events - dry-run #2) ---
   $statePath = Join-Path $Root "zero\STATE.md"
   if (Test-Path $statePath) {
-    $m = [regex]::Match((Get-Content $statePath -Raw -Encoding UTF8), 'Etap ?/ ?Stage: ?\*\*(\d+)')
+    # Stage number may or may not be bolded (starter template writes it plain - pilot #1)
+    $m = [regex]::Match((Get-Content $statePath -Raw -Encoding UTF8), 'Etap ?/ ?Stage: ?\*{0,2}(\d+)')
     if ($m.Success) {
       $stf = Join-Path $an ".stage"
       $cur = ""

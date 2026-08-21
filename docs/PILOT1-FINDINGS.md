@@ -63,7 +63,8 @@ udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
    szablon startera i STATE Janka piszą `- Etap / Stage: 3` bez gwiazdek → mechanizm
    z dry-runu #2 jest martwy na każdym repo. Zamaskowane, bo `stage_start` i tak
    zapisuje `.stage` wprost. Naprawa = skrypty v3 (`.sh` + `.ps1`) + bump VERSION,
-   więc osobna fala.
+   więc osobna fala. **[naprawione w fali 2 - skrypty v3: regex dopuszcza 0-2
+   gwiazdki; oba formaty + przypadki brzegowe przetestowane w sandboksie na `.sh`]**
 6. **Artefakt danych: wszystkie eventy poc-janek mają `session_id: "s0"`.**
    Hooki nigdy nie zapisały `.session`, a `log_event` bierze stąd id (fallback
    `s0`). Analizy pilota #1 muszą segmentować sesje po odstępach czasu, nie po
