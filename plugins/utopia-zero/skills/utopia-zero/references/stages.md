@@ -293,8 +293,11 @@ Load the OS environment playbook + `failure-playbooks.md`. Trigger: the user ask
 Offer the ladder top-down, cheapest first - each rung is a full success:
 
 1. **Phone browser, zero installs**: `flutter run -d web-server --web-hostname 0.0.0.0
-   --web-port 7357`, user opens `http://<computer-LAN-IP>:7357` on the phone
-   (same Wi-Fi). Works on iPhone even from Windows.
+   --web-port 7357 --release`, user opens `http://<computer-LAN-IP>:7357` on the
+   phone (same Wi-Fi). Works on iPhone even from Windows. `--release` is not
+   optional here: the phone is a SECOND viewer, and a debug web-server hands its
+   single dwds connection to whoever asks first, so the phone gets a blank page
+   while your laptop tab looks fine.
 2. **Android emulator / iOS simulator**: heavy toolchain install per playbook
    (Android Studio + SDK / full Xcode - honest multi-GB, ~1 h warnings).
 3. **Physical install**: Android - developer mode + USB debugging, guided tap by tap;
