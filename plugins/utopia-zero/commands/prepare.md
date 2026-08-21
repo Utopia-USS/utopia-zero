@@ -81,8 +81,12 @@ for what's missing.
    The operator supplies both once (Cloudflare → My Profile → API Tokens, template
    permission **Cloudflare Pages: Edit**; account id sits on the dashboard sidebar) -
    read them from the operator's environment or prompt for them in the terminal,
-   never into chat. The URL will be `https://<repo>.pages.dev`; put it in the repo
-   description after the first green run. No Cloudflare account? Skip this step -
+   never into chat. The URL defaults to `https://<repo>.pages.dev`; once the app
+   has a real name (stage 1), give the participant an address that matches it -
+   `gh variable set PAGES_PROJECT --repo <owner>/<repo> --body "<slug>"` (lowercase,
+   digits, hyphens; no diacritics) - and re-run the workflow. Do it once and early:
+   Cloudflare cannot rename a Pages project, so a later change strands the old link.
+   Put the final URL in the repo homepage after the first green run. No Cloudflare account? Skip this step -
    the workflow detects the missing secrets and stays green.
 7. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
    (`zip -r poc-<slug>.zip <dir> -x '*.DS_Store'`). State clearly: the ZIP contains

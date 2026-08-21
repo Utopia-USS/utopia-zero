@@ -7,6 +7,13 @@
 # Setup (operator, once per repo - /utopia-zero:prepare does it automatically):
 #   gh secret set CLOUDFLARE_API_TOKEN  --repo <owner>/<repo>   # token with "Cloudflare Pages: Edit"
 #   gh secret set CLOUDFLARE_ACCOUNT_ID --repo <owner>/<repo>
+#
+# The address defaults to https://<repo>.pages.dev. To give the participant a
+# link that matches THEIR app instead of our internal repo name, set:
+#   gh variable set PAGES_PROJECT --repo <owner>/<repo> --body "wslizgnijto"
+# Do it once, early: Cloudflare cannot rename a project, so a later change
+# creates a NEW project at a NEW address and abandons the old link.
+# Allowed: lowercase letters, digits and hyphens (no Polish diacritics).
 # Without those secrets the workflow skips itself and stays green - it must
 # never show a red X in a beginner's repo.
 
@@ -83,7 +90,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          PROJECT: ${{ github.event.repository.name }}
+          PROJECT: ${{ vars.PAGES_PROJECT || github.event.repository.name }}
         run: |
           # The first run creates the project; later runs reuse it.
           npx --yes wrangler@4 pages project list | grep -qw "$PROJECT" \
