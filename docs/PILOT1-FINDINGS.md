@@ -127,6 +127,18 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
    dociera do trwającego pilota. → SKILL.md: krok 5a (pull klona + odświeżenie sha
    w STATE + sygnał, gdy sha nie drgnął). **[naprawione w tej fali]**
 
+## Ingerencje operatora w repo pilota (do uwzglednienia w analizie)
+
+- **2026-08-21: `.github/workflows/deploy-web.yml`** dodany przez operatora do
+  `poc-janek` (commit spoza tozsamosci P001), zeby apka deployowala sie na
+  Cloudflare Pages i miala publiczny link podgladu. Nie dotyka `app/` ani `zero/`,
+  wiec nie zmienia danych badawczych - ale jest kolejnym commitem operatora w
+  repo uczestnika, tak jak sync skryptow v2 z 19.08. Analizy licza commity P001,
+  nie wszystkie.
+- Efekt uboczny do obserwacji: workflow pojawi sie w repo bez wiedzy przewodnika.
+  Jesli w kolejnej sesji zacznie o nim pytac albo probowac go "naprawiac", to jest
+  sygnal, ze starter powinien go zapowiadac w CLAUDE.md.
+
 ## Obserwacje bez akcji (fala 3)
 - **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z
   "setup od razu w akcje" na "setup → rozdanie → gra rozpoczęta → hub gracza,
