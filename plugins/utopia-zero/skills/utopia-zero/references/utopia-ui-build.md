@@ -125,6 +125,15 @@ as a PROJECT component via the `component` skill (overlay YAML in
 upstream (utopia-ui issue; check #2 "Mobile app kit" for duplicates first).
 Every participant POC thus feeds the utopia-ui backlog instead of hiding gaps.
 
+**A participant cannot open an issue on utopia-ui** - their PAT reaches their own
+repo and nothing else. So in a zero project "file it upstream" means: open a
+`[zero] ui-gap: <component> - <one-line symptom>` issue in THIS repo (the
+escalation channel Utopia already watches, per `escalation.md`), with the 5-part
+report in the body, and log `error{category:"ui-gap", found_by}`. The event alone
+is not filing - pilot #1 logged a real `UtopiaTextField` defect (ignores external
+value changes after mount, so the field never clears after submit) that reached
+nobody, because a JSONL line in a participant repo is data, not a report.
+
 Known consumer-mobile gaps you will likely hit (build as project components,
 token-driven - `context.colors` / `context.tokens`, zero literals):
 

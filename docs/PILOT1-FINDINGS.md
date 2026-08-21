@@ -10,13 +10,13 @@ plugin-less (klon w `zero/.wizard`), Opus 5 High na planie Pro. Projekt: gra
 imprezowa "Wślizgnij To!" (frazy wplatane w rozmowę).
 
 **Ten dokument jest przyrostowy** - pilot trwa, obserwacje dopisujemy falami.
-Stan na 2026-08-20: etapy 0-2 zamknięte w dwa wieczory (18-19.08), etap 3
-(szkielet) rozpoczęty. BRIEF i 3 makiety zaakceptowane za pierwszym podejściem,
-bramki (`flutter analyze`, `utopia doctor`) czyste, pierwszy build weba 240 s i
-udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
+Stan na 2026-08-21: etapy 0-3 zamknięte, etap 4 w toku. 20.08 to pierwszy pełny
+dzień pracy (16:22-21:52, 11 commitów): szkielet MVP, evening flow, persystencja
+rozgrywki, własne frazy zaczęte. BRIEF i 3 makiety zaakceptowane za pierwszym
+podejściem, bramki czyste, 5 testów przechodzi. Pulse #1: kontrola 5/5,
+jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
 
 ## Naprawione w trakcie, przed tą falą (osobne PR-y)
-
 - **Zła aplikacja** (plain Claude zamiast Claude Code) - to była przyczyna źródłowa
   pierwszego wieczoru: brak push, brak zapisu `.claude/settings.json`, brak
   `/plugin` i CLI. Wykrywanie + prowadzenie do właściwej aplikacji: PR #29
@@ -28,7 +28,6 @@ udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
   zadziałał zgodnie z designem ("sync niepotrzebny" po stronie wizarda).
 
 ## Fala 1 - do naprawy w pluginie/starterze
-
 1. **Generator lokalizacji z arkusza blokuje codegen świeżego scaffoldu.**
    `utopia create` zostawia `utopia_localization_generator` spięty z placeholderowymi
    id arkusza (DOCID/SHEETID); codegen pobrał stronę błędu HTML i wpiekł ją w
@@ -54,7 +53,6 @@ udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
    skodyfikowany; przyczyna martwego dispatchu dalej nieznana, patrz niżej]**
 
 ## Do zbadania / kandydaci na falę 2
-
 4. **Dlaczego dispatch hooków nie działa na Windows desktop?** Skrypty wykluczone
    (v2, sprawne ręcznie), JSON w settings poprawny. Wymaga reprodukcji na maszynie
    z Windows albo przeglądu znanych issues Claude Code.
@@ -71,8 +69,7 @@ udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
    `session_id`; reguła "ostatni snapshot per session_id" dla tokenów nie ma na
    tym repo sensu do momentu wejścia fallbacku ze świeżymi id (pkt 3).
 
-## Obserwacje bez akcji (na razie)
-
+## Obserwacje bez akcji (fale 1-2)
 - **Słaby sprzęt obsłużony zgodnie z designem**: decyzja `preview-target: lan`
   (emulator odrzucony na 4-rdzeniowym i5 z 2011) podjęta samodzielnie, bez
   angażowania użytkownika, z rationale w evencie. Etap 5 pozostaje opcjonalny.
@@ -87,3 +84,62 @@ udany za 1. próbą. Pulse #1: kontrola 5/5, jasność 5/5.
 - **Sygnał do obejrzenia w etapie 3**: obowiązkowy checkpoint szkieletu ("mapa
   aplikacji") - pierwszy moment, w którym laik konfrontuje strukturę całej
   aplikacji z własną wizją.
+## Fala 3 - do naprawy w pluginie (etapy 3-4)
+7. **Regresja po naszej własnej poprawce z fali 1: `No MaterialLocalizations found`.**
+   Instrukcja "wytnij generator lokalizacji" zabiera razem z nim delegaty
+   `flutter_localizations`, a każde `TextField` ich wymaga. Analizator tego nie
+   widzi - wybucha dopiero na ekranie, na który patrzy użytkownik. Janek naprawił
+   osobnym commitem ("provide Polish material localizations"), następny uczestnik
+   może mieć mniej szczęścia. → stages.md etap 2: po usunięciu generatora ZOSTAW
+   `flutter_localizations` + `localizationsDelegates` + `supportedLocales`.
+   **[naprawione w tej fali]**
+8. **Podgląd w trybie debug = biała strona.** dwds dopuszcza jedno połączenie
+   debugowe; druga (albo nieodświeżona) karta przeglądarki pokazuje pustą stronę,
+   którą laik zgłasza jako "nic się nie otworzyło". Kosztowało drabinę napraw. →
+   stages.md + oba playbooki środowiskowe: podgląd dla użytkownika ZAWSZE
+   `--release`; debug tylko do własnych sprawdzeń w jednej karcie.
+   **[naprawione w tej fali]**
+9. **Aplikacja webowa nie przeżywała odświeżenia.** Flutter web odtwarza trasę z
+   URL bez argumentów, z jakimi została wypchnięta - szary ekran po F5. Janek
+   naprawił splash-first + odczytem stanu ze storage. Laik NA PEWNO naciśnie F5. →
+   stages.md etap 3: routing odporny na odświeżenie + sprawdzenie każdego ekranu
+   przed checkpointem. **[naprawione w tej fali]**
+10. **Etap 4 nie loguje `decision`.** 13 decyzji w etapach 0-3, ZERO w etapie 4 -
+   a w tym czasie zapadły wybory: `shared_preferences`, splash-first, tryb
+   podglądu. Ten sam dryf, co w dry-runie #2, tylko przeniesiony do pętli funkcji.
+   → analytics.md: twarda reguła 6 (etap 4 loguje decyzje jak każdy inny).
+   **[naprawione w tej fali]**
+11. **GAP w utopia_ui nie ma jak dotrzeć do Utopii.** `UtopiaTextField` ignoruje
+   zewnętrzne zmiany wartości po mount (pole nie czyści się po submit) -
+   zalogowane jako `error{category:"ui-gap"}` i na tym koniec, bo dyscyplina GAP-ów
+   każe "zgłosić upstream", a PAT uczestnika sięga wyłącznie jego repo. →
+   utopia-ui-build.md: w projekcie zero "zgłoś upstream" = issue
+   `[zero] ui-gap: ...` we WŁASNYM repo (kanał, który Utopia już obserwuje).
+   **[naprawione w tej fali]** Sam defekt `UtopiaTextField` czeka na przeniesienie
+   do backlogu utopia-ui - do zrobienia po stronie Utopii, nie uczestnika.
+12. **Klon przewodnika nigdy się nie aktualizuje - poprawki nie docierały.**
+   STATE od 4 sesji podaje ten sam sha `eccbaac` (dzień instalacji). Pull klona
+   jest opisany w CLAUDE.md startera, ale NIE MA GO w protokole wejścia w sesję w
+   SKILL.md - czyli w checkliście, którą przewodnik faktycznie wykonuje. Skutek:
+   fala 1 zmergowana 20.08 o 15:13 nie zadziałała w sesji rozpoczętej o 16:22
+   (ręczna dyspozycja hooków dalej bez świeżego `session_id`, `source: unknown`).
+   To najpoważniejsze znalezisko tej fali: bez tego kanału ŻADNA nasza poprawka nie
+   dociera do trwającego pilota. → SKILL.md: krok 5a (pull klona + odświeżenie sha
+   w STATE + sygnał, gdy sha nie drgnął). **[naprawione w tej fali]**
+
+## Obserwacje bez akcji (fala 3)
+- **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z
+  "setup od razu w akcje" na "setup → rozdanie → gra rozpoczęta → hub gracza,
+  akcje tylko w turze", plus `scope_request` na trzy nowe ekrany (obsłużony).
+  To dokładnie ten sygnał, którego pilot szuka - nietechniczny użytkownik nie
+  tylko akceptuje, ale kształtuje strukturę.
+- **Rework wreszcie widoczny w danych**: szkielet 2 rundy poprawek (rework 1, 2),
+  persystencja 1. Reguła z dry-runu #1 (każda poprawka = checkpoint) działa.
+- **Drobny szum w danych**: pytanie `q-stage4-next` zalogowane dwukrotnie, dwa
+  pytania bez sparowanej odpowiedzi (`q-persistence-checkpoint`,
+  `q-skeleton-checkpoint-2`), dwa commity z powtórzonym komunikatem (drugi to
+  fix-up pierwszego). Nic pilnego, ale to ta sama rodzina co reguła 1.
+- **`feature_start` bez `feature_done`**: `mvp-skeleton` (zamknięty przez
+  `stage_end` etapu 3) i `custom-phrases` (sesja urwana po commicie). Do
+  domknięcia w kolejnej sesji uczestnika.
+
