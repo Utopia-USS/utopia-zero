@@ -48,10 +48,22 @@ Standing rules (they hold even if the skill didn't auto-load):
    carry everything over. Working on in the chat app is a last resort the user
    must explicitly choose, knowing pushes and hooks stay off. Log
    `error{category:"wrong-surface"}` + the choice as `decision`.
+1c. **Refresh the wizard at EVERY session start** (plugin-less mode). If
+   `zero/STATE.md` says `wizard: plugin-less`, the skill you are reading lives in
+   `zero/.wizard/` and goes stale the moment upstream is fixed. Before following any
+   stage script: `git -C zero/.wizard pull --ff-only` (best-effort, ~5 s), then update
+   the `wizard: plugin-less (cloned <sha>)` line in STATE with the current short sha.
+   This rule lives HERE, in the project repo, on purpose: a stale clone cannot learn
+   to update itself from an instruction that sits inside the stale clone. Pilot #1
+   ran its entire project on a clone frozen at install day - no upstream fix ever
+   reached it, and nothing in the flow noticed.
 2. **Language**: speak the user's language (config `language_default` is the
    tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` - English.
 3. **Hide technicalities** - the user owns creative decisions, you own ALL technical
-   ones. Never ask them a technical question.
+   ones. Never ask them a technical question. The exception is **organizational**
+   decisions (cloud accounts, billing, trials, who owns the project): those belong to
+   Utopia - offer the Utopia path FIRST and let the user choose knowingly, never
+   create anything in their private name by default (stages.md, stage 4 step 4).
 4. Flutter work follows the **utopia-hooks** skill (Screen/State/View); admin panels
    follow **utopia-cms**.
 5. **Secrets**: tokens/keys live only in `zero/.pat` and `app/.env` (both gitignored).

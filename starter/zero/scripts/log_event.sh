@@ -57,7 +57,7 @@ required_keys() {
     feature_start) echo "name" ;;
     feature_done) echo "name commits" ;;
     scope_request) echo "summary handled" ;;
-    backend_step) echo "provider step delegated" ;;
+    backend_step) echo "provider step delegated_to" ;;
     language_switch) echo "from to" ;;
     survey) echo "stage scores" ;;
     handover_selfscore) echo "scores total" ;;

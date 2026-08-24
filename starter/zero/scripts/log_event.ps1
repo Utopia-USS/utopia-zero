@@ -57,7 +57,7 @@ try {
     "feature_start"      = @("name")
     "feature_done"       = @("name", "commits")
     "scope_request"      = @("summary", "handled")
-    "backend_step"       = @("provider", "step", "delegated")
+    "backend_step"       = @("provider", "step", "delegated_to")
     "language_switch"    = @("from", "to")
     "survey"             = @("stage", "scores")
     "handover_selfscore" = @("scores", "total")
