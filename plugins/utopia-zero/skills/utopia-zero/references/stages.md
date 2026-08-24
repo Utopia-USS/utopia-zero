@@ -243,15 +243,34 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
 4. **Backend, lazily** - first feature that needs it:
    - Choose provider yourself (auth/data/realtime/files needs → Firebase or Supabase).
      Log `decision{area:"backend-provider"}`.
-   - v1 accounts come from Utopia: point the user at **their Utopia person** -
-     `utopia_contact` in config names the member who prepared this project (the
-     participant knows them; never suggest a generic mailbox as the default) -
-     with a ready message (what to ask for, what to include); wait, then configure.
-     Log `backend_step{delegated:true}`.
+   - **The account is an ORGANIZATIONAL decision, not a technical one** (SKILL.md
+     invariant 3), so it is the one backend question you DO put to the user - and
+     you put it before anything exists in anyone's name. v1 accounts come from
+     Utopia. Do all three, in this order:
+     1. Write the ready-to-send message to **their Utopia person** (`utopia_contact`
+        in config names the member who prepared this project - the participant knows
+        them; never a generic mailbox): what to create, for which project, what to
+        send back.
+     2. Ask, clickable, with the consequence spelled out in plain words:
+        "poczekać na konto Utopii (Utopia płaci i przejmie projekt)" /
+        "założę własne teraz (szybciej, ale przeniesienie później = nowy projekt od
+        zera i skasowanie tego)". **Do not silently pick either.** "Handing project
+        creation to the user" is NOT delegating to Utopia - pilot #1 did exactly
+        that and the participant ended up owning the project on a 30-day trial,
+        outside Utopia's infrastructure, without ever being offered the alternative.
+     3. Log `decision{area:"backend-account", choice, rationale, alternatives,
+        user_involved:true}`, plus `user_override` when they pick their own account
+        against the Utopia default, and `backend_step{delegated_to:"utopia"|"user"}`.
+     **Never block the user while waiting**: keep building everything that does not
+     need live credentials (client code, models, UI, tests against fakes) and wire
+     the config when it arrives.
    - Secrets go to `app/.env` (gitignored) or `--dart-define` - never committed,
      never echoed back in chat. If the user pasted a secret, move it to the file and
      don't repeat it.
-5. Gates (`analyze`, `doctor`, build) - a feature failing gates is not done.
+5. Gates (`analyze`, `doctor`, build) - a feature failing gates is not done. A
+   feature that stood up a backend is not done either until account ownership is
+   decided AND logged (`decision{area:"backend-account"}`) - an account nobody chose
+   is how a project quietly ends up outside Utopia.
 6. Visual checkpoint if enabled: run web preview, ask verdict (dobrze / zmień /
    odrzuć). Log `checkpoint`; rework counts.
    **User-reported corrections ALWAYS log** `checkpoint{feature, verdict:"change",

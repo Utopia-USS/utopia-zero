@@ -105,7 +105,7 @@ is welcome on top.
 | `checkpoint` | every visual checkpoint | `feature`, `verdict: accept\|change\|reject`, `rework` |
 | `feature_start` / `feature_done` | stage-4 loop | `name`; done: `commits`; parallel-agent work adds `parallel_agents:n` |
 | `scope_request` | out-of-BRIEF ask | `summary`, `handled: done\|declined_logged` |
-| `backend_step` | backend setup moments | `provider`, `step`, `delegated` |
+| `backend_step` | backend setup moments | `provider`, `step`, `delegated_to: utopia\|user\|none` (WHO the account work went to - the old boolean `delegated` could not tell "Utopia is creating it" from "the user is creating it himself", so pilot #1's deviation was invisible in the data) |
 | `language_switch` | language change | `from`, `to` |
 | `survey` | pulses + final | `stage`, `scores{}` (normalized: higher = better), `free_text` |
 | `handover_selfscore` | stage 6 | `scores{criterion:0-2}`, `total` |

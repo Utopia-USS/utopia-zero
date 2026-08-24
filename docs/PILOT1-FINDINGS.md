@@ -84,6 +84,7 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
 - **Sygnał do obejrzenia w etapie 3**: obowiązkowy checkpoint szkieletu ("mapa
   aplikacji") - pierwszy moment, w którym laik konfrontuje strukturę całej
   aplikacji z własną wizją.
+
 ## Fala 3 - do naprawy w pluginie (etapy 3-4)
 7. **Regresja po naszej własnej poprawce z fali 1: `No MaterialLocalizations found`.**
    Instrukcja "wytnij generator lokalizacji" zabiera razem z nim delegaty
@@ -127,17 +128,18 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
    dociera do trwającego pilota. → SKILL.md: krok 5a (pull klona + odświeżenie sha
    w STATE + sygnał, gdy sha nie drgnął). **[naprawione w tej fali]**
 
-## Ingerencje operatora w repo pilota (do uwzglednienia w analizie)
+## Ingerencje operatora w repo pilota (do uwzględnienia w analizie)
 
 - **2026-08-21: `.github/workflows/deploy-web.yml`** dodany przez operatora do
-  `poc-janek` (commit spoza tozsamosci P001), zeby apka deployowala sie na
-  Cloudflare Pages i miala publiczny link podgladu. Nie dotyka `app/` ani `zero/`,
-  wiec nie zmienia danych badawczych - ale jest kolejnym commitem operatora w
-  repo uczestnika, tak jak sync skryptow v2 z 19.08. Analizy licza commity P001,
-  nie wszystkie.
-- Efekt uboczny do obserwacji: workflow pojawi sie w repo bez wiedzy przewodnika.
-  Jesli w kolejnej sesji zacznie o nim pytac albo probowac go "naprawiac", to jest
-  sygnal, ze starter powinien go zapowiadac w CLAUDE.md.
+  `poc-janek` (commit spoza tożsamości P001), żeby apka deployowała się na
+  Cloudflare Pages i miała publiczny link podglądu. Nie dotyka `app/` ani `zero/`,
+  więc nie zmienia danych badawczych, ale jest kolejnym commitem operatora w repo
+  uczestnika, tak jak sync skryptów v2 z 19.08. Analizy liczą commity P001, nie
+  wszystkie. **Zweryfikowane po fakcie**: przewodnik nie zgłupiał od nieznanego
+  workflow - sam wpisał link podglądu do STATE i korzysta z niego normalnie.
+- **2026-08-23: `.claude/CLAUDE.md` + `zero/config.json`** (reguła 1c o odświeżaniu
+  klona, kategoria organizacyjna, `utopia_contact` na uchwyt GitHuba bez em-dasha).
+  To jedyny kanał, który sięga zamrożonego przewodnika - patrz fala 4, punkt 14.
 
 ## Obserwacje bez akcji (fala 3)
 - **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z
@@ -155,3 +157,43 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
   `stage_end` etapu 3) i `custom-phrases` (sesja urwana po commicie). Do
   domknięcia w kolejnej sesji uczestnika.
 
+## Fala 4 - konto Firebase poza Utopią i zamrożony przewodnik
+
+13. **Projekt Firebase powstał na prywatnym koncie uczestnika, na 30-dniowym triaLu,
+   bez zaproponowania ścieżki Utopii.** Zgłoszone przez Janka, nie wykryte przez nas.
+   Reguła "v1 accounts come from Utopia" ISTNIAŁA w jego (zamrożonej) wersji skilla,
+   a `utopia_contact` był ustawiony na osobę z imienia i nazwiska. Przewodnik mimo to
+   zalogował `backend_step{step:"project creation handed to the user", delegated:true}`
+   - czyli zdelegował, tylko nie tej stronie. Pytania o konto nie było w ogóle.
+   Cztery przyczyny, wszystkie naprawione w tej fali:
+   - reguła kazała **czekać na człowieka** ("wait, then configure"), co stoi w poprzek
+     dominującej doktryny skilla "nigdy nie blokuj początkującego" i przegrało z nią
+     w starciu → nowa wersja jest nieblokująca (buduj wszystko, co nie potrzebuje
+     kluczy, konfigurację wepnij, gdy przyjdzie);
+   - `delegated` było **booleanem** i nie mówiło KOMU, więc odchylenie wyglądało
+     w danych jak poprawne wykonanie → `delegated_to: utopia|user|none` (skrypty v4);
+   - **nic tego nie pilnowało** → bramka: funkcja z backendem nie jest "done", dopóki
+     własność konta nie jest zdecydowana i zalogowana jako
+     `decision{area:"backend-account"}`;
+   - **nigdzie nie było napisane, czym to grozi** → konsekwencja ("późniejsze
+     przeniesienie = nowy projekt od zera i skasowanie tego") jest teraz częścią
+     pytania zadawanego użytkownikowi.
+   Głębsza przyczyna: skill dzielił decyzje na twórcze (użytkownik) i techniczne
+   (przewodnik). Własność konta i rozliczenia to **trzecia kategoria, organizacyjna**,
+   której ten podział nie nazywał, więc wpadła do worka "techniczne = przewodnik
+   decyduje sam". Kategoria jest teraz nazwana w SKILL.md (wstęp + inwariant 3)
+   i w CLAUDE.md startera. **[naprawione w tej fali]**
+14. **Zamrożony klon nie może nauczyć się odmrażać.** Fala 3 dodała krok 5a (pull
+   klona) do SKILL.md, czyli do pliku, który u zamrożonego uczestnika jest właśnie
+   nieaktualny. Klon Janka stoi na `eccbaac` z ~18.08: nie ma nawet kroku
+   "Scripts sync" (dodanego w #30), więc jego skrypty to nadal v2 przy upstreamie v3,
+   a wszystkie 157 zdarzeń ma `session_id: s0`. Jedyny kanał, który realnie sięga
+   działającego pilota, to `.claude/CLAUDE.md` w JEGO repo - i tam instrukcja pullu
+   była, ale wciśnięta w środek zdania w podpunkcie (b) reguły 1a, czytanej jak
+   poradnik instalacyjny na pierwszy raz. → CLAUDE.md startera dostaje regułę **1c**:
+   osobną, samodzielną, "przy każdym starcie sesji", z wyjaśnieniem, czemu mieszka
+   właśnie tam. **[naprawione w tej fali]**
+15. **Em-dash w `utopia_contact`, drugi raz.** `prepare.md` ostrzega przed tym od
+   dry-runu #2, a pilot #1 i tak dostał w tym polu długi myślnik. Przy okazji: pole
+   powinno nosić **uchwyt GitHuba**, bo eskalacja idzie przez issues `[zero]` w repo
+   uczestnika, gdzie adres e-mail jest bezużyteczny. **[naprawione w tej fali]**
