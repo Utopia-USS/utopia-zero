@@ -140,6 +140,19 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
 - **2026-08-23: `.claude/CLAUDE.md` + `zero/config.json`** (reguła 1c o odświeżaniu
   klona, kategoria organizacyjna, `utopia_contact` na uchwyt GitHuba bez em-dasha).
   To jedyny kanał, który sięga zamrożonego przewodnika - patrz fala 4, punkt 14.
+  **Zadziałało**: 24.08 przewodnik pociągnął klon na `d20eab7` (merge fali 4),
+  zsynchronizował skrypty do v4 i przeszedł nową ścieżkę konta - w analityce jest
+  para `question`/`answer` o koncie, `decision{area:"backend-account"}` z rationale
+  i alternatywami oraz `backend_step{delegated_to:"utopia"}`. Uczestnik wysłał do
+  Utopii gotową prośbę o projekt Firebase. Pierwszy dowód, że kanał aktualizacji
+  w ogóle żyje.
+- **2026-08-24: `firestore.rules`** dodany przez operatora do `poc-janek` przy
+  okazji zakładania projektu Firebase po stronie Utopii. Powód merytoryczny:
+  uczestnik prosił o reguły "ograniczone do kolekcji rooms", a gra trzyma graczy
+  w PODKOLEKCJI `rooms/{kod}/players/{id}` - reguły Firestore nie schodzą kaskadą,
+  więc `match /rooms/{code}` zablokowałby całą rozgrywkę online. Plik wymaga
+  `request.auth != null`, czyli anonimowego logowania, którego aplikacja jeszcze
+  nie ma - publikować dopiero razem ze zmianą po stronie klienta.
 
 ## Obserwacje bez akcji (fala 3)
 - **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z
