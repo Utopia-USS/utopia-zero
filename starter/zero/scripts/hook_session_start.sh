@@ -56,50 +56,60 @@ if [ "$P" -ge 3 ]; then
   echo "=== koniec / end ==="
 fi
 
-# --- Utopia replies on [zero] issues (best-effort; needs python3 + PAT) ---
+# --- Utopia replies on [zero] issues (needs curl + PAT; friend audience only) ---
+# python3 is deliberately NOT required: Git Bash on Windows usually has no python3,
+# and this block used to fail there in complete silence - pilot #1 ran a whole
+# project believing the channel worked while .issues_seen never moved off the epoch.
+# Parsing is left to the reader: the raw API response goes to stdout and the wizard
+# reads it. A crude sed parser would be one more thing to break quietly.
 PATF="$ROOT/zero/.pat"
-if command -v python3 >/dev/null 2>&1 && [ -f "$PATF" ]; then
-  python3 - "$ROOT" <<'PYEOF' 2>/dev/null || true
-import json, re, sys, pathlib, urllib.request
-
-root = pathlib.Path(sys.argv[1])
-try:
-    cfg = json.loads((root / "zero/config.json").read_text())
-    pat = (root / "zero/.pat").read_text().strip()
-    m = re.search(r"github\.com[/:]([\w.-]+/[\w.-]+?)(?:\.git)?$", cfg.get("git_remote", ""))
-    if not (pat and m):
-        sys.exit(0)
-    repo = m.group(1)
-    ckpt_file = root / "zero/analytics/.issues_seen"
-    since = ckpt_file.read_text().strip() if ckpt_file.exists() else "1970-01-01T00:00:00Z"
-
-    def get(url):
-        req = urllib.request.Request(url, headers={
-            "Authorization": f"Bearer {pat}",
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "utopia-zero"})
-        with urllib.request.urlopen(req, timeout=6) as r:
-            return json.loads(r.read())
-
-    latest = since
-    out = []
-    for issue in get(f"https://api.github.com/repos/{repo}/issues?state=open&per_page=20"):
-        if not issue.get("title", "").startswith("[zero]"):
-            continue
-        for c in get(issue["comments_url"] + "?per_page=30"):
-            created = c.get("created_at", "")
-            if created > since:
-                body = (c.get("body") or "")[:600]
-                out.append(f"--- Odpowiedź Utopii / Utopia replied on issue #{issue['number']} "
-                           f"({issue['title']}):\n{body}\n")
-                latest = max(latest, created)
-    if out:
-        print("=== utopia-zero: nowe odpowiedzi Utopii w issues ===")
-        print("\n".join(out))
-        print("(Przeczytaj je PRZED planowaniem pracy i odpisz w issue, co zrobiłeś.)")
-    ckpt_file.write_text(latest)
-except Exception:
-    pass
-PYEOF
+AUD="$(grep -Eo '"audience"[[:space:]]*:[[:space:]]*"[^"]*"' "$ROOT/zero/config.json" 2>/dev/null | head -1 | sed 's/.*"\([^"]*\)"$/\1/')"
+if [ -f "$PATF" ] && [ "${AUD:-friend}" != "public" ]; then
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "=== utopia-zero: nie moge sprawdzic wiadomosci od Utopii (brak curl) ==="
+    echo "Tell the user in one plain sentence that the Utopia channel cannot be"
+    echo "checked automatically here, and read the repo issues yourself instead."
+    echo "=== koniec / end ==="
+  else
+    REPO="$(grep -o 'github\.com[/:][A-Za-z0-9_./-]*' "$ROOT/zero/config.json" 2>/dev/null | head -1 | sed 's|.*github\.com[/:]||; s|\.git$||')"
+    PAT="$(tr -d '\r\n' < "$PATF" 2>/dev/null)"
+    SINCE="$(tr -d '\r\n' < "$AN/.issues_seen" 2>/dev/null || echo '')"
+    [ -n "${SINCE:-}" ] || SINCE='1970-01-01T00:00:00Z'
+    # -f matters: without it GitHub's {"message":"Not Found"} body counts as a
+    # successful answer, the check reports nothing and the channel dies quietly.
+    api() { curl -sS -f -m 8 -H "Authorization: Bearer $PAT" -H "Accept: application/vnd.github+json" \
+              -H "User-Agent: utopia-zero" "$1" 2>/dev/null; }
+    if [ -n "${REPO:-}" ] && [ -n "${PAT:-}" ]; then
+      ISSUES="$(api "https://api.github.com/repos/$REPO/issues?state=open&per_page=20")"
+      if [ -z "${ISSUES:-}" ]; then
+        echo "=== utopia-zero: nie udalo sie sprawdzic wiadomosci od Utopii ==="
+        echo "Network or token problem. Say ONE plain sentence to the user only if"
+        echo "they are waiting on an answer; otherwise carry on and retry next session."
+        echo "=== koniec / end ==="
+      else
+        FOUND=""
+        for N in $(printf '%s' "$ISSUES" | grep -o '"number"[[:space:]]*:[[:space:]]*[0-9]*' | grep -o '[0-9]*$'); do
+          NEW="$(api "https://api.github.com/repos/$REPO/issues/$N/comments?since=$SINCE&per_page=30")"
+          case "$NEW" in
+            ''|'[]') ;;
+            *) FOUND="yes"
+               echo "=== utopia-zero: nowa odpowiedz Utopii w issue #$N ==="
+               printf '%s\n' "$NEW" | cut -c1-4000
+               echo "=== koniec / end ===" ;;
+          esac
+        done
+        if [ -n "$FOUND" ]; then
+          echo "=== utopia-zero: przeczytaj powyzsze PRZED planowaniem pracy ==="
+          echo "Act on it, then comment back on the issue saying what you did - the"
+          echo "thread is a two-way channel, not an inbox."
+          echo "=== koniec / end ==="
+        fi
+        # Checkpoint moves only after a successful round, so a failed check re-reads
+        # the same comments next session instead of losing them.
+        printf '%s' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$AN/.issues_seen" 2>/dev/null
+      fi
+    fi
+  fi
 fi
+
 exit 0
