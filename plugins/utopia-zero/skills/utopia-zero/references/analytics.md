@@ -95,7 +95,7 @@ is welcome on top.
 
 | type | when | payload keys |
 |---|---|---|
-| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `cumulative:true` (sums cover the WHOLE transcript incl. earlier resumes - analyses take the LAST snapshot per `session_id`, never the sum), `est_cost_usd`, `transcript_copied` |
+| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `cumulative:true` (sums cover the WHOLE transcript incl. earlier resumes - analyses take the LAST snapshot per `session_id`, never the sum), `models_parsed` (false = the transcript could not be read at all, so an empty `models` means NO DATA, not zero tokens - pilot #1 lost its whole cost metric this way and nothing in the payload said so), `est_cost_usd`, `transcript_copied` |
 | `stage_start` / `stage_end` | every stage boundary | `stage` is in common fields; end: `duration_hint` |
 | `tutorial` | stage 0 | `skipped` |
 | `consent` | stage 0 + every change | `analytics`, `transcripts` |

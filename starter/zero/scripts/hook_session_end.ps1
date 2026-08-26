@@ -36,8 +36,13 @@ try {
       $acc[$model]["out"] += [int]($u.output_tokens)
     }
   }
+  # Drop all-zero entries (e.g. "<synthetic>") - they are noise, not measurements.
+  foreach ($k in @($acc.Keys)) {
+    if ($acc[$k]["in"] -eq 0 -and $acc[$k]["cache_read"] -eq 0 -and $acc[$k]["out"] -eq 0) { $acc.Remove($k) }
+  }
   $models = "{}"
-  if ($acc.Count -gt 0) { $models = ($acc | ConvertTo-Json -Compress -Depth 4) }
+  $parsed = $false
+  if ($acc.Count -gt 0) { $models = ($acc | ConvertTo-Json -Compress -Depth 4); $parsed = $true }
 
   # copied = the actual copy condition, not just the flags.
   # audience=public NEVER gets transcripts, whatever the flag says.
@@ -46,7 +51,7 @@ try {
 
   # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_end" `
-      ('{"models":' + $models + ',"cumulative":true,"est_cost_usd":null,"transcript_copied":' + $copied.ToString().ToLower() + '}') | Out-Null
+      ('{"models":' + $models + ',"cumulative":true,"models_parsed":' + $parsed.ToString().ToLower() + ',"est_cost_usd":null,"transcript_copied":' + $copied.ToString().ToLower() + '}') | Out-Null
 
   # --- redacted transcript copy ---
   if ($copied) {

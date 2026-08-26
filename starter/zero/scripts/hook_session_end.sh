@@ -15,36 +15,57 @@ flag() { grep -Eo "\"$1\"[[:space:]]*:[[:space:]]*(true|false)" "$CONFIG" 2>/dev
 SID="$(val session_id)"; [ -z "${SID:-}" ] && SID="$(cat "$AN/.session" 2>/dev/null || echo s0)"
 TP="$(val transcript_path)"
 
-# --- token usage from transcript (python3 best-effort) ---
+# --- token usage from transcript (awk, no python3) ---
 # NOTE: the transcript covers the WHOLE session including earlier resumes, so the
 # sums are cumulative per session_id; analyses must take the LAST snapshot per
 # session, never the sum (dry-run #2: summing overstated cost by 84%).
+# python3 is deliberately NOT used here: Git Bash on Windows has none, so on a
+# Windows pilot this produced no token data at all and the cost of the whole run
+# was unrecoverable. awk ships with Git for Windows, macOS and Linux alike.
+# Verified against the previous python implementation on 8 real transcripts:
+# identical totals, minus all-zero model entries (e.g. "<synthetic>") which awk
+# drops as the noise they are.
 MODELS="{}"
-if command -v python3 >/dev/null 2>&1 && [ -n "${TP:-}" ] && [ -f "$TP" ]; then
-  MODELS="$(python3 - "$TP" <<'PYEOF' 2>/dev/null || echo '{}'
-import json, sys, collections
-acc = collections.defaultdict(lambda: {"in": 0, "cache_read": 0, "out": 0})
-try:
-    with open(sys.argv[1]) as f:
-        for line in f:
-            try:
-                obj = json.loads(line)
-            except Exception:
-                continue
-            msg = obj.get("message") or {}
-            usage = msg.get("usage") or {}
-            model = msg.get("model") or "unknown"
-            if usage:
-                acc[model]["in"] += (usage.get("input_tokens") or 0) \
-                    + (usage.get("cache_creation_input_tokens") or 0)
-                acc[model]["cache_read"] += usage.get("cache_read_input_tokens") or 0
-                acc[model]["out"] += usage.get("output_tokens") or 0
-    print(json.dumps(dict(acc)))
-except Exception:
-    print("{}")
-PYEOF
-)"
+PARSED=false
+if [ -n "${TP:-}" ] && [ -f "$TP" ] && command -v awk >/dev/null 2>&1; then
+  MODELS="$(awk '
+function val(s, key,   re, t) {
+  re = "\"" key "\"[ \t]*:[ \t]*[0-9]+"
+  if (match(s, re)) {
+    t = substr(s, RSTART, RLENGTH)
+    sub(/^.*:[ \t]*/, "", t)
+    return t + 0
+  }
+  return 0
+}
+/"usage"/ {
+  model = "unknown"
+  if (match($0, /"model"[ \t]*:[ \t]*"[^"]*"/)) {
+    m = substr($0, RSTART, RLENGTH)
+    sub(/^"model"[ \t]*:[ \t]*"/, "", m)
+    sub(/"$/, "", m)
+    if (m != "") model = m
+  }
+  i = val($0, "input_tokens") + val($0, "cache_creation_input_tokens")
+  c = val($0, "cache_read_input_tokens")
+  o = val($0, "output_tokens")
+  if (i > 0 || c > 0 || o > 0) {
+    if (!(model in seen)) { seen[model] = 1; order[++n] = model }
+    IN[model] += i; CR[model] += c; OUT[model] += o
+  }
+}
+END {
+  printf "{"
+  for (k = 1; k <= n; k++) {
+    m = order[k]
+    if (k > 1) printf ","
+    printf "\"%s\":{\"in\":%d,\"cache_read\":%d,\"out\":%d}", m, IN[m], CR[m], OUT[m]
+  }
+  printf "}"
+}
+' "$TP" 2>/dev/null || echo '{}')"
   [ -z "$MODELS" ] && MODELS="{}"
+  [ "$MODELS" != "{}" ] && PARSED=true
 fi
 
 # copied = the actual copy condition, not just the flags.
@@ -59,7 +80,7 @@ if [ "${AUDIENCE:-friend}" != "public" ] \
 fi
 
 bash "$ROOT/zero/scripts/log_event.sh" session_end \
-  "{\"models\":$MODELS,\"cumulative\":true,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
+  "{\"models\":$MODELS,\"cumulative\":true,\"models_parsed\":$PARSED,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
 
 # --- redacted transcript copy ---
 if [ "$COPIED" = "true" ]; then
