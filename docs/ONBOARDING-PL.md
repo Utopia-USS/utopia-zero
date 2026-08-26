@@ -26,7 +26,7 @@ inaczej. Zajmie ~20-30 minut. Nie musisz nic umieć.
 | **Claude Code** | aplikacja, w której rozmawiasz i powstaje Twój projekt | **Ty** - krok 1 poniżej (jedyna ręczna instalacja) |
 | **Git** | „sejf" zapisujący każdy krok pracy | **przewodnik**, w trakcie - poprosi tylko o zgodę |
 | **Flutter** | silnik, na którym działa Twoja aplikacja | **przewodnik**, w trakcie (duże pobieranie, ~15 min) |
-| dyktowanie (opcjonalnie) | mówisz zamiast pisać | Ty - patrz sekcja „Dyktowanie" na dole |
+| Wispr Flow (mocno polecane) | mówisz zamiast pisać | Ty - patrz sekcja „Dyktowanie" na dole |
 
 Czyli: ręcznie instalujesz tylko Claude Code. Resztą zajmuje się przewodnik -
 gdy poprosi o zgodę na instalację, po prostu się zgódź.
@@ -108,20 +108,19 @@ pamięta, na czym skończyliście.
 
 ## Dyktowanie - mów, nie pisz
 
-Najlepsze odpowiedzi to swobodne, długie wypowiedzi - przewodnik sam je poukłada.
-Masz trzy opcje (od najprostszej):
+**Zainstaluj Wispr Flow: https://wisprflow.ai** (Windows, Mac, iPhone, Android).
 
-1. **Mikrofon w Claude Code** - ikona mikrofonu przy polu rozmowy. Uwaga:
-   najlepiej rozumie **angielski**; po polsku bywa niedokładny.
-2. **Dyktowanie systemowe po polsku** (polecane):
-   - **Windows**: naciśnij **Win + H**, wybierz język polski i mów - tekst
-     wpisuje się prosto do pola rozmowy.
-   - **Mac**: Ustawienia systemowe → Klawiatura → Dyktowanie - włącz;
-     uruchamia się klawiszem 🎤 (F5) albo podwójnym Fn (🌐) - dokładny skrót
-     widać w tym samym miejscu ustawień.
-3. **Aplikacja oparta na Whisper** (dla chętnych - najlepsza polszczyzna,
-   działa offline): poproś osobę z Utopii o aktualną rekomendację i pomoc w
-   instalacji dla Twojego systemu.
+Naprawdę warto, i to jest chyba najważniejsza rada w całej tej instrukcji.
+Przewodnik buduje Twoją aplikację z tego, co mu powiesz - im więcej szczegółów,
+tym trafniejszy wynik. A prawda jest taka, że nikomu nie chce się pisać trzech
+akapitów o swoim pomyśle. Powiedzieć trzy akapity - owszem, i to bez wysiłku.
+Mówiąc, dajesz przewodnikowi kilka razy więcej informacji przy mniejszym
+zmęczeniu. Najbardziej czuć to w wywiadzie o pomyśle na początku.
+
+Wbudowane dyktowanie w systemie (Windows **Win + H**, Mac: Ustawienia → Klawiatura
+→ Dyktowanie) też istnieje, ale po polsku bywa zawodne - u pierwszego uczestnika
+nie udało się go uruchomić wcale. Mikrofon w Claude Code najlepiej radzi sobie
+z angielskim. Traktuj je jako plan awaryjny, nie pierwszy wybór.
 
 ## Dobre nawyki
 

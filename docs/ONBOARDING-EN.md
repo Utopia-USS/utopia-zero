@@ -26,7 +26,7 @@ differently. ~20-30 minutes. No skills required.
 | **Claude Code** | the app where you talk and your project gets built | **You** - step 1 below (the only manual install) |
 | **Git** | the "safe" that records every step of the work | **the guide**, along the way - it only asks for your OK |
 | **Flutter** | the engine your app runs on | **the guide**, along the way (big download, ~15 min) |
-| dictation (optional) | speak instead of typing | you - see the "Dictation" section below |
+| Wispr Flow (strongly recommended) | speak instead of typing | you - see the "Dictation" section below |
 
 So: you manually install Claude Code only. The guide handles the rest - when it
 asks for permission to install something, just agree.
@@ -106,19 +106,19 @@ exactly where you left off.
 
 ## Dictation - talk, don't type
 
-Free-flowing, long answers work best - the guide sorts them out. Three options,
-simplest first:
+**Install Wispr Flow: https://wisprflow.ai** (Windows, Mac, iPhone, Android).
 
-1. **The microphone in Claude Code** - the mic icon by the chat box. Note: it
-   understands **English** best; other languages can be hit-and-miss.
-2. **System dictation in your language** (recommended):
-   - **Windows**: press **Win + H**, pick your language and speak - text goes
-     straight into the chat box.
-   - **Mac**: System Settings → Keyboard → Dictation - turn it on; trigger is
-     the 🎤 (F5) key or double-press Fn (🌐) - the exact shortcut is shown in
-     that same settings pane.
-3. **A Whisper-based app** (for the curious - best quality, works offline):
-   ask your Utopia contact for a current recommendation for your system.
+It is worth it, and it may be the most useful advice on this page. The guide
+builds your app out of what you tell it, so the more detail it gets, the closer
+the result lands. And the honest truth is that nobody wants to type three
+paragraphs about their idea. Saying three paragraphs costs nothing. Speaking
+gives the guide several times more to work with, for less effort - and it shows
+most in the idea interview at the very start.
+
+Your system's own dictation exists too (Windows **Win + H**; Mac: System Settings
+→ Keyboard → Dictation), but outside English it can be unreliable - our first
+participant never got it working at all. The mic in Claude Code is strongest in
+English. Treat both as a fallback, not a first choice.
 
 ## Good habits
 
