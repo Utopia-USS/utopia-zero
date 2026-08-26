@@ -74,12 +74,30 @@ if [ -f "$PATF" ] && [ "${AUD:-friend}" != "public" ]; then
     REPO="$(grep -o 'github\.com[/:][A-Za-z0-9_./-]*' "$ROOT/zero/config.json" 2>/dev/null | head -1 | sed 's|.*github\.com[/:]||; s|\.git$||')"
     PAT="$(tr -d '\r\n' < "$PATF" 2>/dev/null)"
     SINCE="$(tr -d '\r\n' < "$AN/.issues_seen" 2>/dev/null || echo '')"
-    [ -n "${SINCE:-}" ] || SINCE='1970-01-01T00:00:00Z'
+    # NOT the epoch: GitHub's issues list quietly returns [] for since=1970 (it
+    # accepts 1990 and later), and the epoch is exactly the default checkpoint -
+    # so a fresh repo would have surfaced nothing at all, forever.
+    case "${SINCE:-}" in
+      ''|1970-*) SINCE='2000-01-01T00:00:00Z' ;;
+    esac
     # -f matters: without it GitHub's {"message":"Not Found"} body counts as a
     # successful answer, the check reports nothing and the channel dies quietly.
     api() { curl -sS -f -m 8 -H "Authorization: Bearer $PAT" -H "Accept: application/vnd.github+json" \
               -H "User-Agent: utopia-zero" "$1" 2>/dev/null; }
     if [ -n "${REPO:-}" ] && [ -n "${PAT:-}" ]; then
+      # New or updated threads: the BODY of an issue Utopia opened is a message in
+      # its own right, not just a container for comments. Fetching only comments
+      # meant an operator-opened issue reached nobody.
+      FRESH="$(api "https://api.github.com/repos/$REPO/issues?state=open&since=$SINCE&per_page=20")"
+      case "${FRESH:-}" in
+        ''|'[]') ;;
+        *) echo "=== utopia-zero: nowe lub zmienione watki [zero] od Utopii ==="
+           # GitHub's issue JSON is verbose (one issue is ~4 kB of mostly URLs),
+           # so the cap has to fit more than a single thread or a second message
+           # gets clipped mid-object.
+           printf '%s\n' "$FRESH" | cut -c1-16000
+           echo "=== koniec / end ===" ;;
+      esac
       ISSUES="$(api "https://api.github.com/repos/$REPO/issues?state=open&per_page=20")"
       if [ -z "${ISSUES:-}" ]; then
         echo "=== utopia-zero: nie udalo sie sprawdzic wiadomosci od Utopii ==="
