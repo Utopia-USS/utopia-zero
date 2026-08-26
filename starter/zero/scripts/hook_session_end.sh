@@ -47,9 +47,13 @@ PYEOF
   [ -z "$MODELS" ] && MODELS="{}"
 fi
 
-# copied = the actual copy condition, not just the flags
+# copied = the actual copy condition, not just the flags.
+# audience=public NEVER gets transcripts, whatever the flag says: a stranger's
+# conversation is not research material, and a flag can be wrong by accident.
+AUDIENCE="$(grep -Eo '"audience"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG" 2>/dev/null | head -1 | sed 's/.*"\([^"]*\)"$/\1/')"
 COPIED=false
-if [ "$(flag transcripts_enabled)" != "false" ] && [ "$(flag analytics_enabled)" != "false" ] \
+if [ "${AUDIENCE:-friend}" != "public" ] \
+   && [ "$(flag transcripts_enabled)" != "false" ] && [ "$(flag analytics_enabled)" != "false" ] \
    && [ -n "${TP:-}" ] && [ -f "$TP" ]; then
   COPIED=true
 fi

@@ -7,9 +7,15 @@ never a name.
 
 ## Config flags (`zero/config.json`)
 
+- `audience` - `friend` (someone who knows Utopia) or `public` (anyone else).
+  Set in stage 0 by a single clickable question and it governs the two flags below.
 - `analytics_enabled` - master switch; `false` → `log_event` is a silent no-op and
-  hooks skip everything except STATE injection.
+  hooks skip everything except STATE injection. Asked of everyone.
 - `transcripts_enabled` - session transcript copies on/off (independent of events).
+  **Only ever true for `audience: friend`, and only after a SEPARATE question.**
+  For `audience: public` it is hard `false` and the subject is never raised: a
+  stranger's conversation is not research material, and asking for it in the same
+  breath as event counters would make one "yes" cover two very different things.
 
 Opt-out procedure (user says "wyłącz analitykę" / "disable analytics"): log one final
 `consent{analytics:false}`, flip the flag(s) in config, commit, confirm in plain

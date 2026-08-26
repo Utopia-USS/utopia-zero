@@ -29,17 +29,15 @@ for what's missing.
    `starter/` content into a new work dir.
 3. **Fill `zero/config.json`**: `participant_id`, `project_id` (= repo name),
    `project_name`, `language_default`, `git_remote`
-   (`https://github.com/<org>/<repo>.git`), `utopia_contact` - the **operator's own
-   direct contact** (participants are friends of Utopia and write to a person they
-   know, not a mailbox; e.g. `Paweł - pawel@…`). Use `info@utopiasoft.io` only as a
-   last-resort fallback when no direct contact fits. Flags stay `true`.
+   (`https://github.com/<org>/<repo>.git`), and `audience: "friend"` (a prepared
+   repo always goes to someone who knows Utopia). Flags stay `true`.
+   **Never put a person into the config.** `utopia_contact` stays the literal string
+   `"Utopia"`: friends already know who to write to, and a name or address in a
+   project file is personal data that outlives the person's role - pilot #1 shipped
+   a full name plus an address in that field and it had to be cleaned out afterwards.
    House rule applies to VALUES too: no em-dashes in any config field (dry-run #2
-   shipped one inside `utopia_contact`, and pilot #1 shipped one again - check this
-   field specifically before committing) - plain dash with spaces.
-   `utopia_contact` names a PERSON and should carry their **GitHub handle**, e.g.
-   `Pawel Adamarek (GitHub: pawuload)`: escalation runs through `[zero]` issues in
-   the participant's repo, so a handle is actionable where an e-mail address is not.
-   Add an address only when the participant has no GitHub account.
+   shipped one, pilot #1 shipped one again - check this field specifically before
+   committing) - plain dash with spaces.
 4. **utopia_ui dependency**: the utopia-ui repo is PUBLIC - participants fetch it
    themselves via the git dependency (the wizard adds it in stage 2; see the
    skill's `utopia-ui-build.md` ladder). No vendoring by default. Vendor a copy

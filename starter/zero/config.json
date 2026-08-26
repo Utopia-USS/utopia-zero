@@ -4,8 +4,9 @@
   "project_name": "Example",
   "org": "io.utopiasoft.poc",
   "language_default": "auto",
+  "audience": "friend",
   "analytics_enabled": true,
   "transcripts_enabled": true,
   "git_remote": "https://github.com/Utopia-USS/poc-example.git",
-  "utopia_contact": "info@utopiasoft.io"
+  "utopia_contact": "Utopia"
 }

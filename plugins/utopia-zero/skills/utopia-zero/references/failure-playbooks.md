@@ -45,7 +45,9 @@ Strategy menus per category:
 2. Check rules/permissions (Firestore rules, RLS) against the exact failing call.
 3. Quota/plan limits - read the console error class properly.
 4. Re-init config from `.env` (typos, wrong project id).
-5. Needs an admin/account action → delegate: ready-to-send message to `utopia_contact`.
+5. Needs an admin/account action → `audience: friend`: delegate with a ready-to-send
+   message **to Utopia** (no personal name, no address). `audience: public`: it is
+   their own account - guide the clicks instead of delegating.
 
 **Claude Code itself**
 - Subscription limit hit: honest message + when it resets; propose a break -
@@ -95,5 +97,8 @@ also a plan B. Say which rung you're on, in plain words, without shame.
 4. Every session start, the hook surfaces new Utopia replies on `[zero]` issues -
    read them FIRST and weave the guidance into the plan (then comment back on the
    issue what you did, so the thread is a real two-way channel).
-5. No PAT / self-serve project → say there's no help channel wired, suggest the
-   user contacts `utopia_contact` themselves with the summary you prepare.
+5. No PAT / self-serve project → say there's no help channel wired. `audience:
+   friend`: offer the summary to send to Utopia themselves. `audience: public`:
+   the honest answer is that they are self-hosting this - hand them the summary
+   for their own use (or for an issue on the utopia-zero repo when the fault looks
+   like ours), and never point at a contact that will not answer.
