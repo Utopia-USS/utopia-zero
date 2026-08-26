@@ -65,20 +65,44 @@ physical device → emulator/simulator → phone browser via LAN → local web p
 Every rung is a legitimate success; parking a feature and building another one is
 also a plan B. Say which rung you're on, in plain words, without shame.
 
-## Escalation (after the ladder + no plan B, or the user is stuck twice on the same thing)
+## Escalation - the `[zero]` issue channel
 
-1. Log `stuck{attempts, action:"issue_created"}`.
-2. Create a GitHub issue in the project repo (title `[zero] Stuck: <short-slug>`):
+**This is the default way to reach Utopia, not a last resort.** Open an issue
+whenever the work needs something only Utopia can give, and keep building meanwhile:
 
-   macOS - write the body to `/tmp/zero_issue.md` (already redacted), then:
+- **Stuck**: the ladder is exhausted, no plan B, or the user is stuck twice on the
+  same thing. Log `stuck{attempts, action:"issue_created"}`.
+- **Accounts and access**: a backend project, a paid tier, a permission, anything
+  that lives on Utopia's side (stages.md, stage 4 step 4).
+- **A defect in Utopia's own tooling**: a `utopia_ui` gap, a broken scaffold - file
+  it as `[zero] ui-gap: ...` / `[zero] bug: ...` here, since a participant PAT
+  reaches no other repo.
+
+Why by default: a message the user has to copy into e-mail costs a full human
+round trip in each direction, and the answer comes back as something to paste. An
+issue is read by the wizard itself at the next session start and acted on - the
+participant does nothing.
+
+**Never put a credential in an issue.** A Firebase web config is public by design
+and may be posted; a PAT, an API key, a password or a service-account file must
+never appear there, not even redacted-looking. Those stay on a private channel.
+`audience: public` has no channel at all - do not open issues nobody will read.
+
+1. Log the matching event (`stuck`, or `backend_step{delegated_to:"utopia"}`).
+2. Create a GitHub issue in the project repo (title `[zero] <kind>: <short-slug>`).
+   Write the body to `zero/.issue.md` first (gitignored, already redacted), then -
+   **no python3 anywhere, Git Bash on Windows does not have it**:
    ```bash
-   PAT=$(cat zero/.pat)
-   REPO=$(grep -o 'github\.com[/:][A-Za-z0-9_./-]*' zero/config.json | head -1 | sed 's|github\.com[/:]||; s|\.git$||')
-   python3 -c 'import json,pathlib,sys; print(json.dumps({"title": sys.argv[1], "body": pathlib.Path("/tmp/zero_issue.md").read_text()}))' \
-     "[zero] Stuck: <short-slug>" > /tmp/zero_issue.json
+   PAT=$(tr -d '\r\n' < zero/.pat)
+   REPO=$(grep -o 'github\.com[/:][A-Za-z0-9_./-]*' zero/config.json | head -1 | sed 's|.*github\.com[/:]||; s|\.git$||')
+   BODY=$(sed -e 's/\\/\\\\/g' -e 's/"/\\"/g' -e 's/\r//' zero/.issue.md | awk 'BEGIN{ORS=""} {print $0 "\\n"}')
+   printf '{"title":"%s","body":"%s"}' "[zero] Stuck: <short-slug>" "$BODY" > zero/.issue.json
    curl -sS -X POST -H "Authorization: Bearer $PAT" -H "Accept: application/vnd.github+json" \
-     "https://api.github.com/repos/$REPO/issues" --data @/tmp/zero_issue.json
+     -H "User-Agent: utopia-zero" "https://api.github.com/repos/$REPO/issues" --data @zero/.issue.json
+   rm -f zero/.issue.json
    ```
+   (Verified escaping: quotes, backslashes and blank lines survive the round trip.
+   Avoid raw tabs in the body.)
    Windows:
    ```powershell
    $pat  = (Get-Content zero\.pat -Raw).Trim()
@@ -94,9 +118,15 @@ also a plan B. Say which rung you're on, in plain words, without shame.
    Impact on the user · Conversation language.
 3. Tell the user, their language, no drama: "Zatrzymałem się na X i wysłałem raport
    do Utopii. W międzyczasie możemy robić Y, albo wróć jutro - sprawdzę odpowiedź."
-4. Every session start, the hook surfaces new Utopia replies on `[zero]` issues -
-   read them FIRST and weave the guidance into the plan (then comment back on the
-   issue what you did, so the thread is a real two-way channel).
+4. Every session start the hook fetches new comments on open `[zero]` issues and
+   prints them - read them FIRST, act, then comment back on the issue saying what
+   you did. The thread is a two-way channel, not an inbox.
+   **If the hook prints that it could not check** (no curl, network, token), say one
+   plain sentence to the user only when they are actually waiting on an answer, and
+   read the issues yourself before planning. A channel that fails silently is worse
+   than no channel: pilot #1 spent its whole project believing this worked, while
+   `.issues_seen` never moved off the epoch because the old implementation needed
+   python3 and Git Bash on Windows has none.
 5. No PAT / self-serve project → say there's no help channel wired. `audience:
    friend`: offer the summary to send to Utopia themselves. `audience: public`:
    the honest answer is that they are self-hosting this - hand them the summary

@@ -1,6 +1,10 @@
 # secrets - never committed
 zero/.pat
 
+# escalation scratch (issue body + payload built before posting to GitHub)
+zero/.issue.md
+zero/.issue.json
+
 # plugin-less wizard clone (fallback mode)
 zero/.wizard/
 .env

@@ -271,12 +271,16 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
      invariant 3), so it is the one backend question you DO put to the user - and
      you put it before anything exists in anyone's name. v1 accounts come from
      Utopia. Do all three, in this order:
-     1. `audience: friend` → write the ready-to-send message **to Utopia** (that
-        phrase and nothing more: no personal name, no e-mail, in chat or in the
-        message body - a friend knows where to send it): what to create, for which
-        project, what to send back. `audience: public` → there is no Utopia to ask;
-        the account is theirs, so say what needs creating, guide the clicks, and
-        make the free-tier limits explicit.
+     1. `audience: friend` → **open a `[zero]` issue in this repo**
+        (`failure-playbooks.md`) saying what to create, for which project and what
+        to send back, then tell the user in one sentence that the request is with
+        Utopia. Do NOT hand them a message to copy into e-mail: that costs a human
+        round trip each way and comes back as something to paste, while an issue
+        reply is read by the wizard itself at the next session start. A copyable
+        message is the fallback for when there is no PAT. Say "Utopia" and nothing
+        more - no personal name, no address, in chat or in the issue.
+        `audience: public` → there is no Utopia to ask; the account is theirs, so
+        say what needs creating, guide the clicks, and state the free-tier limits.
      2. Ask, clickable, with the consequence spelled out in plain words:
         "poczekać na konto Utopii (Utopia płaci i przejmie projekt)" /
         "założę własne teraz (szybciej, ale przeniesienie później = nowy projekt od
