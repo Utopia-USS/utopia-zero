@@ -99,8 +99,15 @@ for what's missing.
    - PL: „Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji."
    - EN: "Let's start. Guide me from zero to my own app."
 9. **Verify before finishing**: fresh `git clone` of the new repo into /tmp shows
-   starter files, NO `.pat`, NO real token anywhere (`git log -p | grep -c
-   github_pat_` → 0). Report the checklist result.
+   starter files, NO `.pat`, and no real token anywhere:
+   ```bash
+   git ls-files | grep -c '\.pat'                                        # -> 0
+   git log -p | grep -cE 'github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,}'  # -> 0
+   ```
+   The length bound matters: a bare `grep -c github_pat_` matches the **redaction
+   patterns inside our own scripts** and reports 4 hits on a perfectly clean repo.
+   A check that always cries wolf is a check the operator learns to ignore.
+   Report the checklist result.
 
 Never print the token back, never commit it, never put it in the repo description
 or issues.
