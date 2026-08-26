@@ -1,0 +1,71 @@
+name: Run report (how it went)
+description: You used the wizard. Tell us what happened, even if you gave up.
+title: "[run] "
+labels: ["run-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This is the most useful issue you can open here.** Every defect worth
+        fixing so far was found by someone using this for real, not by anyone
+        reading the code. A half-finished run is more useful than a perfect one.
+
+        You do not have to be technical. Write in Polish or English, whichever is
+        easier. Skip any field you cannot answer.
+
+        **Do not paste tokens, keys or passwords.** If something only makes sense
+        with one, say so and leave it out.
+  - type: dropdown
+    id: stage
+    attributes:
+      label: How far did you get?
+      options:
+        - Stage 0 - setup, before anything was built
+        - Stage 1 - idea and design interview
+        - Stage 2 - environment and first screen
+        - Stage 3 - clickable skeleton
+        - Stage 4 - building features
+        - Stage 5 - phone or device
+        - Stage 6 - handover
+        - I gave up before starting
+    validations:
+      required: true
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: In your own words. What worked, what did not, where you got lost.
+    validations:
+      required: true
+  - type: textarea
+    id: worst_moment
+    attributes:
+      label: What was the worst moment?
+      description: The point where you were closest to quitting, even if you carried on.
+  - type: input
+    id: os
+    attributes:
+      label: Your computer
+      placeholder: "macOS 15 on a MacBook Air / Windows 11 desktop"
+  - type: dropdown
+    id: hooks
+    attributes:
+      label: Does zero/analytics/events.jsonl contain a line with "session_start"?
+      description: Open the file and search for it. If you have no idea, pick the last option.
+      options:
+        - "Yes"
+        - "No"
+        - I could not check
+  - type: dropdown
+    id: dictation
+    attributes:
+      label: Did you talk to the wizard or type?
+      options:
+        - Installed Wispr Flow and talked
+        - Used my system's dictation
+        - Typed everything
+  - type: textarea
+    id: anything_else
+    attributes:
+      label: Anything else
+      description: Ideas, complaints, things that felt stupid. All of it is signal.

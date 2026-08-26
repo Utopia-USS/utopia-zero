@@ -1,0 +1,68 @@
+name: Bug report (something is broken)
+description: The wizard, the scripts or the starter did something wrong.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a defect you can point at. If you just want to describe how a run went,
+        use **Run report** instead - that one is more useful than it sounds.
+
+        **Never paste a token, key or password.** If you already did somewhere,
+        revoke it before doing anything else.
+  - type: textarea
+    id: what
+    attributes:
+      label: What broke
+      description: What you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce it
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+  - type: input
+    id: stage
+    attributes:
+      label: Stage
+      description: The "Etap / Stage" line in zero/STATE.md.
+      placeholder: "4"
+  - type: input
+    id: env
+    attributes:
+      label: OS and shell
+      placeholder: "macOS 15, zsh / Windows 11, Git Bash"
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Plugin and scripts version
+      description: Plugin version from the marketplace; scripts from zero/scripts/VERSION.
+      placeholder: "plugin 0.5.0, scripts 8"
+  - type: textarea
+    id: output
+    attributes:
+      label: What the wizard or the script said
+      description: Paste the message. Redact anything that looks like a credential.
+      render: shell
+  - type: textarea
+    id: events
+    attributes:
+      label: Relevant lines from zero/analytics/events.jsonl
+      description: Usually the error, fix_attempt and stuck events around the failure.
+      render: json
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Quick checks
+      options:
+        - label: I checked that no token, key or password appears anywhere in this report.
+          required: true
+        - label: events.jsonl contains session_start lines (hooks are firing)
+        - label: I am on the newest scripts (the wizard syncs them at session start)
