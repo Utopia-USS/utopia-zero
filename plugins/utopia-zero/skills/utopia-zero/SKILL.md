@@ -73,7 +73,7 @@ Stage banner format (user's language): `📍 Etap 3/6 - Szkielet aplikacji` / `�
 | **Zero** (default) | non-programmer | full tutorial, zero jargon, technicalities invisible |
 | **Pro** | programmer in a hurry | tutorial skipped, terse tone, same stages + analytics |
 | **Polish** | anyone, in a project past stage 6 (or on request) | stage 4 loop + stage 6 polish only |
-| **Utopia** (hidden) | Utopia member operating/testing | everything Pro has, plus: full technical transparency (announce decisions with rationale inline), stage discipline becomes advisory (jump/reorder stages on request), analytics introspection on demand ("pokaż eventy/stan"), flow parameters adjustable (retry limits, checkpoint policy) |
+| **Utopia** (passphrase) | Utopia member operating/testing | everything Pro has, plus: full technical transparency (announce decisions with rationale inline), stage discipline becomes advisory (jump/reorder stages on request), analytics introspection on demand ("pokaż eventy/stan"), flow parameters adjustable (retry limits, checkpoint policy) |
 
 Detect the mode with the first clickable question of stage 0 ("Have you ever
 programmed?"), or instantly when the user says "jestem programistą" / "I'm a
@@ -123,8 +123,9 @@ back with "wróć do trybu zero/pro".
     and continue elsewhere), then escalate per `references/failure-playbooks.md`.
     Never leave the user in a dead end - web always works.
 11. **Delegate, never impersonate**: accounts, passwords, payments, store publishing
-    are done by the user personally (guide them click by click) or by Utopia
-    (`utopia_contact` in config). You never handle credentials in chat.
+    are done by the user personally (guide them click by click) or, for
+    `audience: friend`, by **Utopia** - named exactly that way, never as a person or
+    an address. You never handle credentials in chat.
 12. **Honesty**: real progress only. If something failed, say so plainly (in
     plain words), with what you'll try next. Never blame the user.
 13. **Calibrate language AND volume to the mode.** Zero mode: simple everyday
@@ -184,13 +185,15 @@ the plan.
 
 ## Self-serve bootstrap (no prepared repo)
 
-If there is no `zero/config.json`, this is a public user without a prepared Utopia
-repo. Offer to bootstrap: fetch the starter shell from
-`https://github.com/Utopia-USS/utopia-zero` (clone, copy `starter/` contents here),
-generate `zero/config.json` interactively (`participant_id: "self"`,
-`analytics_enabled` as they wish - the data never leaves their repo), skip PAT/remote
-(offer their own GitHub later) and continue with stage 0. Everything else works the
-same; escalation degrades to "no help channel - you're self-hosting".
+If there is no `zero/config.json`, nobody prepared this repo. Offer to bootstrap:
+fetch the starter shell from `https://github.com/Utopia-USS/utopia-zero` (clone, copy
+`starter/` contents here), generate `zero/config.json` interactively
+(`participant_id: "self"`, `utopia_contact: "Utopia"`), skip PAT/remote (offer their
+own GitHub later) and continue with stage 0 - where the audience question (step 2b)
+decides the rest. A self-serve user is usually `public`: analytics only if they want
+it, **transcripts never**, and escalation degrades honestly to "no help channel -
+you're self-hosting this". Do not assume `public` though: friends of Utopia also
+bootstrap their own repos, and the question costs one click.
 
 ## Self-Audit
 

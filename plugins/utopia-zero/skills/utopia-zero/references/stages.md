@@ -28,14 +28,37 @@ Shared rules for every stage:
 > immediately after the toolchain lands. Everything else in stage 0 proceeds.
 
 1. Read `zero/config.json`. Detect OS + basics; log `env{os, arch, disk_free_gb, git, flutter}`.
-2. **Mode** (clickable): "Czy kiedykolwiek programowałeś/aś?" → never / trochę / jestem
-   programistą (→ Pro). Log `question`/`answer`, and `tutorial{skipped:true}` for Pro.
-   (The hidden Utopia mode - passphrase "jestem z utopii" - is recognized at ANY
-   moment, per SKILL.md; it is never one of the offered options.)
-3. **Analytics info** (both modes, plain words): what is collected (steps, decisions,
-   errors, time, conversation copies), why (Utopia studies how well this works), where
-   it lives (their project repo, visible to Utopia), and that "wyłącz analitykę"
-   works at any time. Log `consent{analytics, transcripts}`.
+2. **Mode** (clickable): "Czy kiedykolwiek programowałeś/aś?" → nigdy (→ Zero) /
+   trochę (→ Zero) / jestem programistą (→ Pro) / jestem z Utopii. The last option
+   only ASKS for the passphrase ("jestem z utopii") - Utopia mode is an insider
+   surface (stage jumping, analytics introspection, raw technical transparency), so
+   clicking a button must not be enough to enter it. No passphrase → treat as Pro
+   and move on without making a thing of it. Log `question`/`answer`, and
+   `tutorial{skipped:true}` for Pro.
+2b. **Audience** (clickable, ONE question, before anything about data): "Czy jesteś
+   przyjacielem Utopii?" → tak / nie. This is not small talk - it decides what may
+   be collected and whether a help channel exists. Write `audience: "friend"` or
+   `"public"` into `zero/config.json`, log `question`/`answer` +
+   `decision{area:"audience", user_involved:true}`.
+   - **friend**: a Utopia channel exists. Refer to it ONLY as "Utopia" - never a
+     person's name, never an e-mail, in chat or in any prepared message. A friend
+     already knows who to write to; naming someone turns a project file into
+     personal data and ages badly the moment that person changes role.
+   - **public**: there is no channel. Say so plainly and once ("prowadzisz to
+     samodzielnie"), and never send them chasing a contact that will not answer.
+3. **Data, shaped by the audience** (plain words, both modes). Always explain: what is
+   collected (steps, decisions, errors, time), where it lives (their own repo), and
+   that "wyłącz analitykę" works at any moment. Then:
+   - **friend**: ask about analytics AND about conversation transcripts, as two
+     separate questions - transcripts are a bigger ask than event counters and must
+     never ride along on one "yes". Say plainly that Utopia can read what lands in
+     the repo.
+   - **public**: ask about analytics ONLY. **Transcripts are never collected and
+     never offered** - set `transcripts_enabled: false` and do not raise the subject.
+     The events stay in their own repo; nobody at Utopia sees them unless the person
+     chooses to share the repo. Never imply Utopia is watching a stranger's project.
+   Log `consent{analytics, transcripts}` either way (public always logs
+   `transcripts:false`).
 4. **Tutorial** (Zero mode only, ~6 short paragraphs, user's language): how this chat
    works; stages 0–6 overview; nothing is ever lost ("wysyłam kopie do sejfu");
    how to come back ("otwórz projekt i napisz: kontynuuj"); auto-accept: where the
@@ -73,8 +96,9 @@ Shared rules for every stage:
    current branch. No `.pat`? Try the EXISTING remote as-is first (`git ls-remote`,
    then push) - operator and self-serve machines often authenticate via their own
    SSH keys or credential helper. Only when nothing authenticates → continue
-   local-only, note it in STATE, and plan a "skontaktuj się z Utopią" step
-   (config `utopia_contact`).
+   local-only, note it in STATE. `audience: friend` → plan a "skontaktuj się
+   z Utopią" step (just that, no name, no address). `audience: public` → say
+   plainly that pushing needs their own GitHub account and offer to wire it.
 8. **Wire analytics hooks** for this OS into `.claude/settings.json` (exact JSON in
    `analytics.md`), commit. Then the **one planned restart**: ask the user to fully
    quit and reopen the app, open the project again, and write "kontynuuj". Write
@@ -247,10 +271,12 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
      invariant 3), so it is the one backend question you DO put to the user - and
      you put it before anything exists in anyone's name. v1 accounts come from
      Utopia. Do all three, in this order:
-     1. Write the ready-to-send message to **their Utopia person** (`utopia_contact`
-        in config names the member who prepared this project - the participant knows
-        them; never a generic mailbox): what to create, for which project, what to
-        send back.
+     1. `audience: friend` → write the ready-to-send message **to Utopia** (that
+        phrase and nothing more: no personal name, no e-mail, in chat or in the
+        message body - a friend knows where to send it): what to create, for which
+        project, what to send back. `audience: public` → there is no Utopia to ask;
+        the account is theirs, so say what needs creating, guide the clicks, and
+        make the free-tier limits explicit.
      2. Ask, clickable, with the consequence spelled out in plain words:
         "poczekać na konto Utopii (Utopia płaci i przejmie projekt)" /
         "założę własne teraz (szybciej, ale przeniesienie później = nowy projekt od

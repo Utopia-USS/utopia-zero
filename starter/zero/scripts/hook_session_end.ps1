@@ -39,8 +39,10 @@ try {
   $models = "{}"
   if ($acc.Count -gt 0) { $models = ($acc | ConvertTo-Json -Compress -Depth 4) }
 
-  # copied = the actual copy condition, not just the flags
-  $copied = ($cfg.transcripts_enabled -ne $false) -and ($cfg.analytics_enabled -ne $false) -and $tp -and (Test-Path $tp)
+  # copied = the actual copy condition, not just the flags.
+  # audience=public NEVER gets transcripts, whatever the flag says.
+  $audience = if ($cfg.audience) { $cfg.audience } else { "friend" }
+  $copied = ($audience -ne "public") -and ($cfg.transcripts_enabled -ne $false) -and ($cfg.analytics_enabled -ne $false) -and $tp -and (Test-Path $tp)
 
   # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_end" `
