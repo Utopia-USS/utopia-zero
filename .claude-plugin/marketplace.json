@@ -13,7 +13,7 @@
     {
       "name": "utopia-zero",
       "description": "👾 Guide a complete non-programmer (or a hurried pro) from an idea to a developable Flutter POC/MVP. Staged wizard: tutorial → idea & design interview → web-first environment setup → app skeleton → feature loop → optional devices → handover for professional developers. Multi-session state in zero/STATE.md, GitHub-issue escalation, opt-out experiment analytics in the project repo, and orchestration of the utopia-flutter-skills plugins (hooks, ai-arch, dart-lsp, cms, reviews).",
-      "version": "0.4.2",
+      "version": "0.4.3",
       "source": "./plugins/utopia-zero",
       "repository": "https://github.com/Utopia-USS/utopia-zero",
       "homepage": "https://github.com/Utopia-USS/utopia-zero",
