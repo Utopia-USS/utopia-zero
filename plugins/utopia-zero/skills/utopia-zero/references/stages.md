@@ -64,27 +64,28 @@ Shared rules for every stage:
    how to come back ("otwórz projekt i napisz: kontynuuj"); auto-accept: where the
    AUTO/permissions toggle lives, and the symptom of it being off (constant
    "Allow?" popups → tell me and I'll guide you).
-4a. **Dictation recommendation** (both modes, ONCE, clickable, fully optional):
-   "Najlepiej pracuje się mówiąc - długie, swobodne wypowiedzi. Chcesz, żebym
-   pomógł włączyć dyktowanie?" → tak / nie, będę pisać / już mam.
-   On "tak", recommend in this order and guide the setup click-by-click:
-   - **Windows: Win+H** (set the language to the user's; on Win10 needs online
-     speech recognition toggled on - guide through Settings if it refuses).
-   - **macOS: system dictation** (System Settings → Keyboard → Dictation:
-     enable it; the trigger is the 🎤/F5 key or double-press Fn (🌐) by
-     default - the exact shortcut is shown/changeable right there, so read it
-     from the user's settings instead of asserting one).
-   - Mention the **Claude Code mic** honestly: great for English, weaker in
-     other languages.
-   - Power option, only if the user is keen or system dictation disappoints:
-     a **Whisper-based dictation app** - WebSearch for a currently maintained,
-     well-reviewed one for their OS (do NOT hardcode a name), present 1-2 as a
-     recommendation with one-line trade-offs, and install/configure it WITH
-     their consent, hiding the technicalities as always.
-   Frame everything as a recommendation, never a requirement; typing is fine.
-   Log `decision{area:"dictation", choice:"<winh|macos|claude-mic|whisper-app|typing>",
-   user_involved:true}`. If the user later complains about typing effort or
-   garbled dictation, return to this step once.
+4a. **Dictation - recommend it properly, once** (both modes, clickable, still the
+   user's choice): "Najlepiej pracuje się mówiąc - długie, swobodne wypowiedzi.
+   Polecam Wispr Flow, to zmienia sposób pracy z asystentem." → zainstaluję /
+   już mam / nie, będę pisać.
+   - The recommendation is **Wispr Flow**: https://wisprflow.ai (Windows, macOS,
+     iPhone, Android). Give the link and one honest sentence about why it matters:
+     spoken answers are longer and carry far more detail than typed ones, and this
+     whole flow runs on how much the wizard learns from you - the idea interview in
+     stage 1 most of all. Nobody types three paragraphs about their app idea;
+     everybody says three paragraphs.
+   - **Do not send them round the built-in options first.** Pilot #1 burned three
+     attempts on Windows dictation (Win+H) before giving up and typing all the way
+     through - it does not do Polish reliably, and the Claude Code mic is noticeably
+     weaker outside English. Mention them only as a fallback if the user declines
+     the install.
+   - Frame it as strongly recommended, never a requirement, and never block on it.
+     Do not walk them through the install click by click unless they ask - it is a
+     normal app with its own onboarding.
+   Log `decision{area:"dictation", choice:"<wispr-flow|already-has|typing|system>",
+   user_involved:true}`. **Return to this once** if their answers get very short or
+   dictation-garbled: terse input is the visible symptom of the thing this step
+   exists to prevent.
 5. **Model advice** per `model-advice.md`; log `model_info`.
    *After each of steps 2–5, update `zero/STATE.md` immediately (mode, consent,
    model) - a session dying mid-stage-0 must not lose these answers.*
