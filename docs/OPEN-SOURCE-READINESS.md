@@ -26,10 +26,9 @@ stronie, a domyślne teksty o danych są pisane pod uczestnika badania.
 | Imiona i adresy w plikach projektu | **zrobione** - `utopia_contact` to teraz literalnie `"Utopia"`; skill nigdy nie wypowiada nazwiska ani adresu |
 | Gdzie leżą dane | w repo użytkownika; przy `audience: public` nikt z Utopii ich nie widzi, dopóki sam nie udostępni repo |
 
-**Zostaje do zrobienia:** krótki `PRIVACY.md` po polsku i angielsku, mówiący
-wprost, co zbiera analityka, gdzie to leży, kto ma do tego dostęp w obu wariantach
-i jak to usunąć (z uczciwą uwagą o historii gita - patrz `analytics.md`).
-Bez tego pliku obcy musi wnioskować o prywatności z kodu skilla.
+**Zrobione:** [`PRIVACY.md`](../PRIVACY.md) w obu językach - co zbieramy, gdzie
+to leży, kto czyta w każdym z dwóch wariantów, jak wyłączyć i jak skasować (z
+uczciwą uwagą o historii gita).
 
 ## 2. Kroki, które zakładają operatora
 
@@ -48,18 +47,17 @@ wszystkie trzy przebiegi miały przygotowane repo.
 
 ## 3. Onboarding
 
-README zaczyna się od „powinieneś dostać ZIP" - czyli od ścieżki, której obcy nie
-ma. Kolejność musi się odwrócić: najpierw self-serve (zainstaluj plugin, otwórz
-pusty folder, napisz cokolwiek), a program pilotażowy jako sekcja poniżej.
-`ONBOARDING-PL/EN` są dobre, ale też pisane pod ZIP.
+**Zrobione:** README odwrócony - najpierw self-serve (zainstaluj plugin, otwórz
+pusty folder, `/utopia-zero:start`), ZIP jako sekcja poniżej, plus jawna lista
+znanych ograniczeń i rekomendacja Wispr Flow. `ONBOARDING-PL/EN` nadal pisane pod
+ZIP i to jest w porządku: trafiają tam tylko uczestnicy, którzy ZIP dostali.
 
 ## 4. Kanał zwrotny
 
-Issues są otwarte, `main` jest chroniony (PR wymagany, bez force-push i kasowania,
-zapis tylko dla współpracowników Utopii - obcy forkuje i robi PR). Brakuje:
-`CONTRIBUTING.md`, szablonów issue (bug / doświadczenie z przebiegu) i sekcji
-„znane ograniczenia" w README. Bez tego pierwszy obcy z popsutymi hookami na
-Windowsie po prostu zniknie, zamiast to zgłosić.
+**Zrobione:** [`CONTRIBUTING.md`](../CONTRIBUTING.md) (z zasadami pisania skilla i
+skryptów: bash 3.2, zero `python3`, głośne awarie, bump VERSION), dwa szablony
+issue - **Run report** postawiony wyżej niż bug, bo to on daje sygnał badawczy - i
+sekcja „znane ograniczenia" w README. `main` chroniony, issues otwarte.
 
 ## 5. Defekty, które trafią w obcego
 
@@ -74,7 +72,9 @@ Windowsie po prostu zniknie, zamiast to zgłosić.
 
 ## Rekomendowana kolejność
 
-1. **Dwa, trzy kolejne pilotaże z zaproszenia** (`audience: friend`), koniecznie
+1. **Dwa kolejne pilotaże ruszyły 2026-08-26** (P002 Filip, P003 Bartek, oba na
+   macOS). Pozostała część planu:
+1a. **Kolejne pilotaże z zaproszenia** (`audience: friend`), koniecznie
    na innym systemie niż Windows i na innym typie pomysłu. Każdy dotychczasowy
    przebieg zwracał klasę błędów, której nikt nie przewidział; przy n=1 nie wiemy,
    co jest regułą, a co cechą jednej maszyny.

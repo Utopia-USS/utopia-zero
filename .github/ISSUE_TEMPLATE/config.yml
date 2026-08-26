@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: I am in a Utopia pilot and I am stuck
+    url: https://github.com/Utopia-USS/utopia-zero/blob/main/docs/ONBOARDING-PL.md
+    about: Report inside your OWN project repo as a [zero] issue - your wizard reads it at the next session start and Utopia answers there.
+  - name: What is collected about me
+    url: https://github.com/Utopia-USS/utopia-zero/blob/main/PRIVACY.md
+    about: What is recorded, where it lives, and how to switch it off or delete it.
