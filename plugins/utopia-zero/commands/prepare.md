@@ -47,6 +47,11 @@ for what's missing.
    --description "utopia-zero POC - <project name>"`; `git init -b main`, commit
    `zero: starter for <participant_id>`, push. (The initial push authenticates as
    the operator; the participant's PAT is only for their machine.)
+   Then tag the repo so it is findable org-wide:
+   `gh repo edit <org>/<repo> --add-topic utopia-zero --add-topic zero-pilot`
+   (`zero-dryrun` instead of `zero-pilot` for internal dry-runs). Every zero repo
+   carries `utopia-zero` - that is the one topic the org filter
+   (`org:Utopia-USS topic:utopia-zero`) relies on, so never skip it.
 6. **PAT (operator does this in the browser - guide, don't automate)**:
    GitHub → Settings → Developer settings → Personal access tokens → Fine-grained →
    Generate new: Resource owner = the repo owner (the org, or the operator's account

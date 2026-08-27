@@ -378,7 +378,9 @@ utopia-zero/
 
 ### Checklist przygotowania repo dla uczestnika (v1 ręcznie ~10 min; docelowo `/utopia-zero:prepare`)
 1. Świeży klon / `git pull` tego repo.
-2. `gh repo create Utopia-USS/poc-<slug> --private` (np. `poc-gra-imprezowa`).
+2. `gh repo create Utopia-USS/poc-<slug> --private` (np. `poc-gra-imprezowa`),
+   potem `gh repo edit ... --add-topic utopia-zero --add-topic zero-pilot`
+   (`zero-dryrun` dla dry-runów) - filtr org: `org:Utopia-USS topic:utopia-zero`.
 3. Skopiuj zawartość `starter/` do nowego katalogu, `git init` + commit + push.
 4. Fine-grained PAT ograniczony do nowego repo: Contents rw + Issues rw, wygaśnięcie 90 dni.
 5. Wypełnij `zero/config.json` (participant_id, nazwa projektu, remote - bez tokenu, flagi,
