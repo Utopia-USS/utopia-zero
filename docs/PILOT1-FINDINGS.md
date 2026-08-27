@@ -163,6 +163,22 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
   przypominamy, nie odpowiadamy z zewnątrz, nie commitujemy - testem jest
   właśnie samoistne podjęcie. Stan na 2026-08-27: od założenia issue nie było
   jeszcze żadnej sesji (ostatni commit 26.08 13:28 UTC), czekamy.
+- **2026-08-27: README + opis repo** przepisane przez operatora w `poc-janek`
+  (`c782c5b`): na wejściu jest teraz gra (pomysł, zasady, link do podglądu, co
+  działa, skrót techniczny), a instrukcja "otwórz w Claude Code" zeszła niżej.
+  Powód: repo na GitHubie nie mówiło, czym ten projekt jest. Commit rusza WYŁĄCZNIE
+  `README.md`, pliku, którego ani przewodnik, ani skrypty nigdy nie zapisują (starter
+  kopiuje go raz, przy przygotowaniu repo), więc u uczestnika wejdzie bez konfliktu.
+  Ustawione też About repo: opis gry, homepage na podglądzie, tematy.
+  **Ujawniona luka, nie w tym commicie**: protokół wejścia w sesję pullował tylko
+  klon `zero/.wizard`, nigdy repo uczestnika, a operator commituje do tego repo
+  regularnie (workflow podglądu, `firestore.rules`, CLAUDE.md, teraz README). Objawem
+  nie jest błąd na starcie, tylko ODRZUCONY push na końcu udanej sesji, czyli dla
+  trybu Zero "sejf nie przyjął mojej pracy" bez drogi wyjścia. → SKILL.md: krok 1a
+  (`git pull --rebase --autostash` na starcie, ponowne wczytanie config/STATE gdy HEAD
+  drgnął, abort + jedno zdanie + `error{category:"git"}` przy konflikcie, nigdy
+  force-push) oraz inwariant 8 (odrzucony push = ten sam pull, potem push jeszcze
+  raz). **[naprawione, plugin 0.5.3]**
 
 ## Obserwacje bez akcji (fala 3)
 - **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z
