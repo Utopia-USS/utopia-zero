@@ -20,3 +20,6 @@ zero/.wizard/
 .idea/
 .vscode/
 *.iml
+
+# deferred session_start markers (transient hook state, flushed or dropped)
+zero/analytics/.pending/

@@ -91,12 +91,26 @@ fi
 TS="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 PARTICIPANT="$(cfg participant_id)"
 PROJECT="$(cfg project_id)"
-SESSION="$(cat "$AN/.session" 2>/dev/null || echo "s0")"
+# ZERO_SESSION_ID lets a caller stamp a SPECIFIC session instead of whatever
+# .session holds right now: overlapping sessions overwrite that file, and in
+# pilot #2 one session collected three session_end events while two neighbours
+# got none. The end hook passes the id of the session that is actually ending
+# (from its stdin); everything else keeps reading .session as before.
+SESSION="${ZERO_SESSION_ID:-}"
+[ -z "$SESSION" ] && SESSION="$(cat "$AN/.session" 2>/dev/null || echo "s0")"
 STAGE="$(cat "$AN/.stage" 2>/dev/null || echo "0")"
 
 PAYLOAD="$(printf '%s' "$PAYLOAD" | redact | tr '\n' ' ')"
 
 mkdir -p "$AN"
+# flush this session's deferred session_start first (see hook_session_start):
+# the first real event proves the session is not restart churn, so its start
+# line goes in now, with the timestamp it was born with. events.jsonl is
+# append-ordered, not ts-ordered - analyses sort by ts.
+if [ -f "$AN/.pending/$SESSION" ]; then
+  sed -n '2p' "$AN/.pending/$SESSION" >> "$AN/events.jsonl" 2>/dev/null
+  rm -f "$AN/.pending/$SESSION" 2>/dev/null
+fi
 printf '{"ts":"%s","participant_id":"%s","project_id":"%s","session_id":"%s","stage":"%s","type":"%s","payload":%s}\n' \
   "$TS" "${PARTICIPANT:-unknown}" "${PROJECT:-unknown}" "${SESSION:-s0}" "${STAGE:-0}" "$TYPE" "$PAYLOAD" \
   >> "$AN/events.jsonl" 2>/dev/null
