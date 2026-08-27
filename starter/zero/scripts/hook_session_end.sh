@@ -15,6 +15,21 @@ flag() { grep -Eo "\"$1\"[[:space:]]*:[[:space:]]*(true|false)" "$CONFIG" 2>/dev
 SID="$(val session_id)"; [ -z "${SID:-}" ] && SID="$(cat "$AN/.session" 2>/dev/null || echo s0)"
 TP="$(val transcript_path)"
 
+# --- restart-noise gate: a session younger than 10 s that logged NOTHING is
+# app-restart churn, not work (pilot #2 opened four sessions in 34 seconds).
+# Its deferred session_start is still parked in .pending/<sid> - any real event
+# would have flushed it (log_event) - so drop the marker and leave no trace:
+# no events, no transcript copy, no sync commit.
+PENDING="$AN/.pending/$SID"
+if [ -f "$PENDING" ]; then
+  BORN="$(sed -n '1p' "$PENDING" 2>/dev/null)"
+  case "$BORN" in (*[!0-9]*|'') BORN='' ;; esac
+  if [ -n "$BORN" ] && [ "$(( $(date +%s) - BORN ))" -lt 10 ]; then
+    rm -f "$PENDING" 2>/dev/null
+    exit 0
+  fi
+fi
+
 # --- token usage from transcript (awk, no python3) ---
 # NOTE: the transcript covers the WHOLE session including earlier resumes, so the
 # sums are cumulative per session_id; analyses must take the LAST snapshot per
@@ -79,7 +94,12 @@ if [ "${AUDIENCE:-friend}" != "public" ] \
   COPIED=true
 fi
 
-bash "$ROOT/zero/scripts/log_event.sh" session_end \
+# ZERO_SESSION_ID: stamp the session that is actually ending (our stdin), not
+# whatever .session holds - overlapping sessions overwrite that file, and the
+# event used to land under a neighbour's id while the transcript copy below
+# kept the real one (pilot #2). log_event also flushes our deferred
+# session_start marker, if the session never logged anything until now.
+ZERO_SESSION_ID="$SID" bash "$ROOT/zero/scripts/log_event.sh" session_end \
   "{\"models\":$MODELS,\"cumulative\":true,\"models_parsed\":$PARSED,\"est_cost_usd\":null,\"transcript_copied\":$COPIED}" || true
 
 # --- redacted transcript copy ---
@@ -98,6 +118,9 @@ fi
 # --- auto-commit + push analytics (best-effort, analytics paths only) ---
 if command -v git >/dev/null 2>&1 && git -C "$ROOT" rev-parse --git-dir >/dev/null 2>&1; then
   git -C "$ROOT" add zero/analytics zero/STATE.md 2>/dev/null || true
+  # .pending markers are transient hook state, never data - a concurrent
+  # session's marker must not ride along in the sync commit
+  git -C "$ROOT" reset -q -- zero/analytics/.pending 2>/dev/null || true
   if ! git -C "$ROOT" diff --cached --quiet 2>/dev/null; then
     git -C "$ROOT" commit -q -m "zero: analytics sync (session ${SID})" 2>/dev/null || true
     git -C "$ROOT" push -q 2>/dev/null || true

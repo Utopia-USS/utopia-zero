@@ -32,8 +32,8 @@ as the actual erasure. Never let "usunięte" mean less than the user thinks it m
 | Script | Called by | Does |
 |---|---|---|
 | `log_event.sh` / `.ps1` | you (skill) + other scripts | appends one JSONL event, auto-fills common fields, redacts, **enforces the catalog** (see below), keeps the pulse counter |
-| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, **`.stage` reconciled with STATE.md**, `session_start` event, STATE summary → stdout (context), pulse-survey reminder, new `[zero]`-issue replies → stdout |
-| `hook_session_end.sh` / `.ps1` | SessionEnd hook | `session_end` event with token usage from the transcript (cumulative per session - see catalog), transcript copy (redacted), auto-commit+push of `zero/` analytics files |
+| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, **`.stage` reconciled with STATE.md**, **deferred** `session_start` marker in `.pending/<sid>` (v9 - see below), STATE summary → stdout (context), pulse-survey reminder, new `[zero]`-issue replies → stdout |
+| `hook_session_end.sh` / `.ps1` | SessionEnd hook | **restart-noise gate** (v9: a session under 10 s that logged nothing leaves NO trace - no events, no transcript, no commit), `session_end` event with token usage from the transcript (cumulative per session - see catalog), transcript copy (redacted), auto-commit+push of `zero/` analytics files |
 
 `VERSION` in the same directory numbers the script set. Participant repos carry
 COPIES of these scripts, so fixes do not reach them through the plugin - the
@@ -55,7 +55,20 @@ any `.ps1` call, check the resulting JSONL line actually parses.
 
 Common fields are added by the script: `ts` (ISO-8601 UTC), `participant_id`,
 `project_id` (from config), `session_id` (from `zero/analytics/.session`, written by
-the SessionStart hook), `stage` (from `zero/analytics/.stage`).
+the SessionStart hook; the `ZERO_SESSION_ID` env var overrides it - the end hook
+uses that to stamp the session that is actually ending, because overlapping
+sessions overwrite `.session` and pilot #2 got one session with three
+`session_end` events while two neighbours got none), `stage` (from
+`zero/analytics/.stage`).
+
+**Deferred `session_start` (v9)**: the start hook does not append the event; it
+parks the ready-made line in `zero/analytics/.pending/<sid>` (epoch + JSON).
+`log_event` flushes it on the session's first real event; the end hook flushes it
+when a silent session lives past 10 s, and silently DROPS it under 10 s - restart
+churn (four sessions in 34 s, pilot #2) leaves no trace. Consequences for
+analyses: episodes under 10 s with no events are absent BY DESIGN, and
+`events.jsonl` is append-ordered, not ts-ordered (a deferred start can flush
+late) - always sort by `ts`.
 
 **Your duty on `stage_start`**: write the number first, then log -
 `printf '3' > zero/analytics/.stage && bash zero/scripts/log_event.sh stage_start '{}'`.
@@ -95,7 +108,7 @@ is welcome on top.
 
 | type | when | payload keys |
 |---|---|---|
-| `session_start` / `session_end` | hooks | `source`; end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `cumulative:true` (sums cover the WHOLE transcript incl. earlier resumes - analyses take the LAST snapshot per `session_id`, never the sum), `models_parsed` (false = the transcript could not be read at all, so an empty `models` means NO DATA, not zero tokens - pilot #1 lost its whole cost metric this way and nothing in the payload said so), `est_cost_usd`, `transcript_copied` |
+| `session_start` / `session_end` | hooks | `source` (v9: an episode under 10 s with no other events logs NEITHER - restart churn is dropped by design, see deferral above); end: `models{name:{in,cache_read,out}}` (`in` = fresh + cache-write; `cache_read` separate - lumping them made stage-0 look like 3.3M tokens), `cumulative:true` (sums cover the WHOLE transcript incl. earlier resumes - analyses take the LAST snapshot per `session_id`, never the sum), `models_parsed` (false = the transcript could not be read at all, so an empty `models` means NO DATA, not zero tokens - pilot #1 lost its whole cost metric this way and nothing in the payload said so), `est_cost_usd`, `transcript_copied` |
 | `stage_start` / `stage_end` | every stage boundary | `stage` is in common fields; end: `duration_hint` |
 | `tutorial` | stage 0 | `skipped` |
 | `consent` | stage 0 + every change | `analytics`, `transcripts` |
@@ -146,9 +159,12 @@ one machine, and the exact analytics config stays reproducible in the repo. (If 
 project ever spans two OSes, move the hook block to `settings.local.json` per machine.)
 
 Hooks load at session start → after wiring, one **planned restart** (stage 0 step 8).
-Verification after restart: `zero/analytics/events.jsonl` contains a fresh
-`session_start` line. Missing → re-check settings JSON validity, path, and that the
-project folder (not a parent) is open.
+Verification after restart (v9): the start hook leaves a fresh marker in
+`zero/analytics/.pending/` and rewrites `zero/analytics/.session` with the new
+session's UUID; the `session_start` LINE lands in `events.jsonl` only with the
+session's first real event (deferral, above), so check the marker or `.session`,
+not the log. No trace of either → re-check settings JSON validity, path, and that
+the project folder (not a parent) is open.
 
 **Manual dispatch fallback (field-proven on pilot #1)**: if the checks pass and a
 SECOND planned restart still yields no `session_start` (seen on the Windows desktop

@@ -1,4 +1,4 @@
-# utopia-zero SessionStart hook (Windows): session id file, session_start event,
+# utopia-zero SessionStart hook (Windows): session id file, deferred session_start marker,
 # STATE.md summary -> stdout (context), new Utopia replies on [zero] issues -> stdout.
 # Compatible with Windows PowerShell 5.1; UTF-8 in and out.
 $ErrorActionPreference = "SilentlyContinue"
@@ -34,8 +34,31 @@ try {
     }
   }
 
-  # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
-  & (Join-Path $Root "zero\scripts\log_event.ps1") "session_start" ('{"source":"' + $src + '"}') | Out-Null
+  # --- session_start is DEFERRED, not logged here (mirror of the .sh variant):
+  # restart churn spawns second-long sessions whose start/end pairs are noise.
+  # The event line is built NOW (correct timestamp) and parked in .pending\<sid>;
+  # log_event flushes it on the session's first real event, the end hook flushes
+  # it past 10 s, and a short silent session leaves no trace at all.
+  $cfg = Get-Content (Join-Path $Root "zero\config.json") -Raw -Encoding UTF8 | ConvertFrom-Json
+  if ($cfg.analytics_enabled -ne $false) {
+    $pendDir = Join-Path $an ".pending"
+    New-Item -ItemType Directory -Force -Path $pendDir | Out-Null
+    # sweep markers nothing ever flushed (session died without its end hook)
+    Get-ChildItem $pendDir -File | Where-Object { $_.LastWriteTime -lt (Get-Date).AddHours(-24) } | Remove-Item -Force
+    $csid = "s0"
+    if (Test-Path (Join-Path $an ".session")) { $csid = (Get-Content (Join-Path $an ".session") -Raw).Trim() }
+    $stage0 = "0"
+    if (Test-Path (Join-Path $an ".stage")) { $stage0 = (Get-Content (Join-Path $an ".stage") -Raw).Trim() }
+    $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", [System.Globalization.CultureInfo]::InvariantCulture)
+    $epoch = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+    $part = if ($cfg.participant_id) { $cfg.participant_id } else { "unknown" }
+    $proj = if ($cfg.project_id) { $cfg.project_id } else { "unknown" }
+    $startLine = '{"ts":"' + $ts + '","participant_id":"' + $part + '","project_id":"' + $proj +
+                 '","session_id":"' + $csid + '","stage":"' + $stage0 +
+                 '","type":"session_start","payload":{"source":"' + $src + '"}}'
+    $encP = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText((Join-Path $pendDir $csid), [string]$epoch + "`n" + $startLine + "`n", $encP)
+  }
 
   # --- first-session banner (fresh project) ---
   $state = Join-Path $Root "zero\STATE.md"

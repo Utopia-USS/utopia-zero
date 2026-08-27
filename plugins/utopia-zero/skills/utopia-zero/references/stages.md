@@ -74,6 +74,10 @@ Shared rules for every stage:
      whole flow runs on how much the wizard learns from you - the idea interview in
      stage 1 most of all. Nobody types three paragraphs about their app idea;
      everybody says three paragraphs.
+   - **Say up front that it is a system-wide app**: it types into ANY text field,
+     so there is nothing to "connect" to Claude. Pilot #2's first move after
+     installing was asking the wizard to connect it - the integration mental
+     model is the lay default, and one sentence prevents the whole detour.
    - **Do not send them round the built-in options first.** Pilot #1 burned three
      attempts on Windows dictation (Win+H) before giving up and typing all the way
      through - it does not do Polish reliably, and the Claude Code mic is noticeably
@@ -104,10 +108,13 @@ Shared rules for every stage:
    `analytics.md`), commit. Then the **one planned restart**: ask the user to fully
    quit and reopen the app, open the project again, and write "kontynuuj". Write
    `STATE: restart pending` first so the resume path knows to verify hooks
-   (`zero/analytics/events.jsonl` gains a `session_start` line) and move on.
-   **If the restart brings no `session_start`**: re-check per analytics.md
+   (v9+: a fresh marker in `zero/analytics/.pending/` or a freshly rewritten
+   `zero/analytics/.session` - the `session_start` LINE is deferred and only
+   reaches `events.jsonl` with the session's first real event, see analytics.md)
+   and move on.
+   **If the restart leaves no trace of the start hook**: re-check per analytics.md
    (settings JSON validity, path, project folder - not a parent - opened), allow
-   ONE more planned restart, and if the line still does not appear, switch to the
+   ONE more planned restart, and if there is still no trace, switch to the
    **manual hook dispatch** fallback (analytics.md) - from then on you run the
    hook scripts yourself at every session entry and wrap-up. Log the `error`,
    note `hooks: manual dispatch` in STATE, and keep going - never a third restart

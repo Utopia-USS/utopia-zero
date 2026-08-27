@@ -153,6 +153,16 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
   więc `match /rooms/{code}` zablokowałby całą rozgrywkę online. Plik wymaga
   `request.auth != null`, czyli anonimowego logowania, którego aplikacja jeszcze
   nie ma - publikować dopiero razem ze zmianą po stronie klienta.
+- **2026-08-26 14:32: issue #2 "[zero] ui: ekran powitalny rozjezdza sie na
+  szerokim oknie"** założone w `poc-janek` przez operatora - CELOWO, jako
+  pierwszy żywy test kanału zwrotnego (Utopia zgłasza uczestnikowi, nie tylko
+  odwrotnie; dotąd nieprzetestowany, patrz "Czego nadal nie przetestowano"
+  w findings dry-runu #2). Hook startowy od `3f25468` podaje na wejściu sesji
+  treść otwartych issues, więc oczekiwany przebieg: następna sesja P001 podnosi
+  wątek, przewodnik naprawia ekran i ODPISUJE w issue. Zasady testu: nie
+  przypominamy, nie odpowiadamy z zewnątrz, nie commitujemy - testem jest
+  właśnie samoistne podjęcie. Stan na 2026-08-27: od założenia issue nie było
+  jeszcze żadnej sesji (ostatni commit 26.08 13:28 UTC), czekamy.
 
 ## Obserwacje bez akcji (fala 3)
 - **Laik przeprojektował przepływ aplikacji.** `user_override{ref:"flow"}`: z

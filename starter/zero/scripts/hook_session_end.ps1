@@ -19,6 +19,20 @@ try {
   elseif (Test-Path (Join-Path $an ".session")) { $sid = (Get-Content (Join-Path $an ".session") -Raw).Trim() }
   $tp = $null; if ($in -and $in.transcript_path) { $tp = $in.transcript_path }
 
+  # --- restart-noise gate (mirror of the .sh variant): a session younger than
+  # 10 s that logged NOTHING is app-restart churn. Its deferred session_start is
+  # still parked in .pending\<sid> - drop it and leave no trace.
+  $pend = Join-Path $an ".pending\$sid"
+  if (Test-Path $pend) {
+    $plines = @(Get-Content $pend -Encoding UTF8)
+    $born = 0
+    if ($plines.Count -ge 1 -and $plines[0] -match '^\d+$') { $born = [long]$plines[0] }
+    if ($born -gt 0 -and ([DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - $born) -lt 10) {
+      Remove-Item $pend -Force
+      exit 0
+    }
+  }
+
   # --- token usage from transcript ---
   # NOTE: the transcript covers the WHOLE session including earlier resumes, so the
   # sums are cumulative per session_id; analyses must take the LAST snapshot per
@@ -49,9 +63,14 @@ try {
   $audience = if ($cfg.audience) { $cfg.audience } else { "friend" }
   $copied = ($audience -ne "public") -and ($cfg.transcripts_enabled -ne $false) -and ($cfg.analytics_enabled -ne $false) -and $tp -and (Test-Path $tp)
 
-  # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1)
+  # in-process call (a child powershell.exe would strip the JSON quotes on PS 5.1).
+  # ZERO_SESSION_ID: stamp the session that is actually ending (our stdin), not
+  # whatever .session holds - overlapping sessions overwrite that file. log_event
+  # also flushes our deferred session_start marker if nothing was logged until now.
+  $env:ZERO_SESSION_ID = $sid
   & (Join-Path $Root "zero\scripts\log_event.ps1") "session_end" `
       ('{"models":' + $models + ',"cumulative":true,"models_parsed":' + $parsed.ToString().ToLower() + ',"est_cost_usd":null,"transcript_copied":' + $copied.ToString().ToLower() + '}') | Out-Null
+  Remove-Item Env:ZERO_SESSION_ID -ErrorAction SilentlyContinue
 
   # --- redacted transcript copy ---
   if ($copied) {
@@ -71,6 +90,8 @@ try {
   $git = Get-Command git
   if ($git) {
     & git -C $Root add zero/analytics zero/STATE.md 2>$null
+    # .pending markers are transient hook state, never data
+    & git -C $Root reset -q -- zero/analytics/.pending 2>$null
     & git -C $Root diff --cached --quiet 2>$null
     if ($LASTEXITCODE -ne 0) {
       & git -C $Root commit -q -m "zero: analytics sync (session $sid)" 2>$null

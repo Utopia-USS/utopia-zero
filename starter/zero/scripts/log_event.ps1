@@ -19,8 +19,12 @@ try {
   New-Item -ItemType Directory -Force -Path $an | Out-Null
 
   $ts = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", [System.Globalization.CultureInfo]::InvariantCulture)
+  # ZERO_SESSION_ID lets a caller (the end hook) stamp the session that is
+  # actually ending instead of whatever .session holds - overlapping sessions
+  # overwrite that file (pilot #2).
   $sid = "s0"; $sf = Join-Path $an ".session"
-  if (Test-Path $sf) { $sid = (Get-Content $sf -Raw).Trim() }
+  if ($env:ZERO_SESSION_ID) { $sid = $env:ZERO_SESSION_ID }
+  elseif (Test-Path $sf) { $sid = (Get-Content $sf -Raw).Trim() }
   $stage = "0"; $stf = Join-Path $an ".stage"
   if (Test-Path $stf) { $stage = (Get-Content $stf -Raw).Trim() }
 
@@ -91,6 +95,17 @@ try {
           '","project_id":"' + $cfg.project_id + '","session_id":"' + $sid +
           '","stage":"' + $stage + '","type":"' + $Type + '","payload":' + $Payload + '}'
   $enc = New-Object System.Text.UTF8Encoding($false)
+  # flush this session's deferred session_start first (see hook_session_start):
+  # the first real event proves the session is not restart churn. events.jsonl
+  # is append-ordered, not ts-ordered - analyses sort by ts.
+  $pend = Join-Path $an ".pending\$sid"
+  if (Test-Path $pend) {
+    $plines = @(Get-Content $pend -Encoding UTF8)
+    if ($plines.Count -ge 2) {
+      [System.IO.File]::AppendAllText((Join-Path $an "events.jsonl"), $plines[1] + "`n", $enc)
+    }
+    Remove-Item $pend -Force
+  }
   [System.IO.File]::AppendAllText((Join-Path $an "events.jsonl"), $line + "`n", $enc)
 
   # --- pulse-survey counter: feature_done increments, survey resets ---

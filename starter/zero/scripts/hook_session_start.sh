@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# utopia-zero SessionStart hook: session id file, session_start event,
+# utopia-zero SessionStart hook: session id file, deferred session_start marker,
 # STATE.md summary -> stdout (context), new Utopia replies on [zero] issues -> stdout.
 # Must never fail or block the session.
 set -u
@@ -28,7 +28,32 @@ if [ -n "${STATE_STAGE:-}" ]; then
   fi
 fi
 
-bash "$ROOT/zero/scripts/log_event.sh" session_start "{\"source\":\"${SRC:-unknown}\"}" || true
+# --- session_start is DEFERRED, not logged here (dry-run #1 point 9, dry-run #2
+# point 14, finally implemented after pilot #2): app restarts spawn second-long
+# sessions whose start/end pairs are pure noise - 4 of the first 33 events of
+# pilot #2 were such churn. The event line is built NOW (correct timestamp) but
+# parked in .pending/<sid>; it reaches events.jsonl only when the session logs a
+# real event (log_event flushes it) or lives past 10 s (the end hook flushes it).
+# A short, silent session leaves no trace at all: no events, no transcript copy,
+# no sync commit.
+cfg() { grep -o "\"$1\"[[:space:]]*:[[:space:]]*\"[^\"]*\"" "$ROOT/zero/config.json" 2>/dev/null | head -1 | sed 's/.*"\([^"]*\)"$/\1/'; }
+ENABLED="$(grep -Eo '"analytics_enabled"[[:space:]]*:[[:space:]]*(true|false)' "$ROOT/zero/config.json" 2>/dev/null | head -1 | grep -Eo '(true|false)$')"
+if [ "${ENABLED:-true}" != "false" ]; then
+  PEND="$AN/.pending"
+  mkdir -p "$PEND" 2>/dev/null
+  # a marker nothing ever flushed (session died without its end hook) must not
+  # linger forever - sweep anything older than a day
+  find "$PEND" -type f -mmin +1440 -exec rm -f {} \; 2>/dev/null
+  CSID="$(cat "$AN/.session" 2>/dev/null || echo s0)"
+  PARTICIPANT="$(cfg participant_id)"
+  PROJECT="$(cfg project_id)"
+  STG="$(cat "$AN/.stage" 2>/dev/null || echo 0)"
+  {
+    date +%s
+    printf '{"ts":"%s","participant_id":"%s","project_id":"%s","session_id":"%s","stage":"%s","type":"session_start","payload":{"source":"%s"}}\n' \
+      "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "${PARTICIPANT:-unknown}" "${PROJECT:-unknown}" "$CSID" "${STG:-0}" "${SRC:-unknown}"
+  } > "$PEND/$CSID" 2>/dev/null
+fi
 
 # --- first-session banner (fresh project) ---
 if grep -q "nic jeszcze / nothing yet" "$ROOT/zero/STATE.md" 2>/dev/null; then
