@@ -236,3 +236,38 @@ jasność 5/5 (pulse #2 jeszcze nie należny - licznik na 2).
    dry-runu #2, a pilot #1 i tak dostał w tym polu długi myślnik. Przy okazji: pole
    powinno nosić **uchwyt GitHuba**, bo eskalacja idzie przez issues `[zero]` w repo
    uczestnika, gdzie adres e-mail jest bezużyteczny. **[naprawione w tej fali]**
+
+## Fala 5 - protokół wejścia pomijany w praktyce (sesja 28.08)
+
+16. **Sesja robi swoje, protokół wejścia się nie wykonuje.** 28.08, 16:53-18:33 UTC,
+   14 commitów P001 i solidna robota (powrót do pokoju online po odświeżeniu, crash
+   `[core/no-app]`, runda uwag po teście z dwóch urządzeń, własne frazy w poczekalni,
+   jedna talia 60 fraz, testy 9 → 14), a jednocześnie w tej sesji NIE ma:
+   `session_start` ani `session_end` w `events.jsonl` (ostatni start: 25.08), pullu
+   klona (`zero/.wizard` stoi na `18de027` z 25.08, czyli 21 commitów za `main`) ani
+   syncu skryptów (v4 przy upstreamie v9). Czyli kroki 5, 5a i ręczna dyspozycja
+   hooków nie odpaliły ani razu przez półtorej godziny. Skutki: kolejna sesja bez
+   danych kosztowych, wszystkie zdarzenia dalej `s0`, i - najgorsze - poprawki z
+   #46, #47, #48 nie docierają do jedynego działającego pilota.
+   Różnica wobec fali 4 jest istotna: tam kanał był zepsuty, tu był sprawny
+   i po prostu nie został użyty. To znaczy, że reguła w SKILL.md nie wystarcza,
+   bo SKILL.md czyta się dopiero, gdy protokół już ruszy. → starter
+   `.claude/CLAUDE.md` reguła **1d** (pull repo uczestnika przy każdym starcie,
+   ta sama konstrukcja co 1c dla klona) plus reguła 7 (odrzucony push = pull
+   z 1d, nigdy force-push). **[naprawione, plugin 0.5.4]**
+
+## Obserwacje bez akcji (fala 5)
+- **Test kanału zwrotnego (issue #2) zanieczyszczony.** Issue wisi otwarte od 26.08
+  bez komentarza - konsekwencja punktu 16, bo treść otwartych issues podaje hook
+  startowy, który nie wystartował. Tymczasem ekran powitalny został 28.08 przerobiony
+  z zupełnie innego powodu (uwagi Janka), więc objaw mógł zniknąć bez przeczytania
+  zgłoszenia. Wynik tego testu nie będzie już dowodem w żadną stronę; decyzja
+  operatora: na razie zostawiamy, nie przypominamy.
+- **Repo uczestnika pociągnęło się samo**: commity z 28.08 leżą liniowo na
+  `c782c5b` (README od operatora), bez merge commita i bez konfliktu - pierwszy
+  dowód, że commit operatora w plik nietykany przez przewodnika przechodzi gładko.
+- **Daty w STATE do ostrożnego czytania**: sesja z 28.08 opisuje swoją robotę jako
+  "runda uwag z 26.08" i datuje potwierdzenie poprawki na 26.08, choć commity są
+  z 28.08. Część z tego jest zapewne prawdziwa (test dwóch urządzeń odbył się poza
+  sesją), ale przy analizie fal nie brać dat ze STATE za dane pomiarowe - jedyne
+  wiarygodne stemple to `events.jsonl` i git.
