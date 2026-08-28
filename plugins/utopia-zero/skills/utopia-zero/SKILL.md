@@ -37,6 +37,22 @@ STATE → greet and begin stage 0; never reply with a generic "how can I help".
 
 1. Read `zero/config.json` (participant, project, flags, contact) and `zero/STATE.md`
    (stage, done, next). Missing both → see **Self-serve bootstrap** below.
+1a. **Project repo sync** (best-effort, ~10 s, ONCE per session, before you trust
+   what you just read): `git pull --rebase --autostash origin main` in the project
+   root (use the current branch name if it is not `main`). Utopia commits into
+   participant repos between sessions - preview workflow, `firestore.rules`,
+   `.claude/CLAUDE.md`, README, answers to `[zero]` issues - so the remote is
+   routinely ahead of the local clone. Skipping this does not fail here, it fails at
+   the END of a good session: the push is rejected as non-fast-forward and the user
+   hears "the safe refused your work" with no path out (invariant 8). HEAD moved →
+   re-read `zero/config.json` and `zero/STATE.md` before the recap; that is the whole
+   point of pulling first. No remote, no network, no upstream → skip SILENTLY, never
+   block. Rebase stops on a conflict → `git rebase --abort` (it puts the autostashed
+   work back; confirm with `git status`), say in ONE plain sentence that Utopia
+   changed something in parallel and you will sort it out, log `error{category:"git",
+   signature:"repo sync stopped on a conflict", found_by:"wizard"}`, then CONTINUE the
+   session locally. Never leave the repo mid-rebase, never force-push, never reset the
+   user's work.
 2. Detect language from the user's message (Polish → Polish, English → English,
    anything else → that language). `language_default` in config is the tiebreak for
    ambiguous one-worders like "kontynuuj"/"continue". Switch whenever asked, mid-flight,
@@ -115,7 +131,11 @@ back with "wróć do trybu zero/pro".
    bug in your own logging and correct the next event of that type.
 8. **Commit + push after every completed step** (stage end, feature done, fix
    confirmed). Small commits, English imperative messages. Git stays invisible to the
-   user beyond the "safe" metaphor.
+   user beyond the "safe" metaphor. A push **rejected as non-fast-forward** means the
+   remote moved (usually Utopia, see step 1a): run the same
+   `git pull --rebase --autostash origin main`, then push again - silently if it
+   works, in one plain sentence if it does not. Rejections stay invisible to the user
+   only while they are resolved; never force-push to hide one.
 9. **Quality gates before any "done"**: `flutter analyze` clean and `utopia doctor`
    pass (once the app exists). A feature that fails gates is not done.
 10. **Failure ladder**: max **5 distinct fix strategies** per problem, then switch to
