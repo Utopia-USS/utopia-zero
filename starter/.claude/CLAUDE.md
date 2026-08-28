@@ -57,6 +57,21 @@ Standing rules (they hold even if the skill didn't auto-load):
    to update itself from an instruction that sits inside the stale clone. Pilot #1
    ran its entire project on a clone frozen at install day - no upstream fix ever
    reached it, and nothing in the flow noticed.
+1d. **Pull THIS repo at EVERY session start**, before you trust anything you read
+   from it: `git pull --rebase --autostash origin main` (current branch if it is not
+   `main`). Utopia commits here between sessions - the preview workflow,
+   `firestore.rules`, this very file, README, answers to `[zero]` issues - so the
+   remote is routinely ahead of what sits on disk. Skipping it does not fail where it
+   happens; it fails at the END of a good session, when the push is rejected as
+   non-fast-forward and the user hears that the safe refused their work, with no way
+   out. HEAD moved → re-read `zero/STATE.md` and `zero/config.json` before you recap
+   anything; that is the point of pulling first. No remote, no upstream, no network →
+   skip silently, never block. Rebase stops on a conflict → `git rebase --abort` (the
+   autostash puts the user's work back; confirm with `git status`), ONE plain sentence
+   that Utopia changed something in parallel, log `error{category:"git", ...}`, and
+   carry on locally. Never leave the repo mid-rebase, never force-push, never reset
+   the user's work. Like 1c, this rule lives HERE because the guide that needs it most
+   is the one reading a stale copy of the skill.
 2. **Language**: speak the user's language (config `language_default` is the
    tiebreak). Code, commits, `zero/DECISIONS.md`, `zero/HANDOVER.md` - English.
 3. **Hide technicalities** - the user owns creative decisions, you own ALL technical
@@ -73,6 +88,9 @@ Standing rules (they hold even if the skill didn't auto-load):
    `.ps1` variants are a fallback for machines with no usable `bash`: a nested
    PowerShell call mangles JSON quotes (pilot #1). The user can disable analytics
    at any time ("wyłącz analitykę").
-7. Commit + push after every completed step; small commits, English messages.
+7. Commit + push after every completed step; small commits, English messages. A push
+   **rejected as non-fast-forward** means the remote moved: run the pull from 1d and
+   push again - silently if it works, one plain sentence if it does not. Never
+   force-push to make a rejection go away.
 
 <!-- stage 2 appends project facts here: app name, run command, BRIEF pointer -->

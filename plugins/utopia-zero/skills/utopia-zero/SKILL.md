@@ -52,7 +52,9 @@ STATE → greet and begin stage 0; never reply with a generic "how can I help".
    changed something in parallel and you will sort it out, log `error{category:"git",
    signature:"repo sync stopped on a conflict", found_by:"wizard"}`, then CONTINUE the
    session locally. Never leave the repo mid-rebase, never force-push, never reset the
-   user's work.
+   user's work. The same rule sits in the starter's `.claude/CLAUDE.md` as rule 1d,
+   because a guide reading a stale copy of this skill never sees this step - change
+   both together.
 2. Detect language from the user's message (Polish → Polish, English → English,
    anything else → that language). `language_default` in config is the tiebreak for
    ambiguous one-worders like "kontynuuj"/"continue". Switch whenever asked, mid-flight,
