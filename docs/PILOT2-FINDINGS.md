@@ -86,3 +86,44 @@ wznowienie będzie pierwszym testem podjęcia wywiadu w środku kroku.
 - **Dryf logowania etapu 4** (pytania bez odpowiedzi, funkcje bez
   `feature_done`, decyzje niezalogowane) - psuł dane w każdym poprzednim
   przebiegu; u P002 pierwszy sygnał (pkt wyżej) pojawił się już w etapie 0.
+
+## Ingerencje operatora w repo pilota (do uwzględnienia w analizie)
+
+- **2026-08-28: `PAGES_PROJECT = nihongo-keiko`** ustawione w `poc-filip` (zmienna
+  repo, nie sekret) i ręczne odpalenie workflow `Web preview`. Powód: dać
+  uczestnikowi żywy adres podglądu pod nazwą jego aplikacji, a nie pod wewnętrzną
+  nazwą repo, zanim nazwa się utrwali (Cloudflare nie umie zmienić nazwy projektu
+  Pages, późniejsza zmiana porzuca stary link). Nie dotyka `app/` ani `zero/`,
+  więc danych badawczych nie zmienia; commitów uczestnika nie przybywa. Pierwszy
+  przebieg (18:47 UTC) był zielony, ale **pominięty na braku sekretów** - dopiero
+  po wpisaniu `CLOUDFLARE_API_TOKEN` i `CLOUDFLARE_ACCOUNT_ID` przebieg o 19:03
+  zbudował aplikację i wypchnął 39 plików. **Podgląd żyje pod
+  https://nihongo-keiko.pages.dev** (zweryfikowane: `main.dart.js` 2,99 MB, nie
+  zaślepka Cloudflare), odświeża się przy każdym pushu uczestnika do `app/`.
+  Uwaga przy okazji: ścieżka **Workers Builds** w panelu Cloudflare (podpięcie
+  repo przez GitHub App, `npx wrangler deploy`) jest ŚLEPA dla tego programu -
+  buduje GitHub Actions, a nazwa zajęta przez Workera zablokowałaby projekt Pages
+  o tej samej nazwie. Prepare powinien mówić wprost: token i account id, zero
+  integracji z repo.
+- **2026-08-28: `README.md`, homepage i opis repo** w `poc-filip` (commit
+  operatora `e5d62b3`). README ze startera opisywał "Twoją aplikację" i onboarding
+  do Claude Code; zastąpiony opisem projektu z żywym linkiem, listą "co działa"
+  i "w budowie" wziętą ze STATE, z zachowaną krótką instrukcją powrotu do pracy.
+  Homepage ustawione na adres podglądu. Ten sam ruch co w `poc-janek` 24.08, gdzie
+  commit operatora w README przeszedł liniowo, bez konfliktu z przewodnikiem.
+  Przy okazji **usunięte imię uczestnika z opisu repo** ("utopia-zero POC -
+  Projekt ...") - zasada domowa mówi bez imion, a to wpisaliśmy my na etapie
+  prepare. Pozostaje jedno wystąpienie w `zero/BRIEF.md` linia 17, napisane przez
+  przewodnika; nietknięte, bo to plik prowadzony przez wizarda.
+
+## Fala 1a - drobiazg wychwycony przy okazji
+
+4. **`/utopia-zero:prepare` krok 6 wypadł przy zakładaniu repo P002.** Sekrety
+   Cloudflare są w skrypcie przygotowania opisane jako ustawiane od razu ("set
+   both secrets now so the very first stage-2 push deploys itself"), ale
+   `poc-filip` (przygotowane 26.08) nie ma ani jednego sekretu, podczas gdy
+   `poc-janek` ma komplet od 21.08. Efekt jest łagodny, bo workflow wykrywa brak
+   sekretów i zostaje zielony, ale uczestnik przechodzi etapy 2-3 bez żywego
+   podglądu, a przewodnik musi tłumaczyć w STATE, dlaczego linku nie wolno podać.
+   Kandydat na twardą kontrolę w prepare: po kroku 6 sprawdzić `gh secret list`
+   i zgłosić brak, zamiast zakładać, że krok się wykonał.
