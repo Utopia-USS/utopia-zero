@@ -86,3 +86,28 @@ wznowienie będzie pierwszym testem podjęcia wywiadu w środku kroku.
 - **Dryf logowania etapu 4** (pytania bez odpowiedzi, funkcje bez
   `feature_done`, decyzje niezalogowane) - psuł dane w każdym poprzednim
   przebiegu; u P002 pierwszy sygnał (pkt wyżej) pojawił się już w etapie 0.
+
+## Ingerencje operatora w repo pilota (do uwzględnienia w analizie)
+
+- **2026-08-28: `PAGES_PROJECT = nihongo-keiko`** ustawione w `poc-filip` (zmienna
+  repo, nie sekret) i ręczne odpalenie workflow `Web preview`. Powód: dać
+  uczestnikowi żywy adres podglądu pod nazwą jego aplikacji, a nie pod wewnętrzną
+  nazwą repo, zanim nazwa się utrwali (Cloudflare nie umie zmienić nazwy projektu
+  Pages, późniejsza zmiana porzuca stary link). Nie dotyka `app/` ani `zero/`,
+  więc danych badawczych nie zmienia; commitów uczestnika nie przybywa. Przebieg
+  z 18:47 UTC zielony, ale **pominięty na braku sekretów Cloudflare** - deploy
+  ruszy dopiero, gdy operator wpisze `CLOUDFLARE_API_TOKEN` i
+  `CLOUDFLARE_ACCOUNT_ID`. Do tego czasu notatka w STATE, żeby nie podawać
+  uczestnikowi linku, pozostaje słuszna.
+
+## Fala 1a - drobiazg wychwycony przy okazji
+
+4. **`/utopia-zero:prepare` krok 6 wypadł przy zakładaniu repo P002.** Sekrety
+   Cloudflare są w skrypcie przygotowania opisane jako ustawiane od razu ("set
+   both secrets now so the very first stage-2 push deploys itself"), ale
+   `poc-filip` (przygotowane 26.08) nie ma ani jednego sekretu, podczas gdy
+   `poc-janek` ma komplet od 21.08. Efekt jest łagodny, bo workflow wykrywa brak
+   sekretów i zostaje zielony, ale uczestnik przechodzi etapy 2-3 bez żywego
+   podglądu, a przewodnik musi tłumaczyć w STATE, dlaczego linku nie wolno podać.
+   Kandydat na twardą kontrolę w prepare: po kroku 6 sprawdzić `gh secret list`
+   i zgłosić brak, zamiast zakładać, że krok się wykonał.
