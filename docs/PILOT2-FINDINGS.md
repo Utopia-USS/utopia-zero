@@ -94,11 +94,27 @@ wznowienie będzie pierwszym testem podjęcia wywiadu w środku kroku.
   uczestnikowi żywy adres podglądu pod nazwą jego aplikacji, a nie pod wewnętrzną
   nazwą repo, zanim nazwa się utrwali (Cloudflare nie umie zmienić nazwy projektu
   Pages, późniejsza zmiana porzuca stary link). Nie dotyka `app/` ani `zero/`,
-  więc danych badawczych nie zmienia; commitów uczestnika nie przybywa. Przebieg
-  z 18:47 UTC zielony, ale **pominięty na braku sekretów Cloudflare** - deploy
-  ruszy dopiero, gdy operator wpisze `CLOUDFLARE_API_TOKEN` i
-  `CLOUDFLARE_ACCOUNT_ID`. Do tego czasu notatka w STATE, żeby nie podawać
-  uczestnikowi linku, pozostaje słuszna.
+  więc danych badawczych nie zmienia; commitów uczestnika nie przybywa. Pierwszy
+  przebieg (18:47 UTC) był zielony, ale **pominięty na braku sekretów** - dopiero
+  po wpisaniu `CLOUDFLARE_API_TOKEN` i `CLOUDFLARE_ACCOUNT_ID` przebieg o 19:03
+  zbudował aplikację i wypchnął 39 plików. **Podgląd żyje pod
+  https://nihongo-keiko.pages.dev** (zweryfikowane: `main.dart.js` 2,99 MB, nie
+  zaślepka Cloudflare), odświeża się przy każdym pushu uczestnika do `app/`.
+  Uwaga przy okazji: ścieżka **Workers Builds** w panelu Cloudflare (podpięcie
+  repo przez GitHub App, `npx wrangler deploy`) jest ŚLEPA dla tego programu -
+  buduje GitHub Actions, a nazwa zajęta przez Workera zablokowałaby projekt Pages
+  o tej samej nazwie. Prepare powinien mówić wprost: token i account id, zero
+  integracji z repo.
+- **2026-08-28: `README.md`, homepage i opis repo** w `poc-filip` (commit
+  operatora `e5d62b3`). README ze startera opisywał "Twoją aplikację" i onboarding
+  do Claude Code; zastąpiony opisem projektu z żywym linkiem, listą "co działa"
+  i "w budowie" wziętą ze STATE, z zachowaną krótką instrukcją powrotu do pracy.
+  Homepage ustawione na adres podglądu. Ten sam ruch co w `poc-janek` 24.08, gdzie
+  commit operatora w README przeszedł liniowo, bez konfliktu z przewodnikiem.
+  Przy okazji **usunięte imię uczestnika z opisu repo** ("utopia-zero POC -
+  Projekt ...") - zasada domowa mówi bez imion, a to wpisaliśmy my na etapie
+  prepare. Pozostaje jedno wystąpienie w `zero/BRIEF.md` linia 17, napisane przez
+  przewodnika; nietknięte, bo to plik prowadzony przez wizarda.
 
 ## Fala 1a - drobiazg wychwycony przy okazji
 
