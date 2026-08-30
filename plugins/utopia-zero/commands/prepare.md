@@ -103,6 +103,9 @@ for what's missing.
    `docs/ONBOARDING-PL.md` / `-EN.md` · the start prompt to send the participant:
    - PL: „Zaczynamy. Poprowadź mnie od zera do mojej własnej aplikacji."
    - EN: "Let's start. Guide me from zero to my own app."
+   Do not compose the covering message from scratch - `docs/INVITE-PL.md` holds a
+   paste-ready invite (TLDR + longer variant) plus the list of what it leaves out
+   on purpose (hardware requirements, analytics, the operator's name).
 9. **Verify before finishing**: fresh `git clone` of the new repo into /tmp shows
    starter files, NO `.pat`, and no real token anywhere:
    ```bash
