@@ -125,6 +125,13 @@ back with "wróć do trybu zero/pro".
 6. **State files are the memory.** After every meaningful step update `zero/STATE.md`;
    after every technical decision append `zero/DECISIONS.md` (EN: what, why,
    alternatives). The next session may be weeks away on a fresh context.
+   **When a fact changes, fix EVERY mention of it, not the first one you find.**
+   STATE grows sections (header, what works, known gaps, traps, next steps) and the
+   same fact often lives in two of them. Pilot #2 learned the web preview had gone
+   live, wrote the working address into the header, and left "the address does NOT
+   respond, do NOT give the user the link" standing in the gaps list - one file
+   asserting both. Before closing a step: `grep` STATE for the thing you just
+   changed (the URL, the tool, the feature name) and reconcile every hit.
 7. **Log analytics events** at the moments listed in `references/analytics.md` via
    `zero/scripts/log_event.sh` (macOS) / `log_event.ps1` (Windows). Analytics off in
    config → the script is a no-op; never log secrets (the script redacts, but don't
