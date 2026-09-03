@@ -52,6 +52,11 @@ for what's missing.
    (`zero-dryrun` instead of `zero-pilot` for internal dry-runs). Every zero repo
    carries `utopia-zero` - that is the one topic the org filter
    (`org:Utopia-USS topic:utopia-zero`) relies on, so never skip it.
+   **The no-names rule covers the description and `project_name` too**, not just
+   `utopia_contact`: "utopia-zero POC - Projekt <Imię>" is exactly the leak step 3
+   forbids, and pilot #2 carried it until an operator cleaned it out by hand. Until
+   stage 1 names the app, a neutral placeholder ("Drugi projekt", "POC") is right -
+   the display name is cosmetic and the wizard overwrites it anyway.
 6. **PAT (operator does this in the browser - guide, don't automate)**:
    GitHub → Settings → Developer settings → Personal access tokens → Fine-grained →
    Generate new: Resource owner = the repo owner (the org, or the operator's account
@@ -96,6 +101,17 @@ for what's missing.
    Cloudflare cannot rename a Pages project, so a later change strands the old link.
    Put the final URL in the repo homepage after the first green run. No Cloudflare account? Skip this step -
    the workflow detects the missing secrets and stays green.
+   **Verify, do not assume**: `gh secret list --repo <owner>/<repo>` must show BOTH
+   names before you move on. This step failed silently for P002 - the repo went out
+   with no secrets at all, the workflow skipped itself politely on every push, and
+   nobody noticed until stage 3, when the wizard had to write into STATE that the
+   participant must not be given the link. The graceful skip is what hides it.
+   **Do NOT use the Cloudflare dashboard's "Connect to Git" / Workers Builds flow**
+   for this. It is a different architecture: it grants Cloudflare access to the
+   participant's private repo and runs `npx wrangler deploy` on their side, while
+   our workflow builds in GitHub Actions and uploads `build/web`. Worse, a Worker
+   claiming the name blocks the Pages project of the same name, and Pages projects
+   cannot be renamed. All Cloudflare needs from you is the API token and account id.
 7. **ZIP**: zip the work dir INCLUDING `.git` and `zero/.pat`
    (`zip -r poc-<slug>.zip <dir> -x '*.DS_Store'`). State clearly: the ZIP contains
    a repo-scoped token - send it over a private channel only.

@@ -79,6 +79,19 @@ late) - always sort by `ts`.
    event is a data bug; the pairing (`id`) is what makes the interview analyzable.
    This includes the stage-4 plan approvals (loop step 2) - dry-run #2 logged 11
    questions against 43 features.
+1a. **Every `question` gets a closing event, including the ones that go nowhere.**
+   A `question` with no `answer` (or, where the thread ends in a call rather than a
+   reply, no `decision` naming its `id`) is a hole exactly where the interesting
+   thing happened - nobody logs a question about a boring topic. When the thread is
+   dropped, log it dropped: `answer{id:"<same id>", mode:"open", length_chars:0,
+   changed_prior:false, note:"abandoned - <what actually happened>"}`. When it
+   resolves in conversation without a clean reply, log the `decision` and reference
+   the question id in its rationale. Pilot #2: at the stage-3 checkpoint the
+   participant asked for a DIFFERENT app; the wizard logged
+   `question{id:"pivot-new-app"}`, the conversation moved on, and that single
+   unpaired event is the only trace in the whole project - not in STATE, not in
+   DECISIONS. Whether a lay builder changes product mid-flight is a headline
+   research question, and it was answered with a shrug.
 2. **Every user-reported correction logs a checkpoint**:
    `checkpoint{feature, verdict:"change", rework:n}` - also when visual checkpoints
    are turned off. Silent fixes destroy the vision↔implementation research signal.
@@ -93,6 +106,14 @@ late) - always sort by `ts`.
    drifted into prose after day one and the rework metric became uncomputable.
 5. **`feature_start` before every `feature_done`.** Time per feature is a research
    question; 11 starts against 43 dones made it unanswerable in dry-run #2.
+5a. **The feature pair is not stage-4 furniture.** It belongs to any user-visible
+   capability you set out to build, whatever stage the number says - stage 3
+   skeletons routinely grow real features, and "we are not in the loop yet" is not
+   a reason to skip the pair. Pilot #2 shipped a typed-answer review mode, an
+   offline dictionary, saved words as review cards, keyboard shortcuts and
+   tap-to-select words across 103 events with ZERO `feature_start` and ZERO
+   `feature_done`, so time-per-feature is unanswerable there too, and the pulse
+   counter (which `feature_done` drives) never fired a single survey.
 6. **Stage 4 logs `decision` like every other stage.** The loop is the stage where
    this rule dies: pilot #1 logged 13 decisions across stages 0-3 and ZERO in stage 4,
    while choosing a persistence mechanism, a startup/routing shape and a preview mode.

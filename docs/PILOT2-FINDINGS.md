@@ -1,4 +1,4 @@
-# Pilot #2 - pomysł jeszcze w wywiadzie (poc-filip, P002, 2026-08-26 → w toku)
+# Pilot #2 - Nihongo Keiko (poc-filip, P002, 2026-08-26 → w toku)
 
 Drugi przebieg z prawdziwym laikiem i pierwszy na macOS (arm64, Apple Silicon).
 Tryb Zero (nigdy nie programował/a), audience: friend, Wispr Flow jako dyktowanie,
@@ -13,12 +13,16 @@ fali wchodzą do obu przebiegów przez sync skryptów (VERSION), zanim którykol
 dotrze do etapów 2-4.
 
 **Ten dokument jest przyrostowy** - pilot trwa, obserwacje dopisujemy falami.
-Stan na 2026-08-27: etap 0 zamknięty w ~15 minut bez żadnej improwizacji
-przewodnika (22:41-22:58 UTC), etap 1 otwarty - pytanie o pomysł (`s1-idea`)
-zadane, odpowiedzi brak. Pierwsza sesja była nocna (22:40-01:10 czasu lokalnego)
-i urwała się w środku pierwszego pytania wywiadu: uczestnik zszedł w konfigurację
-dyktowania i poszedł spać. STATE trzyma "W TOKU - zadane pytanie 1", więc
-wznowienie będzie pierwszym testem podjęcia wywiadu w środku kroku.
+Stan na 2026-09-01: etap 3, aplikacja działa i stoi online pod
+https://nihongo-keiko.pages.dev, 103 zdarzenia, 25 commitów uczestnika.
+Projekt: osobisty, długoterminowy kurs japońskiego, przeniesiony z **działającego
+prototypu HTML, który uczestnik zbudował sam przed programem** i podał jako
+odpowiedź na pytanie o pomysł. To odróżnia ten przebieg od pilotażu #1: brief był
+gotowy i precyzyjny od pierwszej minuty etapu 1.
+
+Pierwsza sesja (26.08, nocna) urwała się w środku pierwszego pytania wywiadu:
+uczestnik zszedł w konfigurację dyktowania i poszedł spać, a wywiad ruszył dopiero
+dwa dni później. Wznowienie po tej przerwie zadziałało bez pomocy operatora.
 
 ## Co zadziałało pierwszy raz w programie
 
@@ -127,3 +131,74 @@ wznowienie będzie pierwszym testem podjęcia wywiadu w środku kroku.
    podglądu, a przewodnik musi tłumaczyć w STATE, dlaczego linku nie wolno podać.
    Kandydat na twardą kontrolę w prepare: po kroku 6 sprawdzić `gh secret list`
    i zgłosić brak, zamiast zakładać, że krok się wykonał.
+
+## Fala 2 - dryf logowania zjada rzecz najważniejszą (sesje 29-31.08)
+
+Kontekst: dwie sesje robocze, 8 commitów, aplikacja urosła o wpisywanie odpowiedzi
+w powtórkach, słownik offline zbudowany z samego kursu, zapisywane słowa wracające
+jako karty, skróty klawiszowe i klikanie w pojedyncze słowa. Analityka 78 → 103
+zdarzenia i po raz pierwszy w tym przebiegu widać pracę inżynierską: 5 `error`
+i 6 `fix_attempt`, w tym uczciwa seria trzech prób ze skrótami (dwie nieudane).
+W STATE przewodnik założył sam z siebie sekcję "PUŁAPKI, W KTÓRE JUŻ WPADŁEM",
+z wpisem samokrytycznym o ogłaszaniu zmian, których `dart format` nie przyjął.
+Fala 1 dotarła w komplecie: klon podciągnięty do `dffba8d`, skrypty v9, bramki
+przebiegnięte na wejściu sesji.
+
+5. **Pytanie o zmianę aplikacji zostało zadane i nigdy nie domknięte.** 29.08 09:43,
+   na checkpoincie etapu 3, uczestnik poprosił o INNĄ aplikację. Przewodnik zalogował
+   `question{id:"pivot-new-app", topic:"user asks for a different app ... whether
+   Nihongo Keiko is parked or dropped"}` i na tym koniec: brak `answer`, brak
+   `decision`, ani słowa w STATE ani w DECISIONS, a siedem minut później praca wraca
+   do Nihongo Keiko i trwa do 31.08. Nie wiemy, czy się rozmyślił, czy pomysł wisi.
+   Pytanie "czy laik zmienia produkt w połowie drogi" dostało jeden nieuzupełniony
+   rekord. → analytics.md reguła twarda **1a**: każde `question` dostaje zdarzenie
+   domykające, także gdy wątek umiera (`answer` z `note:"abandoned - ..."` albo
+   `decision` odwołująca się do id). **[naprawione w tej fali]**
+6. **Para `feature_start`/`feature_done` nie została użyta ANI RAZU** przez 103
+   zdarzenia, mimo pięciu gotowych, widocznych dla użytkownika funkcji. Powód jest
+   strukturalny: katalog i stages.md wiążą tę parę z pętlą etapu 4, a to jest etap 3.
+   Skutki dwa: czas na funkcję znów niepoliczalny (trzeci przebieg z rzędu) i licznik
+   pulsu, który siedzi na `feature_done`, nie ruszył się z zera, więc pierwsza ankieta
+   satysfakcji nadal nie padła. → analytics.md reguła **5a**: para należy do każdej
+   funkcji widocznej dla użytkownika, niezależnie od numeru etapu.
+   **[naprawione w tej fali]**
+7. **STATE zaprzecza sam sobie po zmianie faktu.** Przewodnik dowiedział się, że
+   podgląd żyje, dopisał poprawny adres do nagłówka i zostawił w "ZNANE BRAKI"
+   punkt 7 w brzmieniu "NIE odpowiada (brak sekretów Cloudflare). NIE dawać
+   użytkownikowi tego linku". Jeden plik twierdzi obie rzeczy naraz, a to plik,
+   który wstrzykuje się do kontekstu każdej kolejnej sesji. → SKILL.md invariant 6:
+   przy zmianie faktu przegrepować STATE i uzgodnić WSZYSTKIE wystąpienia, nie
+   pierwsze. **[naprawione w tej fali]**
+8. **Uczestnik nie wie, jak publiczny jest link do podglądu, bo nikt mu tego nie
+   mówi.** Adres `*.pages.dev` dostaje własny certyfikat (`CN=<projekt>.pages.dev`),
+   więc nazwa trafia do jawnych rejestrów Certificate Transparency w chwili
+   pierwszego deployu, niezależnie od tego, komu link zostanie wysłany. Do tego
+   scaffold nie zawiera `robots.txt`, a każda nieistniejąca ścieżka zwraca 200
+   z aplikacją. Nic z tego nie jest wyciekiem (repo prywatne, publikowany jest sam
+   `build/web`, aplikacja nie ma kont ani danych), ale laik słyszy "aplikacja jest
+   online" jako "widzą ją tylko ci, którym wyślę". → stages.md etap 2 krok 10: jedno
+   zdanie prawdy przy podawaniu linku, `robots.txt` dopisywany po scaffoldzie,
+   i Cloudflare Access jako oferta dla chcących zamknąć stronę.
+   **[naprawione w tej fali]** Dotyczy też pilotażu #1.
+9. **Krok 6b prepare przemilczał własną porażkę** (fala 1a): repo P002 pojechało bez
+   sekretów, a workflow uprzejmie pomijał się przy każdym pushu, więc nic nie krzyczało
+   aż do etapu 3. → prepare krok 6b: `gh secret list` jako weryfikacja obowiązkowa,
+   plus ostrzeżenie, że ścieżka Workers Builds w panelu Cloudflare jest ślepa (podpina
+   repo przez GitHub App i zajmuje nazwę, której projekt Pages potem nie dostanie),
+   plus reguła bez imion rozciągnięta na opis repo i `project_name`.
+   **[naprawione w tej fali]**
+
+## Obserwacje bez akcji (fala 2)
+
+- **Drugi projekt dla P002 przygotowany 2026-09-01** (`poc-filip-2`, to samo
+  `participant_id`, nowe `project_id`) jako odpowiedź na punkt 5: zamiast pytać
+  uczestnika o porzucony wątek, dajemy mu miejsce, w którym może zbudować drugą
+  rzecz bez zamykania pierwszej. Nowe pytanie badawcze, jakiego dotąd nie mieliśmy:
+  jak wygląda przebieg kogoś, kto zna już etapy 0-3. Analizy muszą od teraz
+  rozbijać P002 po `project_id`.
+- **Checkpoint etapu 3 formalnie nieodhaczony**, mimo że uczestnik testował
+  aplikację i zgłosił trzy braki na jednym posiedzeniu (`checkpoint{feature:
+  "review-session", verdict:"change", rework:1}`). Etap stoi na 3 od 28.08.
+- **Kanał eskalacji w stronę Utopii nadal nietknięty**: issue o konto dla silnika
+  generującego lekcje stoi w planie jako "WCZEŚNIE" od 28.08 i nie powstało.
+  Trzeci przebieg z rzędu bez naturalnego wywołania tej ścieżki.

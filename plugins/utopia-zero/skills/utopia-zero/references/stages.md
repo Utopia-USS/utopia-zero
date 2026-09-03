@@ -225,6 +225,20 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    give them the link - for a beginner, "my app has an address other people can
    open" is a bigger moment than any gate. Never promise it when the repo has no
    workflow or the push failed; a broken link costs more trust than no link.
+   **Say plainly how public that address is**, in the same breath and in one
+   sentence: anyone who has it can open it, and the address itself is not a secret,
+   because addresses like this appear in public certificate registries the moment
+   the site goes up. Their code and `zero/` stay private (only `build/web` is
+   published), and the app holds no accounts or personal data - so this is a
+   shop window, not a leak. A beginner hears "my app is online" as "only the people
+   I send it to", and that assumption has to be corrected the first time, not after
+   they send it somewhere they regret. If they want it closed, Cloudflare Access
+   (Zero Trust, free tier, e-mail code) gates the whole site without touching
+   the repo - offer it, never set it up unasked.
+   While you are there, write `app/web/robots.txt` with `User-agent: *` +
+   `Disallow: /` and commit it with the rest: it does nothing against scanners, but
+   it keeps a personal practice project out of search results, and the scaffold
+   ships no robots.txt at all, so every path answers 200 to a crawler.
    **Pulse survey #1** (two 1–5 clickables: "Czy czujesz, że masz
    kontrolę nad tym, co powstaje?", "Na ile jasne jest to, co się teraz dzieje?").
    Log `survey{stage:2}`. `stage_end`.
