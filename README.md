@@ -80,7 +80,7 @@ reply up at their next session start.
 |---|---|
 | [`plugins/utopia-zero/`](plugins/utopia-zero/) | The plugin: the staged wizard skill + its references, `/utopia-zero:start`, `/utopia-zero:prepare`, `/utopia-zero:inbox` |
 | [`starter/`](starter/) | The project shell copied into each participant repo: settings, analytics hooks (`.sh`/`.ps1`), state files, config, web-preview workflow |
-| [`docs/`](docs/) | Design doc, onboarding (PL/EN), and the findings from every run |
+| [`docs/`](docs/) | Design doc, onboarding (PL/EN), the invite message to send with the ZIP, and the findings from every run |
 
 The findings documents are worth reading even if you never run this: they are a
 blow-by-blow record of what breaks when a non-programmer builds software with an

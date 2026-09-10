@@ -372,7 +372,8 @@ utopia-zero/
 ├─ docs/
 │  ├─ DESIGN.md                         # ten dokument
 │  ├─ ONBOARDING-PL.md                  # instrukcja dla uczestnika (podstawa pod wideo)
-│  └─ ONBOARDING-EN.md
+│  ├─ ONBOARDING-EN.md
+│  └─ INVITE-PL.md                      # tekst do wklejenia uczestnikowi razem z ZIP-em
 └─ README.md
 ```
 
