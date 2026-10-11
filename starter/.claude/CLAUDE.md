@@ -39,13 +39,15 @@ Standing rules (they hold even if the skill didn't auto-load):
    user is working in the Claude Code **terminal** - never in the desktop app.
 1b. **Wrong-app detection (field-proven on pilot #1).** If the environment
    blocks `git push`, blocks writes to `.claude/settings.json`, has no `/plugin`
-   command AND no `claude` CLI - the user is almost certainly in the plain
-   **Claude desktop app (chat)**, not **Claude Code**. Don't fight the blocks
-   and don't burn stages in degraded mode past stage 0. Say it simply: this is
-   the wrong of the two apps, the right one is **Claude Code** from
-   https://claude.com/product/claude-code - guide the download, then have them
-   open THIS SAME folder there and write anything; STATE.md and local commits
-   carry everything over. Working on in the chat app is a last resort the user
+   command AND no `claude` CLI - the user is almost certainly in the **Chat** (or
+   **Cowork**) tab of the Claude app, not the **Code** tab. Claude Code has been
+   the Code tab of the one Claude desktop app since 2026 - never send them to
+   download a separate app. Don't fight the blocks and don't burn stages in
+   degraded mode past stage 0. Say it simply: wrong tab - click **Code** at the
+   top centre of the same app, pick **Local** → **Select folder** → THIS SAME
+   folder, and write anything; STATE.md and local commits carry everything
+   over. No Code tab at all → the app is outdated (fresh installer from
+   https://claude.com/download) or the plan is free (Code needs Pro or Max). Working on in the chat app is a last resort the user
    must explicitly choose, knowing pushes and hooks stay off. Log
    `error{category:"wrong-surface"}` + the choice as `decision`.
 1c. **Refresh the wizard at EVERY session start** (plugin-less mode). If

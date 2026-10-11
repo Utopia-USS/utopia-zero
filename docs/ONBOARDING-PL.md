@@ -1,11 +1,10 @@
 # Zbuduj swoją aplikację - instrukcja startu (utopia-zero)
 
-**Wersja krótka (zwykle wystarczy):** zainstaluj aplikację **Claude Code**
-(https://claude.com/product/claude-code - uwaga: to INNA aplikacja niż zwykły
-"Claude"!) i zaloguj się → rozpakuj ZIP od Utopii → otwórz
-rozpakowany folder w Claude Code (Open project) → zgadzaj się na wszystko, o co
-zapyta (zaufanie folderowi, instalacja dodatków, restart) → **napisz cokolwiek**,
-np. „start". Od tej chwili przewodnik prowadzi Cię za rękę - łącznie z
+**Wersja krótka (zwykle wystarczy):** zainstaluj aplikację **Claude**
+(https://claude.com/download) i zaloguj się → rozpakuj ZIP od Utopii → w
+zakładce **Code** wybierz **Local** → **Select folder** i wskaż rozpakowany
+folder → zgadzaj się na wszystko, o co zapyta (zaufanie folderowi, instalacja
+dodatków, restart) → **napisz cokolwiek**, np. „start". Od tej chwili przewodnik prowadzi Cię za rękę - łącznie z
 instalacją wszystkiego, czego zabraknie.
 
 Poniżej ta sama droga krok po kroku z obrazkami - na wypadek, gdyby coś poszło
@@ -15,7 +14,7 @@ inaczej. Zajmie ~20-30 minut. Nie musisz nic umieć.
 
 - Komputer: **Mac** lub **Windows**, z co najmniej **10 GB** wolnego miejsca.
 - Stabilny internet (będą się pobierać duże rzeczy).
-- Konto Claude z subskrypcją - Twoje własne albo dane od Utopii.
+- Konto Claude z płatnym planem (**Pro** lub **Max**) - Twoje własne albo dane od Utopii.
 - **Paczka ZIP od Utopii** (Twój projekt) - dostajesz ją mailem/komunikatorem.
 - ~30 minut spokoju na start.
 
@@ -23,32 +22,34 @@ inaczej. Zajmie ~20-30 minut. Nie musisz nic umieć.
 
 | Program | Do czego | Kto instaluje |
 |---|---|---|
-| **Claude Code** | aplikacja, w której rozmawiasz i powstaje Twój projekt | **Ty** - krok 1 poniżej (jedyna ręczna instalacja) |
+| **Claude** (zakładka Code) | aplikacja, w której rozmawiasz i powstaje Twój projekt | **Ty** - krok 1 poniżej (jedyna ręczna instalacja) |
 | **Git** | „sejf" zapisujący każdy krok pracy | **przewodnik**, w trakcie - poprosi tylko o zgodę |
 | **Flutter** | silnik, na którym działa Twoja aplikacja | **przewodnik**, w trakcie (duże pobieranie, ~15 min) |
-| Wispr Flow (mocno polecane) | mówisz zamiast pisać | Ty - patrz sekcja „Dyktowanie" na dole |
+| Wispr Flow (opcjonalnie) | mówisz zamiast pisać - albo mikrofon wbudowany w Claude | Ty - patrz sekcja „Dyktowanie" na dole |
 
-Czyli: ręcznie instalujesz tylko Claude Code. Resztą zajmuje się przewodnik -
+Czyli: ręcznie instalujesz tylko aplikację Claude. Resztą zajmuje się przewodnik -
 gdy poprosi o zgodę na instalację, po prostu się zgódź.
 
-> 🔒 Prywatność: projekt zapisuje przebieg pracy (kroki, decyzje, kopie rozmów) w
-> Twoim prywatnym repozytorium, żeby Utopia mogła badać, jak działa ten proces.
+> 🔒 Prywatność: projekt zapisuje przebieg pracy (kroki, decyzje, a kopie rozmów
+> tylko wtedy, gdy osobno się na to zgodzisz) w Twoim prywatnym repozytorium, żeby Utopia mogła badać, jak działa ten proces.
 > W każdej chwili możesz to wyłączyć - wystarczy napisać: **„wyłącz analitykę"**.
 
-## Krok 1 - Zainstaluj aplikację Claude Code
+## Krok 1 - Zainstaluj aplikację Claude
 
-Wejdź na **https://claude.com/product/claude-code** i kliknij **Download** dla
-swojego systemu (Mac / Windows). Zainstaluj jak każdy inny program.
+Wejdź na **https://claude.com/download** i pobierz aplikację dla swojego systemu
+(Mac / Windows). Zainstaluj jak każdy inny program. Masz już Claude na
+komputerze? Świetnie - to właściwa aplikacja, upewnij się tylko, że jest aktualna.
 
-> ⚠️ **Uwaga: "Claude" i "Claude Code" to DWIE RÓŻNE aplikacje.** Potrzebujesz
-> **Claude Code** (do budowania). Jeśli masz już zwykłego "Claude" (czat) -
-> to nie ten program; doinstaluj Claude Code z linku powyżej.
+> Claude Code nie jest już osobną aplikacją: to zakładka **Code** w zwykłej
+> aplikacji Claude (obok Chat i Cowork). Wszystko poniżej dzieje się w tej zakładce.
 
 `[SCREENSHOT: strona pobierania z zaznaczonym przyciskiem]`
 
 ## Krok 2 - Zaloguj się
 
-Otwórz Claude Code i zaloguj się na konto Claude (swoje lub przekazane przez Utopię).
+Otwórz Claude i zaloguj się na konto Claude (swoje lub przekazane przez Utopię).
+Potem kliknij zakładkę **Code** u góry pośrodku. Jeśli poprosi o zmianę planu,
+konto potrzebuje płatnego planu (Pro lub Max).
 
 `[SCREENSHOT: ekran logowania]`
 
@@ -61,7 +62,8 @@ projekt - nic w nim nie zmieniaj ręcznie.
 
 ## Krok 4 - Otwórz projekt
 
-W Claude Code wybierz **Open project** i wskaż rozpakowany folder.
+W zakładce **Code** wybierz **Local**, kliknij **Select folder** i wskaż rozpakowany
+folder (ten, w którym są `zero` i `README.md`, a nie folder w środku).
 
 `[SCREENSHOT: okno wyboru folderu]`
 
@@ -78,15 +80,15 @@ otwórz swój folder.
 > potwierdź je; dopiero po nim zobaczysz propozycję dodatków.
 > Nie pojawiła się żadna propozycja? Zajrzyj do FAQ na dole.
 
-## Krok 6 - Włącz tryb automatyczny
+## Krok 6 - Sprawdź tryb uprawnień
 
-W oknie rozmowy przełącz tryb uprawnień na **automatyczny (auto-accept)** - dzięki
-temu Claude nie będzie pytał o zgodę przy każdej czynności.
+Obok przycisku wysyłania jest wybór trybu uprawnień. Ustaw **Accept edits**
+(projekt zwykle ustawia to sam) - dzięki temu Claude nie będzie pytał o zgodę
+przy każdej czynności.
 
-`[SCREENSHOT: przełącznik trybu z zaznaczonym AUTO]`
+`[SCREENSHOT: wybór trybu obok przycisku wysyłania]`
 
-> Poznasz, że tryb jest wyłączony, po ciągłych pytaniach „Allow?" - wtedy wróć do
-> tego kroku.
+> Poznasz zły tryb po ciągłych pytaniach „Allow?" - wtedy wróć do tego kroku.
 
 ## Krok 7 - Zacznij!
 
@@ -103,12 +105,17 @@ Ciebie i można go zmienić w każdej chwili.
 
 ## Wracasz po przerwie?
 
-Otwórz Claude Code → otwórz swój folder → napisz: **„kontynuuj"**. Przewodnik
+Otwórz Claude → zakładka **Code** → swój folder (jest na liście z boku) → napisz: **„kontynuuj"**. Przewodnik
 pamięta, na czym skończyliście.
 
 ## Dyktowanie - mów, nie pisz
 
-**Zainstaluj Wispr Flow: https://wisprflow.ai** (Windows, Mac, iPhone, Android).
+Dwie dobre drogi, wybierz dowolną:
+
+- **Mikrofon w Claude** - ikona mikrofonu pod polem czatu. Nic nie instalujesz:
+  klikasz, mówisz, klikasz jeszcze raz i tekst ląduje w polu.
+- **Wispr Flow: https://wisprflow.ai** (Windows, Mac, iPhone, Android) - osobna
+  aplikacja, która wpisuje to, co mówisz, w dowolne pole tekstowe na komputerze.
 
 Naprawdę warto, i to jest chyba najważniejsza rada w całej tej instrukcji.
 Przewodnik buduje Twoją aplikację z tego, co mu powiesz - im więcej szczegółów,
@@ -117,10 +124,9 @@ akapitów o swoim pomyśle. Powiedzieć trzy akapity - owszem, i to bez wysiłku
 Mówiąc, dajesz przewodnikowi kilka razy więcej informacji przy mniejszym
 zmęczeniu. Najbardziej czuć to w wywiadzie o pomyśle na początku.
 
-Wbudowane dyktowanie w systemie (Windows **Win + H**, Mac: Ustawienia → Klawiatura
-→ Dyktowanie) też istnieje, ale po polsku bywa zawodne - u pierwszego uczestnika
-nie udało się go uruchomić wcale. Mikrofon w Claude Code najlepiej radzi sobie
-z angielskim. Traktuj je jako plan awaryjny, nie pierwszy wybór.
+Dyktowanie wbudowane w system (Windows **Win + H**, Mac: Ustawienia → Klawiatura
+→ Dyktowanie) to ostateczność - po polsku bywa zawodne, a u pierwszego
+uczestnika nie udało się go uruchomić wcale.
 
 ## Dobre nawyki
 
@@ -133,7 +139,8 @@ z angielskim. Traktuj je jako plan awaryjny, nie pierwszy wybór.
 | Objaw | Co zrobić |
 |---|---|
 | Brak propozycji instalacji dodatków (krok 5) | Zamknij aplikację **całkowicie** (nie tylko okno), otwórz ją ponownie i otwórz ten sam folder - okienko instalacji dodatków powinno się pojawić; zaakceptuj wszystko. Potem napisz cokolwiek - przewodnik dociągnie resztę sam. Okienko się nie pokazuje? Nie szkodzi - napisz cokolwiek, a przewodnik **pobierze się sam** i poprowadzi Cię normalnie. Uwaga: komendy `/plugin ...` **nie działają w aplikacji** - tylko w Claude Code w terminalu (tam: `/plugin marketplace add Utopia-USS/utopia-zero`, potem `/plugin install utopia-zero@utopia-zero`). |
-| Ciągłe pytania „Allow…?" | Tryb automatyczny wyłączony → krok 6. |
+| Ciągłe pytania „Allow…?" | Zły tryb uprawnień → krok 6. |
+| Claude odpowiada, ale nie widzi żadnych plików ani projektu | Jesteś w zakładce **Chat** - przełącz na **Code** i otwórz folder (krok 4). |
 | Komunikat o limicie użycia | Twój plan ma limity czasowe. Aplikacja pokazuje, kiedy limit się odnowi - wróć wtedy i napisz „kontynuuj". |
 | Coś wygląda na zepsute / nie wiesz, co się dzieje | Napisz po prostu: „co się dzieje?" - przewodnik wyjaśni ludzkim językiem. |
 | Nic nie pomaga | Odezwij się bezpośrednio do osoby z Utopii, od której masz paczkę (tym samym kanałem). Awaryjnie: **info@utopiasoft.io**. |

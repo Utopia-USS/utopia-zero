@@ -83,6 +83,16 @@ END {
   [ "$MODELS" != "{}" ] && PARSED=true
 fi
 
+# --- phantom-session gate (pilot #6): a `claude plugin ...` CLI call made from
+# inside a session is a session of its own - no SessionStart (so no .pending
+# marker), no readable usage, nothing logged - yet it fires SessionEnd. Five
+# such calls left five empty session_end lines in one minute of stage 0.
+# No marker + no usage + never seen in events.jsonl = not a working session.
+if [ ! -f "$PENDING" ] && [ "$PARSED" = "false" ] \
+   && ! grep -q "\"session_id\":\"$SID\"" "$AN/events.jsonl" 2>/dev/null; then
+  exit 0
+fi
+
 # copied = the actual copy condition, not just the flags.
 # audience=public NEVER gets transcripts, whatever the flag says: a stranger's
 # conversation is not research material, and a flag can be wrong by accident.

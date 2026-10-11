@@ -32,8 +32,8 @@ as the actual erasure. Never let "usunięte" mean less than the user thinks it m
 | Script | Called by | Does |
 |---|---|---|
 | `log_event.sh` / `.ps1` | you (skill) + other scripts | appends one JSONL event, auto-fills common fields, redacts, **enforces the catalog** (see below), keeps the pulse counter |
-| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, **`.stage` reconciled with STATE.md**, **deferred** `session_start` marker in `.pending/<sid>` (v9 - see below), STATE summary → stdout (context), pulse-survey reminder, new `[zero]`-issue replies → stdout |
-| `hook_session_end.sh` / `.ps1` | SessionEnd hook | **restart-noise gate** (v9: a session under 10 s that logged nothing leaves NO trace - no events, no transcript, no commit), `session_end` event with token usage from the transcript (cumulative per session - see catalog), transcript copy (redacted), auto-commit+push of `zero/` analytics files |
+| `hook_session_start.sh` / `.ps1` | SessionStart hook | `.session` file, **`.stage` reconciled with STATE.md**, **deferred** `session_start` marker in `.pending/<sid>` (v9 - see below), STATE summary → stdout (context), pulse-survey reminder, **event-log lag reminder** (v10: 15+ non-analytics commits since the last semantic event → catch-up prompt), new `[zero]`-issue replies → stdout |
+| `hook_session_end.sh` / `.ps1` | SessionEnd hook | **restart-noise gate** (v9: a session under 10 s that logged nothing leaves NO trace - no events, no transcript, no commit), **phantom-session gate** (v10: no start marker + no readable usage + never seen in `events.jsonl` - e.g. a `claude plugin …` CLI call - leaves no trace either), `session_end` event with token usage from the transcript (cumulative per session - see catalog), transcript copy (redacted), auto-commit+push of `zero/` analytics files |
 
 `VERSION` in the same directory numbers the script set. Participant repos carry
 COPIES of these scripts, so fixes do not reach them through the plugin - the

@@ -58,6 +58,13 @@ try {
   $parsed = $false
   if ($acc.Count -gt 0) { $models = ($acc | ConvertTo-Json -Compress -Depth 4); $parsed = $true }
 
+  # --- phantom-session gate (mirror of the .sh variant, pilot #6): a `claude
+  # plugin ...` CLI call is a session of its own with no start marker, no usage
+  # and no events - it must not leave an empty session_end behind.
+  $evf = Join-Path $an "events.jsonl"
+  $seen = (Test-Path $evf) -and (Select-String -Path $evf -SimpleMatch -Quiet ('"session_id":"' + $sid + '"'))
+  if (-not (Test-Path $pend) -and -not $parsed -and -not $seen) { exit 0 }
+
   # copied = the actual copy condition, not just the flags.
   # audience=public NEVER gets transcripts, whatever the flag says.
   $audience = if ($cfg.audience) { $cfg.audience } else { "friend" }

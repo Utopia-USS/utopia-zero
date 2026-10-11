@@ -14,7 +14,8 @@ asked what you want to build, and everything technical is decided for you.
 
 ## Start here (anyone)
 
-1. Install [Claude Code](https://claude.com/product/claude-code).
+1. Install the [Claude desktop app](https://claude.com/download) - Claude Code is
+   its **Code** tab (Pro or Max plan). The standalone CLI works too.
 2. Install the plugin. In the Claude Code **terminal**:
 
    ```
@@ -22,17 +23,19 @@ asked what you want to build, and everything technical is decided for you.
    /plugin install utopia-zero@utopia-zero
    ```
 
-   In the **desktop app** `/plugin` does not exist - use the CLI instead
+   In the **desktop app's Code tab** `/plugin` does not exist - use the CLI instead
    (`claude plugin marketplace add Utopia-USS/utopia-zero` then
    `claude plugin install utopia-zero@utopia-zero`).
-3. Open an empty folder in Claude Code and run `/utopia-zero:start`.
+3. Open an empty folder (desktop: Code tab → Local → Select folder) and run
+   `/utopia-zero:start`.
 
 The skill builds the project shell itself and takes it from there. Your analytics
 stay in your own folder and nothing is sent to Utopia - see
 [PRIVACY.md](PRIVACY.md).
 
-**One recommendation worth taking:** install [Wispr Flow](https://wisprflow.ai) and
-talk to the wizard instead of typing. The app it builds is made out of what you
+**One recommendation worth taking:** talk to the wizard instead of typing - with
+[Wispr Flow](https://wisprflow.ai) or the microphone icon under the chat field in
+the Claude app. The app it builds is made out of what you
 tell it, and nobody types three paragraphs about their idea. Everybody says three
 paragraphs.
 

@@ -91,6 +91,27 @@ try {
     Write-Output "=== koniec / end ==="
   }
 
+  # --- event-log lag reminder (mirror of the .sh variant, pilot #6) ---
+  $evf = Join-Path $an "events.jsonl"
+  if (($cfg.analytics_enabled -ne $false) -and (Test-Path $evf) -and (Get-Command git)) {
+    $sem = @(Get-Content $evf -Encoding UTF8 | Where-Object { $_ -notmatch '"type":"session_(start|end)"' })
+    if ($sem.Count -gt 0) {
+      $lm = [regex]::Match($sem[-1], '"ts":"([^"]*)"')
+      if ($lm.Success) {
+        $last = $lm.Groups[1].Value
+        $lag = @(& git -C $Root log "--since=$last" --format=%s 2>$null | Where-Object { $_ -notmatch '^zero: analytics' }).Count
+        if ($lag -ge 15) {
+          Write-Output "=== utopia-zero: dziennik zdarzen nie nadaza / event log lagging ==="
+          Write-Output "$lag commits since the last semantic event ($last). Before new work, catch"
+          Write-Output "up from git log + STATE: feature_start/feature_done per feature, decision per"
+          Write-Output 'real choice, backend_step, error/fix_attempt - add note:"catch-up" to each.'
+          Write-Output "Then log as you go (analytics.md), not at the end of the day."
+          Write-Output "=== koniec / end ==="
+        }
+      }
+    }
+  }
+
   # --- Utopia replies on [zero] issues (best-effort) ---
   $patFile = Join-Path $Root "zero\.pat"
   $cfg = Get-Content (Join-Path $Root "zero\config.json") -Raw -Encoding UTF8 | ConvertFrom-Json
