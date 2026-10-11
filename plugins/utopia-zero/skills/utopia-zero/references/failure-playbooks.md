@@ -52,7 +52,7 @@ Strategy menus per category:
 **Claude Code itself**
 - Subscription limit hit: honest message + when it resets; propose a break -
   never degrade to a weaker model mid-build of a critical stage (see model-advice).
-- Constant permission popups: auto-accept is off - guide the toggle, per ONBOARDING.
+- Constant permission popups: wrong permission mode - guide the selector next to the send button to **Accept edits**, per ONBOARDING.
 - Plugin update broke a flow: pin/workaround, then escalate with details.
 
 **User-driven**

@@ -81,6 +81,28 @@ if [ "$P" -ge 3 ]; then
   echo "=== koniec / end ==="
 fi
 
+# --- event-log lag reminder (pilot #6): after the first two days the log went
+# quiet - ~200 commits (a backend migration, an online mode, two deploys) left
+# 25 events and two decisions, so the research record stops where the project
+# got interesting. Long sessions (resume, compact, 1M context) are where the
+# logging duty fades, and this hook is the one voice that reaches every one.
+EVF="$AN/events.jsonl"
+if [ "${ENABLED:-true}" != "false" ] && [ -f "$EVF" ] && command -v git >/dev/null 2>&1; then
+  LAST="$(grep -Ev '"type":"session_(start|end)"' "$EVF" 2>/dev/null | tail -1 | grep -o '"ts":"[^"]*"' | sed 's/^"ts":"//; s/"$//')"
+  if [ -n "${LAST:-}" ]; then
+    LAG="$(git -C "$ROOT" log --since="$LAST" --format=%s 2>/dev/null | grep -vc '^zero: analytics')"
+    case "$LAG" in (*[!0-9]*|'') LAG=0 ;; esac
+    if [ "$LAG" -ge 15 ]; then
+      echo "=== utopia-zero: dziennik zdarzen nie nadaza / event log lagging ==="
+      echo "$LAG commits since the last semantic event ($LAST). Before new work, catch"
+      echo "up from git log + STATE: feature_start/feature_done per feature, decision per"
+      echo "real choice, backend_step, error/fix_attempt - add note:\"catch-up\" to each."
+      echo "Then log as you go (analytics.md), not at the end of the day."
+      echo "=== koniec / end ==="
+    fi
+  fi
+fi
+
 # --- Utopia replies on [zero] issues (needs curl + PAT; friend audience only) ---
 # python3 is deliberately NOT required: Git Bash on Windows usually has no python3,
 # and this block used to fail there in complete silence - pilot #1 ran a whole

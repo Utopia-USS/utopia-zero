@@ -61,32 +61,36 @@ Shared rules for every stage:
    `transcripts:false`).
 4. **Tutorial** (Zero mode only, ~6 short paragraphs, user's language): how this chat
    works; stages 0–6 overview; nothing is ever lost ("wysyłam kopie do sejfu");
-   how to come back ("otwórz projekt i napisz: kontynuuj"); auto-accept: where the
-   AUTO/permissions toggle lives, and the symptom of it being off (constant
-   "Allow?" popups → tell me and I'll guide you).
+   how to come back ("otwórz aplikację Claude, zakładkę Code, ten folder i napisz:
+   kontynuuj"); permissions: the mode selector sits next to the send button and
+   should read **Accept edits**, and the symptom of a wrong mode is constant
+   "Allow?" popups → tell me and I'll guide you. (Claude Code is the **Code** tab of
+   the one Claude desktop app since 2026 - there is no separate app to name; a user
+   who lands in the Chat or Cowork tab only needs to switch tabs.)
 4a. **Dictation - recommend it properly, once** (both modes, clickable, still the
    user's choice): "Najlepiej pracuje się mówiąc - długie, swobodne wypowiedzi.
-   Polecam Wispr Flow, to zmienia sposób pracy z asystentem." → zainstaluję /
-   już mam / nie, będę pisać.
-   - The recommendation is **Wispr Flow**: https://wisprflow.ai (Windows, macOS,
-     iPhone, Android). Give the link and one honest sentence about why it matters:
+   Polecam Wispr Flow albo wbudowany mikrofon pod polem czatu." → zainstaluję
+   Wispr Flow / użyję mikrofonu w Claude / już dyktuję / nie, będę pisać.
+   - Two equal recommendations: **Wispr Flow** (https://wisprflow.ai - Windows,
+     macOS, iPhone, Android) or **the microphone icon under the chat field** in the
+     Claude app's Code tab (nothing to install - click, speak, click again). Give
+     the link / point at the icon and one honest sentence about why it matters:
      spoken answers are longer and carry far more detail than typed ones, and this
      whole flow runs on how much the wizard learns from you - the idea interview in
      stage 1 most of all. Nobody types three paragraphs about their app idea;
      everybody says three paragraphs.
-   - **Say up front that it is a system-wide app**: it types into ANY text field,
+   - **Wispr Flow: say up front that it is a system-wide app**: it types into ANY text field,
      so there is nothing to "connect" to Claude. Pilot #2's first move after
      installing was asking the wizard to connect it - the integration mental
      model is the lay default, and one sentence prevents the whole detour.
-   - **Do not send them round the built-in options first.** Pilot #1 burned three
-     attempts on Windows dictation (Win+H) before giving up and typing all the way
-     through - it does not do Polish reliably, and the Claude Code mic is noticeably
-     weaker outside English. Mention them only as a fallback if the user declines
-     the install.
+   - **Do not send them round the OPERATING SYSTEM's dictation.** Pilot #1 burned
+     three attempts on Windows dictation (Win+H) before giving up and typing all the
+     way through - it does not do Polish reliably. The Claude mic is a different
+     thing and a first-class option; system dictation is a last-resort fallback.
    - Frame it as strongly recommended, never a requirement, and never block on it.
      Do not walk them through the install click by click unless they ask - it is a
      normal app with its own onboarding.
-   Log `decision{area:"dictation", choice:"<wispr-flow|already-has|typing|system>",
+   Log `decision{area:"dictation", choice:"<wispr-flow|claude-mic|already-has|typing|system>",
    user_involved:true}`. **Return to this once** if their answers get very short or
    dictation-garbled: terse input is the visible symptom of the thing this step
    exists to prevent.
@@ -124,7 +128,10 @@ Shared rules for every stage:
    marketplaces and the plugin set (utopia-zero + utopia-hooks, utopia-ai-arch,
    utopia-dart-lsp, utopia-cms, utopia-reviews). Check they're active (skills
    available). If not: try `claude plugin marketplace add …` / `claude plugin install
-   <name>@<marketplace>` via Bash. If the CLI is missing or refuses, walk the user
+   <name>@<marketplace>` via Bash. **Declared but never installed usually means a
+   stale marketplace cache** (pilot #6: the cache sat at an old version, so the
+   five utopia-flutter-skills plugins were never installed and nothing said so) -
+   run `claude plugin marketplace update <marketplace>` BEFORE the installs. If the CLI is missing or refuses, walk the user
    through a **full quit → reopen app → open this folder → accept the add-on popup**
    (do NOT tell a desktop-app user to paste `/plugin …` - that command exists only in
    the Claude Code terminal; offer those lines only if they are in a terminal).
@@ -196,6 +203,12 @@ Load `environment-macos.md` or `environment-windows.md` + `utopia-ui-build.md`.
    is not analyzer-clean until this runs (undefined generated classes are
    expected before it). A couple of info-level lints may remain in template files -
    fix them immediately so the analyze gate stays at literally zero issues.
+   **Pro/Utopia mode, user runs the app from their own IDE** (IntelliJ / Android
+   Studio) with fvm: pin the SDK in `app/.fvmrc` - next to `pubspec.yaml`, not the
+   repo root - open the IDE on `app/`, and use a **Flutter** run configuration.
+   Pilot #6 lost two rounds to a root-level pin the Flutter plugin never saw (the
+   IDE kept reverting the SDK) and to a plain Dart run configuration that crashes
+   the compiler with `InvalidType is not a subtype of type FunctionType`.
 4. **Visual layer** (`utopia-ui-build.md`): add `utopia_ui` via the dependency
    ladder (pub.dev → git → tokenized-Material fallback; log the rung), emit
    `lib/app/theme.dart` from the accepted Pracownia tokens, wire `UtopiaTheme` at
@@ -331,6 +344,12 @@ Load `failure-playbooks.md`. **Entry:** skeleton approved. Repeat per feature:
    the user self-previews, tell them to hard-refresh (Cmd+Shift+R / Ctrl+F5) -
    Flutter web caches aggressively and they may be staring at the old bundle.
 7. Append `zero/DECISIONS.md` (EN); update STATE; commit + push; log `feature_done`.
+   **Updating STATE means reconciling it, not appending to it**: re-read "Następne
+   kroki" and "Znane luki" against what now works and strike what this feature
+   made false. Pilot #6 ended with STATE saying in one section that the Firebase
+   project works and in another that its owner still has to create it, and that
+   the functions are not deployed while the event log showed them answering.
+   A next session trusts STATE first - a stale line there is a wrong instruction.
 8. Every ~3 features: pulse survey (2 clickables). Log `survey`.
 
 Out-of-BRIEF requests at any point: do it if feasible (log
